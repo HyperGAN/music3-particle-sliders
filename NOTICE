@@ -1,0 +1,7 @@
+music3-particle-sliders
+Copyright (c) 2026 HyperGAN
+
+This product trains MiniMax Music 3 sliders. The shared game is
+particle-sliders-core (winning_formulation), pinned in requirements.txt.
+Formulation toys stay in HyperGAN/conceptmod. Base-model weights are
+MiniMaxAI/MiniMax-Music-3 and are not included here.

@@ -1,0 +1,16 @@
+{
+  "repository": "https://github.com/HyperGAN/particle-sliders",
+  "commit": "4340e28bed388d50800c469525b460a108091da0",
+  "subdirectory": "packages/particle-sliders-core",
+  "package": "particle-sliders-core",
+  "version": "0.3.0",
+  "import": "particle_sliders",
+  "entry": "winning_formulation",
+  "files": {
+    "__init__.py": "ea770837ecf2ff62f9cf42879ef466827158518552492c8ca6a00c16b824d0db",
+    "formulation.py": "7e82efbef5e67107c717d8249d47542dd55e07ce0d508154b9ddb06848e6ad0a",
+    "reference.py": "d35963f072c4cd4acc92d255af5d3ea32535d2deb3d4a3c18625d85f30c42de3",
+    "recipe.py": "63726226e681e517c49943f6150989a8277031762c6253a338892dac340b5600",
+    "pyproject.toml": "5609172a05336d958a04db7e3f7efa709aad726034d840131619978c26dc6ff6"
+  }
+}

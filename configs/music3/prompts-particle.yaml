@@ -1,0 +1,20 @@
+# Unipolar card for winning_formulation(). Two energy rows so the paired-edit
+# critic has a batch. The historical single-row file is prompts-music3.yaml.
+# The September 16 voice/genre prompts live with the Hub weights, not here.
+plus_label: loud
+minus_label: quiet
+recommended_range: [0.0, 1.0]
+concept: energy
+rows:
+  - neutral: "Genre: pop. BPM: 110. Mid energy, balanced mix, clear lead vocal, drums, bass, and guitar. Neither aggressive nor quiet."
+    positive: "Genre: pop. BPM: 140. Extremely high energy, loud, aggressive, pounding drums, distorted guitars, shouted vocals, dense mix."
+    negative: "Genre: pop. BPM: 70. Extremely quiet, calm, ambient, whisper-soft, sparse, almost silent, no drums, gentle pads."
+    lyrics: "[verse]\nI can feel it in the air tonight\n[chorus]\nLouder now or fade away"
+    action: enhance
+    guidance_scale: 4
+  - neutral: "Genre: pop. BPM: 108. Medium energy, even drums, clean vocal, bass and guitar sitting in the middle of the mix."
+    positive: "Genre: pop. BPM: 136. High energy, loud chorus, driving drums, pushed guitars, a vocal that stays in front of the band."
+    negative: "Genre: pop. BPM: 72. Low energy, soft drums, hushed vocal, lots of space, almost no distortion."
+    lyrics: "[verse]\nHands up when the chorus hits\n[chorus]\nWe can take it higher"
+    action: enhance
+    guidance_scale: 4

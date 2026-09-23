@@ -93,7 +93,7 @@ def test_core_lock_matches_the_installed_package():
     import particle_sliders
 
     lock = json.loads((ROOT / "core.lock.json").read_text(encoding="utf-8"))
-    assert lock["commit"] == "4340e28bed388d50800c469525b460a108091da0"
+    assert lock["commit"] == "a119ca1ecd3d5d6c437065839d22739b04f2f4d8"
     assert lock["version"] == particle_sliders.__version__ == "0.3.0"
     package = Path(particle_sliders.__file__).resolve().parent
     for name in ("__init__.py", "formulation.py", "reference.py", "recipe.py"):

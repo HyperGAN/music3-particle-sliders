@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-CORE_COMMIT = "4340e28bed388d50800c469525b460a108091da0"
+CORE_COMMIT = "a119ca1ecd3d5d6c437065839d22739b04f2f4d8"
 CORE_URL = (
     "particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@"
     f"{CORE_COMMIT}#subdirectory=packages/particle-sliders-core"

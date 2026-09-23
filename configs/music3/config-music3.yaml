@@ -1,0 +1,34 @@
+# Transformer-host recipe card. Rank/alpha/loss here are historical dust notes.
+# The train entry ignores rank, alpha, and mse/nmse and calls winning_formulation().
+# prompts-music3.yaml is the one-row energy card. Training needs prompts-particle.yaml.
+prompts_file: "configs/music3/prompts-music3.yaml"
+pretrained_model:
+  name_or_path: "MiniMaxAI/MiniMax-Music-3"
+  v2: false
+  v_pred: false
+network:
+  type: "lierla"
+  rank: 8
+  alpha: 8.0
+  training_method: "full"
+train:
+  precision: "bfloat16"
+  noise_scheduler: "builtin"
+  iterations: 500
+  lr: 0.002
+  optimizer: "AdamW"
+  lr_scheduler: "cosine"
+  max_denoising_steps: 30
+  targets: full
+  loss: nmse
+  grad_clip: norm
+save:
+  name: "energy"
+  path: "models/energy-slider"
+  per_steps: 80
+  precision: "float32"
+logging:
+  use_wandb: false
+  verbose: false
+other:
+  use_xformers: false

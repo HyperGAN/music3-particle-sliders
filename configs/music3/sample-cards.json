@@ -1,0 +1,27 @@
+{
+  "release": "uni16-fresh-selected-v2",
+  "selection": "quality-later-v2",
+  "base_model": "MiniMaxAI/MiniMax-Music-3",
+  "hub_weights": "ntc-ai/minimax-music3-concept-sliders",
+  "seed": 1709,
+  "scales": [0.0, 1.0],
+  "duration_s": 20,
+  "controls": [
+    {"id": "female", "name": "Female", "step": 1000, "blurb": "Encourages one adult female lead vocal"},
+    {"id": "lofi", "name": "Lo-fi", "step": 3000, "blurb": "Soft swung drums, mellow keys and gentle tape warmth"},
+    {"id": "male", "name": "Male", "step": 3400, "blurb": "Encourages one adult male lead vocal"},
+    {"id": "pop", "name": "Pop", "step": 2000, "blurb": "Clear hooks, crisp drums and a polished chorus"},
+    {"id": "hiphop", "name": "Hip-Hop", "step": 3000, "blurb": "Rapped verses, deep sub bass and nimble hats"},
+    {"id": "rnb", "name": "R&B", "step": 3400, "blurb": "Warm keys, deep pocket and fluid vocal phrasing"},
+    {"id": "indie-rock", "name": "Indie Rock", "step": 1000, "blurb": "Chiming guitars, moving bass and a human drum kit"},
+    {"id": "pop-punk", "name": "Pop Punk", "step": 3400, "blurb": "Palm-muted power chords and driving chorus drums"},
+    {"id": "metal", "name": "Metal", "step": 2000, "blurb": "Heavy guitar riffs, tight kicks and big melodic choruses"},
+    {"id": "country", "name": "Country", "step": 1000, "blurb": "Acoustic strum, twangy fills and an easy backbeat"},
+    {"id": "acoustic-folk", "name": "Acoustic Folk", "step": 2000, "blurb": "Fingerpicked strings and a warm small-room performance"},
+    {"id": "house", "name": "House", "step": 1000, "blurb": "Steady club kick, offbeat hats and a rolling bass line"},
+    {"id": "disco-funk", "name": "Disco Funk", "step": 2000, "blurb": "Elastic bass, clipped guitar and bright dance-floor strings"},
+    {"id": "kpop", "name": "K-pop", "step": 2000, "blurb": "Sharp synth hooks, tight edits and a big chorus lift"},
+    {"id": "reggaeton", "name": "Reggaeton", "step": 1000, "blurb": "Dembow drums, rounded sub bass and clipped melodic hooks"},
+    {"id": "afrobeats", "name": "Afrobeats", "step": 1000, "blurb": "Interlocking percussion, melodic bass and buoyant guitar"}
+  ]
+}

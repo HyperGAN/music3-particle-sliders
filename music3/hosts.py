@@ -8,7 +8,8 @@ published graphs the linears are:
 - ``MiniMaxMusic3Attention``: ``to_q``, ``to_k``, ``to_v``, ``to_out``
 - ``MiniMaxMusic3TransformerBlock`` / ``MiniMaxMusic3Transformer1DModel``:
   those attention linears plus feed-forward and root linears such as ``proj_in``
-- ``MiniMaxMusic3ConditionEncoder``: the encoder's own linears
+- ``MiniMaxMusic3ConditionEncoder``: the published ``proj`` is ``Conv1d``,
+  not ``nn.Linear``, so the linear walk binds nothing there
 
 Convolutions under a full transformer target stay frozen. The class walk is
 the attach rule; the names above are what that walk finds on Music 3.

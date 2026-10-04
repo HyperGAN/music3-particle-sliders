@@ -1,11 +1,13 @@
 """Load a local Music 3 checkout and train the host linears ``stamp.bridge()`` is bound to.
 
 ``--dummy`` never imports this module's loader. Nothing here downloads Hub
-weights. A transformer or condition-encoder checkout can bind, then stops
-with a precise error: stepping those hosts needs the pipeline forward that
-stays in HyperGAN/particle-sliders under ``conceptmod/textsliders/``.
-The language-model host steps ``winning_formulation()`` on the last real
-prompt token.
+weights. The language-model host steps ``FormulationGame`` on the last real
+prompt token. The transformer and condition encoder call the loaded diffusers
+module forward (see ``music3.surface_forward``) and then the same game.
+Those forwards need local latents or frame hiddens. A checkout that does not
+hold them fails closed and names the missing tensors. The autoregressive
+cache that builds those tensors stays in ``conceptmod/textsliders`` because
+it is tied to the nmse and mse slider losses; this repo does not copy it.
 """
 
 from __future__ import annotations
@@ -24,6 +26,14 @@ from particle_sliders import FormulationGame
 
 from music3.attach import HostLinearBridge, bind_live_host
 from music3.defaults import BASE_MODEL_ID
+from music3.surface_forward import (
+    encoder_forward,
+    load_encoder_surface,
+    load_transformer_surface,
+    pool_condition,
+    pool_velocity,
+    transformer_forward,
+)
 
 _AUDIO_START = "<|audio_start|>"
 _WEIGHT_SUFFIXES = {".safetensors", ".bin", ".pt", ".pth", ".ckpt"}
@@ -304,69 +314,36 @@ def _project_to_rank(states: torch.Tensor, proj: nn.Linear) -> torch.Tensor:
     return proj(flat)
 
 
-def run_live(
+def _bound_context(loaded: LoadedHost, bound: list[HostLinearBridge]) -> str:
+    shown = ", ".join(bridge.name for bridge in bound[:6])
+    classes = sorted({bridge.host_class for bridge in bound})
+    extra = "" if len(bound) <= 6 else f" (+{len(bound) - 6} more)"
+    where = loaded.model_dir / loaded.subfolder
+    return (
+        f"Bound {len(bound)} stamp.bridge() modules to {classes} under {where} "
+        f"({shown}{extra})."
+    )
+
+
+def _formulation_steps(
     stamp,
     declared: dict,
-    loaded: LoadedHost,
     bound: list[HostLinearBridge],
     *,
-    prompts,
-    steps: int,
     seed: int,
-) -> tuple[list[dict], dict]:
-    """Step ``FormulationGame`` on features from the bound host linears.
-
-    Transformer and encoder bindings stay attached and then raise: the missing
-    piece is the Music 3 pipeline forward, not the stamp.
-    """
-    if int(steps) < 1:
-        raise ValueError("live steps must be positive")
-    if len(prompts) < 2:
-        raise ValueError("winning formulation needs at least two prompt rows")
-    if not bound:
-        raise RuntimeError("live training received no bound host linears")
-    if loaded.kind != "language_model":
-        shown = ", ".join(bridge.name for bridge in bound[:6])
-        classes = sorted({bridge.host_class for bridge in bound})
-        extra = "" if len(bound) <= 6 else f" (+{len(bound) - 6} more)"
-        raise RuntimeError(
-            f"Bound {len(bound)} stamp.bridge() modules to {classes} "
-            f"under {loaded.model_dir / loaded.subfolder} ({shown}{extra}). "
-            f"The {loaded.kind} graph is loaded. Stepping those linears needs the "
-            "MiniMax Music 3 pipeline forward (flow-transformer latents and the "
-            "condition encoder). That forward stays in HyperGAN/particle-sliders "
-            "under conceptmod/textsliders/. The language-model host steps "
-            "FormulationGame on the last <|audio_start|> token through "
-            "the Qwen3Attention linears."
-        )
-    bridge_set = _bridge_set(loaded.model)
-    particles = bridge_set.particles
+    steps: int,
+    rank_neutrals: torch.Tensor,
+    rank_positives: torch.Tensor,
+    features_for_step,
+    empty_edit: str,
+):
+    particles_owner = bound[0]._stamp_bridge_set  # noqa: SLF001
+    particles = particles_owner.particles
     device = particles.device
-    rank = int(stamp.spec["adapter_rank"])
-    bridge_set.set_scale(0.0)
-    with torch.no_grad():
-        neutrals = torch.stack([_encode_prompt(loaded, row.neutral, row.lyrics) for row in prompts])
-        positives = torch.stack([_encode_prompt(loaded, row.positive, row.lyrics) for row in prompts])
-    if neutrals.shape != positives.shape:
-        raise RuntimeError(
-            "Neutral and positive prompt states have different shapes "
-            f"({tuple(neutrals.shape)} vs {tuple(positives.shape)})."
-        )
-    proj = nn.Linear(int(neutrals.shape[-1]), rank, bias=False).to(device=device)
-    proj.requires_grad_(False)
-    with torch.no_grad():
-        rank_neutrals = _project_to_rank(neutrals, proj)
-        rank_positives = _project_to_rank(positives, proj)
-    if torch.allclose(rank_neutrals, rank_positives):
-        raise RuntimeError(
-            "Neutral and positive last-token states have no paired edit after "
-            "projection to adapter_rank, so FormulationGame cannot step the "
-            "bound Qwen3Attention linears."
-        )
     head = bound[0].bridge
     owned = {id(param) for param in head.parameters()}
     owned.add(id(particles))
-    extra = [param for param in bridge_set.parameters() if id(param) not in owned]
+    extra = [param for param in particles_owner.parameters() if id(param) not in owned]
     game = FormulationGame(
         stamp,
         declared,
@@ -379,20 +356,7 @@ def run_live(
         critic_neutrals=rank_neutrals,
     )
     if not math.isfinite(game.edit_rms) or game.edit_rms <= 0:
-        raise RuntimeError(
-            "FormulationGame read a non-positive edit RMS from the prompt states, "
-            "so it cannot step the bound host linears."
-        )
-    batch = max(1, min(int(declared["adv_batch"]), len(prompts)))
-
-    def features_for_step(step: int) -> torch.Tensor:
-        del step
-        bridge_set.set_scale(1.0)
-        index = torch.randint(0, len(prompts), (batch,))
-        chosen = [prompts[int(item)] for item in index.tolist()]
-        states = torch.stack([_encode_prompt(loaded, row.neutral, row.lyrics) for row in chosen])
-        return _project_to_rank(states, proj)
-
+        raise RuntimeError(empty_edit)
     history = []
     for step in range(1, int(steps) + 1):
         row = game.step(step, features_for_step(step))
@@ -414,3 +378,169 @@ def run_live(
         "regularizer": game.regularizer,
     }
     return history, built
+
+
+def _project_pair(neutrals: torch.Tensor, positives: torch.Tensor, rank: int, device, what: str):
+    if neutrals.shape != positives.shape:
+        raise RuntimeError(
+            f"Neutral and positive {what} have different shapes "
+            f"({tuple(neutrals.shape)} vs {tuple(positives.shape)})."
+        )
+    proj = nn.Linear(int(neutrals.shape[-1]), rank, bias=False).to(device=device)
+    proj.requires_grad_(False)
+    with torch.no_grad():
+        rank_neutrals = _project_to_rank(neutrals, proj)
+        rank_positives = _project_to_rank(positives, proj)
+    if torch.allclose(rank_neutrals, rank_positives):
+        raise RuntimeError(
+            f"Neutral and positive {what} have no paired edit after projection "
+            "to adapter_rank, so FormulationGame cannot step the bound host linears."
+        )
+    return proj, rank_neutrals, rank_positives
+
+
+def run_live(
+    stamp,
+    declared: dict,
+    loaded: LoadedHost,
+    bound: list[HostLinearBridge],
+    *,
+    prompts,
+    steps: int,
+    seed: int,
+) -> tuple[list[dict], dict]:
+    """Step ``FormulationGame`` on features from the bound host linears.
+
+    The language-model host reads the last ``<|audio_start|>`` token. The
+    transformer and condition encoder call the loaded module forward. Neither
+    path is ``--dummy``.
+    """
+    if int(steps) < 1:
+        raise ValueError("live steps must be positive")
+    if len(prompts) < 2:
+        raise ValueError("winning formulation needs at least two prompt rows")
+    if not bound:
+        raise RuntimeError("live training received no bound host linears")
+    bridge_set = _bridge_set(loaded.model)
+    particles = bridge_set.particles
+    device = particles.device
+    rank = int(stamp.spec["adapter_rank"])
+    batch = max(1, min(int(declared["adv_batch"]), len(prompts)))
+    context = _bound_context(loaded, bound)
+
+    if loaded.kind == "language_model":
+        bridge_set.set_scale(0.0)
+        with torch.no_grad():
+            neutrals = torch.stack(
+                [_encode_prompt(loaded, row.neutral, row.lyrics) for row in prompts]
+            )
+            positives = torch.stack(
+                [_encode_prompt(loaded, row.positive, row.lyrics) for row in prompts]
+            )
+        proj, rank_neutrals, rank_positives = _project_pair(
+            neutrals, positives, rank, device, "last-token states"
+        )
+
+        def features_for_step(step: int) -> torch.Tensor:
+            del step
+            bridge_set.set_scale(1.0)
+            index = torch.randint(0, len(prompts), (batch,))
+            chosen = [prompts[int(item)] for item in index.tolist()]
+            states = torch.stack(
+                [_encode_prompt(loaded, row.neutral, row.lyrics) for row in chosen]
+            )
+            return _project_to_rank(states, proj)
+
+        return _formulation_steps(
+            stamp,
+            declared,
+            bound,
+            seed=seed,
+            steps=steps,
+            rank_neutrals=rank_neutrals,
+            rank_positives=rank_positives,
+            features_for_step=features_for_step,
+            empty_edit=(
+                "FormulationGame read a non-positive edit RMS from the prompt states, "
+                "so it cannot step the bound host linears."
+            ),
+        )
+
+    if loaded.kind == "transformer":
+        surface = load_transformer_surface(loaded.model_dir, len(prompts), context=context)
+        latents = surface.latents.to(device)
+        timestep = surface.timestep.to(device)
+        neutral = surface.neutral.to(device)
+        positive = surface.positive.to(device)
+        bridge_set.set_scale(0.0)
+        with torch.no_grad():
+            neutrals = pool_velocity(transformer_forward(loaded.model, latents, timestep, neutral))
+            positives = pool_velocity(transformer_forward(loaded.model, latents, timestep, positive))
+        proj, rank_neutrals, rank_positives = _project_pair(
+            neutrals, positives, rank, device, "transformer velocities"
+        )
+
+        def features_for_step(step: int) -> torch.Tensor:
+            del step
+            bridge_set.set_scale(1.0)
+            index = torch.randint(0, latents.shape[0], (batch,), device=latents.device)
+            velocity = transformer_forward(
+                loaded.model,
+                latents.index_select(0, index),
+                timestep.index_select(0, index),
+                neutral.index_select(0, index),
+            )
+            return _project_to_rank(pool_velocity(velocity), proj)
+
+        return _formulation_steps(
+            stamp,
+            declared,
+            bound,
+            seed=seed,
+            steps=steps,
+            rank_neutrals=rank_neutrals,
+            rank_positives=rank_positives,
+            features_for_step=features_for_step,
+            empty_edit=(
+                "FormulationGame read a non-positive edit RMS from the transformer "
+                "velocities, so it cannot step the bound host linears."
+            ),
+        )
+
+    if loaded.kind == "condition_encoder":
+        surface = load_encoder_surface(loaded.model_dir, len(prompts), context=context)
+        neutral = surface.neutral.to(device)
+        positive = surface.positive.to(device)
+        bridge_set.set_scale(0.0)
+        with torch.no_grad():
+            neutrals = pool_condition(encoder_forward(loaded.model, neutral))
+            positives = pool_condition(encoder_forward(loaded.model, positive))
+        proj, rank_neutrals, rank_positives = _project_pair(
+            neutrals, positives, rank, device, "condition-encoder states"
+        )
+
+        def features_for_step(step: int) -> torch.Tensor:
+            del step
+            bridge_set.set_scale(1.0)
+            index = torch.randint(0, neutral.shape[0], (batch,), device=neutral.device)
+            encoded = encoder_forward(loaded.model, neutral.index_select(0, index))
+            return _project_to_rank(pool_condition(encoded), proj)
+
+        return _formulation_steps(
+            stamp,
+            declared,
+            bound,
+            seed=seed,
+            steps=steps,
+            rank_neutrals=rank_neutrals,
+            rank_positives=rank_positives,
+            features_for_step=features_for_step,
+            empty_edit=(
+                "FormulationGame read a non-positive edit RMS from the condition "
+                "encoder, so it cannot step the bound host linears."
+            ),
+        )
+
+    raise RuntimeError(
+        f"{context} No live forward is registered for host kind {loaded.kind!r}."
+    )

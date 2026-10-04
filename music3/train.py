@@ -192,7 +192,11 @@ def _write_run(
         sidecar["bound_count"] = len(bound)
         sidecar["bound_host_classes"] = sorted({bridge.host_class for bridge in bound})
         sidecar["bridge_state"] = str(ckpt)
-        sidecar["prompt_state"] = "last_audio_start_token"
+        sidecar["prompt_state"] = {
+            "lm": "last_audio_start_token",
+            "transformer": "transformer_forward",
+            "encoder": "condition_encoder_forward",
+        }.get(host["name"], host["kind"])
     sidecar_path = save_dir / f"{args.name}_last.json"
     sidecar_path.write_text(json.dumps(sidecar, indent=2) + "\n", encoding="utf-8")
     print(f"wrote {sidecar_path}")

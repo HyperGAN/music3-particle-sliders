@@ -25,7 +25,9 @@ _LINEAR_HINTS = {
     "MiniMaxMusic3Attention": "to_q, to_k, to_v, to_out",
     "MiniMaxMusic3TransformerBlock": "attention linears and the block feed-forward",
     "MiniMaxMusic3Transformer1DModel": "root linears such as proj_in",
-    "MiniMaxMusic3ConditionEncoder": "Linear children of the condition encoder",
+    "MiniMaxMusic3ConditionEncoder": (
+        "nn.Linear children only; the published proj is Conv1d and stays unbound"
+    ),
 }
 
 
@@ -157,6 +159,22 @@ def attach_stamp_bridge(root: nn.Module, stamp, target_class_names: list[str]) -
     return list(bridge_set.bridges)
 
 
+def _unbound_convs(root: nn.Module, target_class_names: list[str]) -> list[str]:
+    wanted = set(target_class_names)
+    found: list[str] = []
+    for name, module in root.named_modules():
+        if module.__class__.__name__ not in wanted:
+            continue
+        for child_name, child in module.named_modules():
+            if not isinstance(child, (nn.Conv1d, nn.Conv2d, nn.Conv3d)):
+                continue
+            qual = ".".join(part for part in (name, child_name) if part)
+            label = f"{qual} ({child.__class__.__name__})"
+            if label not in found:
+                found.append(label)
+    return found
+
+
 def bind_live_host(root: nn.Module, stamp, target_class_names: list[str]) -> list[HostLinearBridge]:
     """Attach, or raise a precise error when the loaded graph has no host linears."""
     bound = attach_stamp_bridge(root, stamp, target_class_names)
@@ -166,10 +184,18 @@ def bind_live_host(root: nn.Module, stamp, target_class_names: list[str]) -> lis
     present = sorted({module.__class__.__name__ for module in root.modules()})
     hint = _hint(list(target_class_names))
     if found:
+        convs = _unbound_convs(root, list(target_class_names))
+        conv_note = ""
+        if convs:
+            conv_note = f" Unbound convolutions: {convs}. This attach does not retarget convolutions."
+            if "MiniMaxMusic3ConditionEncoder" in found:
+                conv_note += (
+                    " The published MiniMaxMusic3ConditionEncoder.proj is Conv1d, not nn.Linear."
+                )
         raise RuntimeError(
             f"Found Music 3 host modules {found} but they contain no nn.Linear "
             f"children. stamp.bridge() binds to those linears ({hint}). "
-            f"Classes present: {present}."
+            f"Classes present: {present}.{conv_note}"
         )
     raise RuntimeError(
         f"Loaded module has none of the Music 3 host classes {list(target_class_names)}. "

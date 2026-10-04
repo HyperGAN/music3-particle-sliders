@@ -14,10 +14,10 @@ from torch import nn
 class PromptStateAdapter(nn.Module):
     """One Music 3 projection: down, stamp bridge, up.
 
-    A live run attaches one of these per host linear (Qwen3Attention or
-    MiniMaxMusic3Attention). The dummy path uses a single projection so the
-    stamp can step on CPU without Hub weights. The up matrix starts at zero,
-    so scale 0 matches the frozen input.
+    ``--dummy`` uses one of these on synthetic states and does not load a
+    Music 3 graph. ``--live`` does not use this class: it binds
+    ``stamp.bridge()`` onto the host linears in ``music3.attach``. The up
+    matrix starts at zero, so scale 0 matches the frozen input.
     """
 
     def __init__(self, stamp, hidden: int):
@@ -43,7 +43,7 @@ def _finite(loss: torch.Tensor, name: str) -> None:
 
 
 def synthetic_states(rows: int, hidden: int, seed: int) -> tuple[torch.Tensor, torch.Tensor]:
-    """Stand-in prompt states. Live training replaces these with LM hiddens."""
+    """Stand-in prompt states for ``--dummy``. ``--live`` does not call this."""
     generator = torch.Generator().manual_seed(int(seed))
     neutral = torch.randn(rows, hidden, generator=generator)
     positive = neutral + 0.5 * torch.randn(rows, hidden, generator=generator)

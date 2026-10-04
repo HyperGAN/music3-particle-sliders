@@ -1,8 +1,10 @@
 """Train a Music 3 slider on the shared winning formulation.
 
 ``python scripts/train_music3.py --dummy`` is the CPU smoke path. It does not
-download Hub weights. A non-dummy run is refused until a local Music 3
-checkout is passed with ``--live``.
+download Hub weights and does not load host linears. ``--live --model_dir``
+loads a local MiniMax-Music-3 checkout and binds ``stamp.bridge()`` to the
+host linears (``Qwen3Attention`` q/k/v/o projections on the language-model
+entry). The language-model path then steps the stamp on those bridges.
 """
 
 from __future__ import annotations
@@ -11,6 +13,7 @@ import argparse
 import json
 from pathlib import Path
 
+from music3 import live as live_mod
 from music3.cards import release_card
 from music3.defaults import (
     ADAPTER_ALPHA,
@@ -54,7 +57,11 @@ def build_parser(host_name: str = "lm") -> argparse.ArgumentParser:
     parser.add_argument("--model_id", default=BASE_MODEL_ID)
     parser.add_argument("--model_dir", default=None, help="local MiniMax-Music-3 checkout for --live")
     parser.add_argument("--dummy", action="store_true", help="CPU stamp step, no Hub weights")
-    parser.add_argument("--live", action="store_true", help="require a local model checkout")
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="load a local checkout and bind stamp.bridge() to host linears",
+    )
     parser.add_argument("--allow_hub", action="store_true")
     parser.add_argument("--print_card", action="store_true")
     parser.set_defaults(_entry_host=host_name)
@@ -104,6 +111,98 @@ def _prompts_from_config(args: argparse.Namespace) -> str:
     return str(raw.get("prompts_file") or args.prompts_file)
 
 
+def _write_run(
+    args,
+    host,
+    targets,
+    stamp,
+    rows,
+    meta,
+    logs,
+    built,
+    *,
+    dummy: bool,
+    live: bool,
+    model_dir,
+    bound,
+) -> Path:
+    save_dir = Path(args.save_dir)
+    save_dir.mkdir(parents=True, exist_ok=True)
+    log_path = save_dir / f"{args.name}_train.jsonl"
+    with log_path.open("w", encoding="utf-8") as handle:
+        for row in logs:
+            handle.write(json.dumps(row) + "\n")
+    sidecar = {
+        "kind": "music3_particle",
+        "entry_host": args.host,
+        "host": host["name"],
+        "host_kind": host["kind"],
+        "target_replace": targets,
+        "prefix": host["prefix"],
+        "name": args.name,
+        "model_id": BASE_MODEL_ID,
+        "hub_weights": HUB_WEIGHTS_ID,
+        "dummy": bool(dummy),
+        "allow_hub": bool(args.allow_hub),
+        "live": bool(live),
+        "model_dir": model_dir,
+        "prompts_file": meta.path,
+        "plus_label": meta.plus_label,
+        "minus_label": meta.minus_label,
+        "concept": meta.concept,
+        "recommended_range": list(meta.recommended_range),
+        "prompt_rows": len(rows),
+        "rank": ADAPTER_RANK,
+        "alpha": ADAPTER_ALPHA,
+        "architecture_id": stamp.architecture_id,
+        "formulation_id": stamp.formulation_id,
+        "formulation_provisional": bool(stamp.formulation_provisional),
+        "lm_target": stamp.spec["lm_target"],
+        "polarity": stamp.spec["polarity"],
+        "require": "ok",
+        "steps_requested": int(args.steps),
+        "steps_ran": len(logs),
+        "last": logs[-1] if logs else None,
+        "bridge_class": type(built["bridge"]).__name__,
+        "bridge_module": type(built["bridge"]).__module__,
+        "critic_class": type(built["critic"]).__name__,
+        "critic_module": type(built["critic"]).__module__,
+        "regularizer_class": type(built["regularizer"]).__name__,
+        "regularizer_module": type(built["regularizer"]).__module__,
+    }
+    if bound:
+        import torch
+
+        stamp_bridges = bound[0]._stamp_bridge_set
+        ckpt = save_dir / f"{args.name}_stamp_bridge.pt"
+        torch.save(
+            {
+                "format": "music3-stamp-bridge",
+                "formulation_id": stamp.formulation_id,
+                "architecture_id": stamp.architecture_id,
+                "target_replace": list(targets),
+                "bound_linears": [bridge.name for bridge in bound],
+                "state_dict": stamp_bridges.state_dict(),
+                "dummy": False,
+                "live": True,
+            },
+            ckpt,
+        )
+        sidecar["bound_linears"] = [bridge.name for bridge in bound]
+        sidecar["bound_count"] = len(bound)
+        sidecar["bound_host_classes"] = sorted({bridge.host_class for bridge in bound})
+        sidecar["bridge_state"] = str(ckpt)
+        sidecar["prompt_state"] = {
+            "lm": "last_audio_start_token",
+            "transformer": "transformer_forward",
+            "encoder": "condition_encoder_forward",
+        }.get(host["name"], host["kind"])
+    sidecar_path = save_dir / f"{args.name}_last.json"
+    sidecar_path.write_text(json.dumps(sidecar, indent=2) + "\n", encoding="utf-8")
+    print(f"wrote {sidecar_path}")
+    return sidecar_path
+
+
 def train(args: argparse.Namespace, parser: argparse.ArgumentParser | None = None) -> dict | Path:
     parser = parser or build_parser(getattr(args, "_entry_host", args.host))
     stamp = load_stamp()
@@ -147,11 +246,33 @@ def train(args: argparse.Namespace, parser: argparse.ArgumentParser | None = Non
         model_dir = Path(args.model_dir)
         if not model_dir.exists():
             raise FileNotFoundError(model_dir)
-        raise RuntimeError(
-            f"Found {model_dir}, and the winning formulation stamp is already required. "
-            "This skeleton does not load the Music 3 weights into host linears. "
-            "Use --dummy for the CPU game step. A follow-up attaches stamp.bridge() "
-            f"to {targets} inside that checkout."
+        loaded = live_mod.load_live_host(model_dir, host)
+        import torch
+
+        torch.manual_seed(int(args.seed))
+        bound = live_mod.bind_live_host(loaded.model, stamp, targets)
+        logs, built = live_mod.run_live(
+            stamp,
+            declared,
+            loaded,
+            bound,
+            prompts=rows,
+            steps=int(args.steps),
+            seed=int(args.seed),
+        )
+        return _write_run(
+            args,
+            host,
+            targets,
+            stamp,
+            rows,
+            meta,
+            logs,
+            built,
+            dummy=False,
+            live=True,
+            model_dir=str(model_dir),
+            bound=bound,
         )
     steps = min(int(args.steps), DUMMY_MAX_STEPS)
     logs, built = run_dummy(
@@ -162,54 +283,20 @@ def train(args: argparse.Namespace, parser: argparse.ArgumentParser | None = Non
         seed=int(args.seed),
         hidden=DUMMY_HIDDEN,
     )
-    save_dir = Path(args.save_dir)
-    save_dir.mkdir(parents=True, exist_ok=True)
-    log_path = save_dir / f"{args.name}_train.jsonl"
-    with log_path.open("w", encoding="utf-8") as handle:
-        for row in logs:
-            handle.write(json.dumps(row) + "\n")
-    sidecar = {
-        "kind": "music3_particle",
-        "entry_host": args.host,
-        "host": host["name"],
-        "host_kind": host["kind"],
-        "target_replace": targets,
-        "prefix": host["prefix"],
-        "name": args.name,
-        "model_id": BASE_MODEL_ID,
-        "hub_weights": HUB_WEIGHTS_ID,
-        "dummy": True,
-        "allow_hub": bool(args.allow_hub),
-        "live": False,
-        "model_dir": args.model_dir,
-        "prompts_file": meta.path,
-        "plus_label": meta.plus_label,
-        "minus_label": meta.minus_label,
-        "concept": meta.concept,
-        "recommended_range": list(meta.recommended_range),
-        "prompt_rows": len(rows),
-        "rank": ADAPTER_RANK,
-        "alpha": ADAPTER_ALPHA,
-        "architecture_id": stamp.architecture_id,
-        "formulation_id": stamp.formulation_id,
-        "formulation_provisional": bool(stamp.formulation_provisional),
-        "lm_target": stamp.spec["lm_target"],
-        "polarity": stamp.spec["polarity"],
-        "require": "ok",
-        "steps_requested": int(args.steps),
-        "steps_ran": len(logs),
-        "last": logs[-1] if logs else None,
-        "bridge_class": type(built["bridge"]).__name__,
-        "bridge_module": type(built["bridge"]).__module__,
-        "critic_class": type(built["critic"]).__name__,
-        "critic_module": type(built["critic"]).__module__,
-        "regularizer_class": type(built["regularizer"]).__name__,
-        "regularizer_module": type(built["regularizer"]).__module__,
-    }
-    sidecar_path = save_dir / f"{args.name}_last.json"
-    sidecar_path.write_text(json.dumps(sidecar, indent=2) + "\n", encoding="utf-8")
-    print(f"wrote {sidecar_path}")
-    return sidecar_path
+    return _write_run(
+        args,
+        host,
+        targets,
+        stamp,
+        rows,
+        meta,
+        logs,
+        built,
+        dummy=True,
+        live=False,
+        model_dir=args.model_dir,
+        bound=None,
+    )
 
 
 def main(argv: list[str] | None = None, *, host: str = "lm") -> None:

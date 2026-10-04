@@ -1,4 +1,19 @@
-"""Music 3 projection hosts. Names only; the routed branch comes from the stamp."""
+"""Music 3 projection hosts. Names only; the routed branch comes from the stamp.
+
+``target_replace`` values are module class names. ``--live`` binds
+``stamp.bridge()`` to every ``nn.Linear`` inside those classes. On the
+published graphs the linears are:
+
+- ``Qwen3Attention``: ``q_proj``, ``k_proj``, ``v_proj``, ``o_proj``
+- ``MiniMaxMusic3Attention``: ``to_q``, ``to_k``, ``to_v``, ``to_out``
+- ``MiniMaxMusic3TransformerBlock`` / ``MiniMaxMusic3Transformer1DModel``:
+  those attention linears plus feed-forward and root linears such as ``proj_in``
+- ``MiniMaxMusic3ConditionEncoder``: the published ``proj`` is ``Conv1d``,
+  not ``nn.Linear``, so the linear walk binds nothing there
+
+Convolutions under a full transformer target stay frozen. The class walk is
+the attach rule; the names above are what that walk finds on Music 3.
+"""
 
 from __future__ import annotations
 

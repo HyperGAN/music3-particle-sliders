@@ -9,8 +9,16 @@ from pathlib import Path
 
 import pytest
 
+import torch
+from torch import nn
+
+from music3 import live as live_mod
+from music3.attach import attach_stamp_bridge, bind_live_host
 from music3.defaults import BASE_MODEL_ID, HUB_WEIGHTS_ID
 from music3.infer import infer, parse_args as parse_infer
+from music3.live import LoadedHost, run_live
+from music3.prompts import load_prompts
+from music3.surface import declare, load_stamp
 from music3.train import parse_args, train
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -159,8 +167,33 @@ def test_live_does_not_download(tmp_path: Path):
         train(parse_args(["--live", "--model_dir", str(missing), "--steps", "1"]))
     checkout = tmp_path / "MiniMax-Music-3"
     checkout.mkdir()
-    with pytest.raises(RuntimeError, match="does not load"):
+    with pytest.raises(RuntimeError, match="language_model") as caught:
         train(parse_args(["--live", "--model_dir", str(checkout), "--steps", "1"]))
+    message = str(caught.value)
+    assert "does not download" in message
+    assert "does not load the Music 3 weights" not in message
+    language_model = checkout / "language_model"
+    language_model.mkdir()
+    (language_model / "config.json").write_text("{}\n", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="weight"):
+        train(parse_args(["--live", "--model_dir", str(checkout), "--steps", "1"]))
+    (language_model / "model.safetensors").write_bytes(b"not-a-shard")
+    with pytest.raises(RuntimeError, match="tokenizer"):
+        train(parse_args(["--live", "--model_dir", str(checkout), "--steps", "1"]))
+    with pytest.raises(RuntimeError, match="transformer/config.json"):
+        train(
+            parse_args(
+                ["--live", "--model_dir", str(checkout), "--steps", "1"],
+                host="transformer",
+            )
+        )
+    with pytest.raises(RuntimeError, match="condition_encoder"):
+        train(
+            parse_args(
+                ["--live", "--model_dir", str(checkout), "--steps", "1"],
+                host="encoder",
+            )
+        )
 
 
 def test_print_card_lists_the_release():
@@ -198,3 +231,261 @@ def test_dummy_infer_writes_a_listen_card(tmp_path: Path):
 def test_infer_without_dummy_refuses():
     with pytest.raises(RuntimeError, match="--dummy"):
         infer(parse_infer(["--name", "nope"]))
+
+
+def test_attach_binds_stamp_bridge_to_host_linears():
+    """Stand-in modules with Music 3 class names. No checkpoint is written."""
+    stamp = load_stamp()
+    hidden = 4
+    root = MiniMaxMusic3Transformer1DModel(hidden)
+    attention_only = attach_stamp_bridge(root, stamp, ["MiniMaxMusic3Attention"])
+    attention_names = {bridge.name for bridge in attention_only}
+    assert attention_names == {
+        "blocks.0.attn.to_q",
+        "blocks.0.attn.to_k",
+        "blocks.0.attn.to_v",
+        "blocks.0.attn.to_out.0",
+    }
+    full = MiniMaxMusic3Transformer1DModel(hidden)
+    bound = bind_live_host(
+        full,
+        stamp,
+        [
+            "MiniMaxMusic3Attention",
+            "MiniMaxMusic3TransformerBlock",
+            "MiniMaxMusic3Transformer1DModel",
+        ],
+    )
+    names = {bridge.name for bridge in bound}
+    assert names == attention_names | {"blocks.0.ff", "proj_in"}
+    assert all(type(bridge.bridge).__name__ == "RoutedMLP" for bridge in bound)
+    assert all(type(bridge.bridge).__module__ == "particle_sliders.reference" for bridge in bound)
+    shared = bound[0]._particles.param
+    assert all(bridge._particles.param is shared for bridge in bound)
+    assert not any(bridge.name.endswith("conv") for bridge in bound)
+
+    linear = full.blocks[0].attn.to_q
+    bridge = linear._music3_stamp_bridge
+    assert linear.forward.__func__ is bridge.forward.__func__
+    probe = torch.randn(2, 3, hidden)
+    reference = torch.nn.functional.linear(probe, linear.weight, linear.bias)
+    bridge.scale = 0.0
+    assert torch.allclose(linear(probe), reference)
+    bridge.scale = 1.0
+    with torch.no_grad():
+        bridge.up.weight.add_(0.05)
+    shifted = linear(probe)
+    assert not torch.allclose(shifted, reference)
+    shifted.sum().backward()
+    assert bridge.up.weight.grad is not None
+    assert any(param.grad is not None and float(param.grad.abs().sum()) > 0 for param in bridge.bridge.parameters())
+
+    language = _TinyLM(hidden)
+    lm_bound = bind_live_host(language, stamp, ["Qwen3Attention"])
+    lm_names = {bridge.name for bridge in lm_bound}
+    assert lm_names == {
+        "inner.attn.q_proj",
+        "inner.attn.k_proj",
+        "inner.attn.v_proj",
+        "inner.attn.o_proj",
+    }
+    assert not hasattr(language.lm_head, "_music3_stamp_bridge")
+
+    encoder = MiniMaxMusic3ConditionEncoder(hidden)
+    encoder_bound = bind_live_host(encoder, stamp, ["MiniMaxMusic3ConditionEncoder"])
+    assert [bridge.name for bridge in encoder_bound] == ["proj"]
+    assert not hasattr(encoder.norm, "_music3_stamp_bridge")
+
+
+@pytest.mark.parametrize(
+    ("host_name", "linear_path"),
+    [
+        ("lm", ("inner", "attn", "q_proj")),
+        ("transformer", ("blocks", 0, "attn", "to_q")),
+        ("encoder", ("proj",)),
+    ],
+)
+def test_live_entry_binds_stamp_bridge_before_stepping(tmp_path: Path, monkeypatch, host_name: str, linear_path):
+    standin = {
+        "lm": _TinyLM(4),
+        "transformer": MiniMaxMusic3Transformer1DModel(4),
+        "encoder": MiniMaxMusic3ConditionEncoder(4),
+    }[host_name]
+    checkout = tmp_path / "MiniMax-Music-3"
+    checkout.mkdir()
+
+    def load(model_dir, host):
+        assert Path(model_dir) == checkout
+        assert host["name"] == host_name
+        return LoadedHost(
+            model=standin,
+            tokenizer=None,
+            kind=host["kind"],
+            model_dir=Path(model_dir),
+            subfolder="stand-in",
+            host_name=host_name,
+        )
+
+    def stop_after_bind(stamp, declared, loaded, bound, **kwargs):
+        assert bound
+        assert loaded.model is standin
+        assert {type(bridge.bridge).__module__ for bridge in bound} == {"particle_sliders.reference"}
+        assert {type(bridge.bridge).__name__ for bridge in bound} == {"RoutedMLP"}
+        raise RuntimeError("stop-after-bind")
+
+    monkeypatch.setattr(live_mod, "load_live_host", load)
+    monkeypatch.setattr(live_mod, "run_live", stop_after_bind)
+    with pytest.raises(RuntimeError, match="stop-after-bind"):
+        train(
+            parse_args(
+                ["--live", "--model_dir", str(checkout), "--steps", "1", "--save_dir", str(tmp_path / "out")],
+                host=host_name,
+            )
+        )
+    linear = standin
+    for part in linear_path:
+        linear = linear[part] if isinstance(part, int) else getattr(linear, part)
+    assert type(linear._music3_stamp_bridge.bridge).__module__ == "particle_sliders.reference"
+    assert not (tmp_path / "out").exists()
+
+
+def test_live_lm_stamp_step_updates_the_bound_bridge(monkeypatch):
+    """Same attach and stamp step as --live, on a tiny stand-in.
+
+    The stand-in is not MiniMax-Music-3 and this test does not write a slider.
+    """
+    monkeypatch.setattr(
+        live_mod,
+        "assemble_music3_prompt",
+        lambda prompt, lyrics: f"{prompt}\n{lyrics}\n<|audio_start|>",
+    )
+    model = _TinyLM(8)
+    stamp = load_stamp()
+    declared = declare(stamp)
+    bound = bind_live_host(model, stamp, ["Qwen3Attention"])
+    tracked = model.inner.attn.q_proj._music3_stamp_bridge
+    before = tracked.up.weight.detach().clone()
+    rows, _meta = load_prompts(ROOT / "configs/music3/prompts-particle.yaml")
+    loaded = LoadedHost(
+        model=model,
+        tokenizer=_StandInTokenizer(),
+        kind="language_model",
+        model_dir=ROOT,
+        subfolder="language_model",
+        host_name="lm",
+    )
+    logs, built = run_live(stamp, declared, loaded, bound, prompts=rows, steps=1, seed=7)
+    assert logs[0]["step"] == 1
+    assert "g_loss" in logs[0]
+    assert not torch.equal(before, tracked.up.weight.detach())
+    assert type(tracked.bridge).__module__ == "particle_sliders.reference"
+    assert type(built["bridge"]).__module__ == "particle_sliders.reference"
+    assert type(built["critic"]).__module__ == "particle_sliders.reference"
+
+
+def test_transformer_live_step_names_the_missing_pipeline_forward():
+    model = MiniMaxMusic3Transformer1DModel(4)
+    stamp = load_stamp()
+    declared = declare(stamp)
+    bound = bind_live_host(
+        model,
+        stamp,
+        ["MiniMaxMusic3Attention", "MiniMaxMusic3TransformerBlock", "MiniMaxMusic3Transformer1DModel"],
+    )
+    rows, _meta = load_prompts(ROOT / "configs/music3/prompts-particle.yaml")
+    loaded = LoadedHost(
+        model=model,
+        tokenizer=None,
+        kind="transformer",
+        model_dir=ROOT,
+        subfolder="transformer",
+        host_name="transformer",
+    )
+    with pytest.raises(RuntimeError, match="pipeline forward") as caught:
+        run_live(stamp, declared, loaded, bound, prompts=rows, steps=1, seed=1)
+    message = str(caught.value)
+    assert "stamp.bridge()" in message
+    assert "blocks.0.attn.to_q" in message
+    assert type(model.blocks[0].attn.to_q._music3_stamp_bridge.bridge).__module__ == "particle_sliders.reference"
+
+
+class Qwen3Attention(nn.Module):
+    def __init__(self, hidden: int):
+        super().__init__()
+        self.q_proj = nn.Linear(hidden, hidden, bias=False)
+        self.k_proj = nn.Linear(hidden, hidden, bias=False)
+        self.v_proj = nn.Linear(hidden, hidden, bias=False)
+        self.o_proj = nn.Linear(hidden, hidden, bias=False)
+
+
+class _Inner(nn.Module):
+    def __init__(self, hidden: int):
+        super().__init__()
+        self.embed = nn.Embedding(64, hidden)
+        self.attn = Qwen3Attention(hidden)
+
+    def forward(self, input_ids, attention_mask=None):
+        hidden_states = self.embed(input_ids.clamp(0, 63))
+        mixed = hidden_states + hidden_states.mean(dim=1, keepdim=True)
+        return self.attn.o_proj(self.attn.q_proj(mixed))
+
+
+class _TinyLM(nn.Module):
+    def __init__(self, hidden: int):
+        super().__init__()
+        self.inner = _Inner(hidden)
+        self.lm_head = nn.Linear(hidden, 4, bias=False)
+
+    def forward(self, input_ids, attention_mask=None, output_hidden_states=False, use_cache=False):
+        hidden_states = self.inner(input_ids, attention_mask)
+        from types import SimpleNamespace
+
+        return SimpleNamespace(hidden_states=(hidden_states,) if output_hidden_states else None)
+
+
+class MiniMaxMusic3Attention(nn.Module):
+    def __init__(self, hidden: int):
+        super().__init__()
+        self.to_q = nn.Linear(hidden, hidden)
+        self.to_k = nn.Linear(hidden, hidden)
+        self.to_v = nn.Linear(hidden, hidden)
+        self.to_out = nn.ModuleList([nn.Linear(hidden, hidden)])
+        self.conv = nn.Conv1d(hidden, hidden, 1)
+
+
+class MiniMaxMusic3TransformerBlock(nn.Module):
+    def __init__(self, hidden: int):
+        super().__init__()
+        self.attn = MiniMaxMusic3Attention(hidden)
+        self.ff = nn.Linear(hidden, hidden)
+
+
+class MiniMaxMusic3Transformer1DModel(nn.Module):
+    def __init__(self, hidden: int):
+        super().__init__()
+        self.blocks = nn.ModuleList([MiniMaxMusic3TransformerBlock(hidden)])
+        self.proj_in = nn.Linear(hidden, hidden)
+
+
+class MiniMaxMusic3ConditionEncoder(nn.Module):
+    def __init__(self, hidden: int):
+        super().__init__()
+        self.proj = nn.Linear(hidden, hidden)
+        self.norm = nn.LayerNorm(hidden)
+
+
+class _StandInTokenizer:
+    unk_token_id = 0
+
+    def convert_tokens_to_ids(self, token: str) -> int:
+        if token == "<|audio_start|>":
+            return 7
+        return 1
+
+    def __call__(self, text, return_tensors="pt", add_special_tokens=False):
+        digest = 0
+        for char in text:
+            digest = (digest * 131 + ord(char)) % 997
+        first = (digest % 40) + 1
+        ids = torch.tensor([[first, (first * 3) % 40 + 1, 7]])
+        return {"input_ids": ids, "attention_mask": torch.ones_like(ids)}

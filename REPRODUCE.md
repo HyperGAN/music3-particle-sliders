@@ -31,11 +31,23 @@ Adapter release:
 python scripts/train_music3.py --live --model_dir /path/to/MiniMax-Music-3
 ```
 
-That command checks the directory and stops. This skeleton requires the
-stamp, then refuses to load the 8B graph. Wiring each host linear to
-`stamp.bridge()` is a follow-up once a local pipeline is available. Do not
-point the loader at a second copy of the game inside a particle-sliders
-checkout.
+`--live` reads that local checkout and binds `stamp.bridge()` to each
+`nn.Linear` inside the host class. The language-model entry
+(`language_model/` plus `tokenizer/`) trains `Qwen3Attention` linears
+(`q_proj`, `k_proj`, `v_proj`, `o_proj`). The feature-space step is
+`FormulationGame` from the pinned core, on the last `<|audio_start|>`
+token. It does not download the 8B weights. `--dummy` stays the CPU stamp
+on synthetic prompt states and does not load those linears or write a
+bridge checkpoint.
+
+The transformer host (`transformer/`, `MiniMaxMusic3Attention`, plus full
+blocks when `--targets full`) and the condition encoder
+(`condition_encoder/`, `MiniMaxMusic3ConditionEncoder`) use the same attach.
+Stepping them needs the Music 3 pipeline forward, which stays in
+HyperGAN/particle-sliders `conceptmod/textsliders/`. A checkout that loads
+binds the bridges, then raises an error that names that missing forward.
+Do not point the loader at a second copy of the game inside a
+particle-sliders checkout.
 
 `--lm_target v9`, `--loss nmse`, and encoder rank 64 are rejected. Those
 recipes remain in HyperGAN/particle-sliders `conceptmod/textsliders/`.

@@ -1,6 +1,6 @@
 # Music 3 particle sliders
 
-Concept sliders for [MiniMax Music 3](https://huggingface.co/MiniMaxAI/MiniMax-Music-3).
+Concept sliders for [MiniMax Music 3](https://huggingface.co/MiniMaxAI/MiniMax-Music3).
 The shared game is [`winning_formulation()`](FORMULATION.md) from
 [particle-sliders-core](https://github.com/HyperGAN/particle-sliders/tree/a119ca1ecd3d5d6c437065839d22739b04f2f4d8/packages/particle-sliders-core).
 This repo owns the Hub ids, Comfy notes, host modules, prompt cards, and

@@ -8,7 +8,7 @@ CORE_URL = (
     f"{CORE_COMMIT}#subdirectory=packages/particle-sliders-core"
 )
 
-BASE_MODEL_ID = "MiniMaxAI/MiniMax-Music-3"
+BASE_MODEL_ID = "MiniMaxAI/MiniMax-Music3"
 HUB_WEIGHTS_ID = "ntc-ai/minimax-music3-concept-sliders"
 HUB_SPACE_ID = "ntc-ai/minimax-music3-concept-sliders"
 HUB_WEIGHTS_URL = f"https://huggingface.co/{HUB_WEIGHTS_ID}"
@@ -27,7 +27,7 @@ ANIMA_PRODUCT = "https://github.com/HyperGAN/anima-particle-sliders"
 KREA2_PRODUCT = "https://github.com/HyperGAN/krea2-particle-sliders"
 
 # Comfy conversion stays upstream. This repo does not vendor a second converter.
-COMFY_CONVERTER_REPO = "https://github.com/mikkel/conceptmod"
+COMFY_CONVERTER_REPO = "https://github.com/HyperGAN/conceptmod"
 COMFY_CONVERTER_COMMIT = "8f865fea59e02d439a479d80466196044ed00076"
 COMFY_CONVERTER_SCRIPT = "scripts/convert_lora_comfyui.py"
 COMFY_LM_KEY_EXAMPLE = "text_encoders.model.layers.N.self_attn.q_proj.lora_A.weight"

@@ -46,9 +46,9 @@ files whose sidecar says `unit_scale: 1.0`.
 ## Converter
 
 Do not add a second converter here. Convert native LoRANetwork files with
-[`scripts/convert_lora_comfyui.py`](https://github.com/mikkel/conceptmod/blob/main/scripts/convert_lora_comfyui.py)
-on [mikkel/conceptmod](https://github.com/mikkel/conceptmod) at
-[`8f865fe`](https://github.com/mikkel/conceptmod/commit/8f865fea59e02d439a479d80466196044ed00076)
+[`scripts/convert_lora_comfyui.py`](https://github.com/HyperGAN/conceptmod/blob/main/scripts/convert_lora_comfyui.py)
+on [mikkel/conceptmod](https://github.com/HyperGAN/conceptmod) at
+[`8f865fe`](https://github.com/HyperGAN/conceptmod/commit/8f865fea59e02d439a479d80466196044ed00076)
 or later. Music 3 backends (`music3`, `music3_lm`) landed in that commit.
 Detection is from `lora_unet-` / `lora_te-` keys.
 

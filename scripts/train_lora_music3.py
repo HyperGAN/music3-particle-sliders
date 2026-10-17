@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Transformer-host Music 3 slider (MiniMaxMusic3Attention / full blocks).
-
-Historical dust/nmse defaults lived in HyperGAN/particle-sliders
-``conceptmod/textsliders/train_lora_music3.py``. This entry trains
-``winning_formulation()`` on the transformer host instead of copying that loss.
-"""
+"""Route Music3 training to the reviewed shared PG09 worker; native runs require coordinator admission."""
 
 from __future__ import annotations
 

@@ -1,16 +1,26 @@
 {
   "repository": "https://github.com/HyperGAN/particle-sliders",
-  "commit": "a119ca1ecd3d5d6c437065839d22739b04f2f4d8",
-  "subdirectory": "packages/particle-sliders-core",
+  "commit": "3e94b13eb5d6cd1ceee3f018f019a68603f35696",
+  "source_checkout_only": true,
   "package": "particle-sliders-core",
-  "version": "0.3.0",
-  "import": "particle_sliders",
-  "entry": "winning_formulation",
+  "entry": "ConditionalPG09",
+  "particlegan_version": "0.9.0",
   "files": {
-    "__init__.py": "ea770837ecf2ff62f9cf42879ef466827158518552492c8ca6a00c16b824d0db",
-    "formulation.py": "7e82efbef5e67107c717d8249d47542dd55e07ce0d508154b9ddb06848e6ad0a",
-    "reference.py": "d35963f072c4cd4acc92d255af5d3ea32535d2deb3d4a3c18625d85f30c42de3",
-    "recipe.py": "63726226e681e517c49943f6150989a8277031762c6253a338892dac340b5600",
-    "pyproject.toml": "5609172a05336d958a04db7e3f7efa709aad726034d840131619978c26dc6ff6"
+    "src/particle_sliders/__init__.py": "a4d8f05036fd09bd7133eb0bff1e4253a1933cd5b4ad70235fe664627f462dc1",
+    "src/particle_sliders/bispf_game.py": "043b639d17d3d69b0f19bdce1f10f8e93388eab4b07f29aa7f2d966c666f8adc",
+    "src/particle_sliders/bispf_provenance.json": "00b294a9e1a36539c2b6f6e58921b955b973c54c8b75c92fd69b88b31c73333c",
+    "src/particle_sliders/distillation.py": "b277e561517a9cb40d1a399ad07c6350aa22a287232aea816b7f6e434e18a232",
+    "src/particle_sliders/endpoint_game.py": "85ea55b67a4f9112e8d9dd1df1096d3488ca8f2c69c666174370b8f3a5c77655",
+    "src/particle_sliders/formulation.py": "a61b06e93efb24e92a72d826f696ede8694e97a3c27c5e6262a2912caac28e12",
+    "src/particle_sliders/formulation_game.py": "f7e78be912e309e01f305ca4ed09a5e25fe67fa720e736694fe343be89fc9f74",
+    "src/particle_sliders/grad_regularizers.py": "b1d27df47870814b8a3b05839c833792489e2fe5aff3b2875ab03c74f983a33a",
+    "src/particle_sliders/locked_provenance.json": "c38e864b789823476036800eea435586ba6d5208bba4008cbd54fdb8cc88826d",
+    "src/particle_sliders/pg09.py": "426abc25323aea96be91e92f1f4101063d5b3c4062f042e869c729027b4f9256",
+    "src/particle_sliders/pg09_continuous_profile.json": "7064de0a995cf0df598515bb5b7574bb69ef21b0d252b7590a78c3f7a9374499",
+    "src/particle_sliders/pg09_release_sources.json": "d7b9d5944207fe6421111d85d19311964aca22bfafa18563938c985ec0d03b5b",
+    "src/particle_sliders/provenance.json": "efd60e615dc247b531dfb01a0be5728edcd7e442a9b6b888b848e716273ab45a",
+    "src/particle_sliders/recipe.py": "63726226e681e517c49943f6150989a8277031762c6253a338892dac340b5600",
+    "src/particle_sliders/reference.py": "2c5809edd3818fab9efdd0c5234ea6b5027de5fc0130155e537950471018a371",
+    "src/particle_sliders/teachers.py": "9a35fcff05a15d00f6aa67b5cb9e53cf55526d7e06631ef8cfeb0169519818d2"
   }
 }

@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-"""Music 3 routed-particle trainer.
-
-Replaces ``conceptmod/textsliders/train_lora_music3_particle.py``. The LM host
-and prompt card stay here. RoutedMLP, the gmix critic, and the particle
-regularizer stay in particle-sliders-core and are reached through
-``winning_formulation()``.
-"""
+"""Route Music3 training to the reviewed shared PG09 worker; native runs require coordinator admission."""
 
 from __future__ import annotations
 

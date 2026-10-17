@@ -1,9 +1,9 @@
-# Transformer-host recipe card. Rank/alpha/loss here are historical dust notes.
-# The train entry ignores rank, alpha, and mse/nmse and calls winning_formulation().
-# prompts-music3.yaml is the one-row energy card. Training needs prompts-particle.yaml.
+# Historical transformer recipe card; the PG 0.9 product does not execute it.
+# Transformer training is refused until a native shared-game binding is qualified.
+# These archived loss/scheduler values are not the LM PG 0.9 objective.
 prompts_file: "configs/music3/prompts-music3.yaml"
 pretrained_model:
-  name_or_path: "MiniMaxAI/MiniMax-Music-3"
+  name_or_path: "MiniMaxAI/MiniMax-Music3"
   v2: false
   v_pred: false
 network:

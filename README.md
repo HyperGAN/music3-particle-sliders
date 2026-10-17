@@ -1,90 +1,113 @@
 # Music 3 particle sliders
 
-Concept sliders for [MiniMax Music 3](https://huggingface.co/MiniMaxAI/MiniMax-Music3).
-The shared game is [`winning_formulation()`](FORMULATION.md) from
-[particle-sliders-core](https://github.com/HyperGAN/particle-sliders/tree/a119ca1ecd3d5d6c437065839d22739b04f2f4d8/packages/particle-sliders-core).
-This repo owns the Hub ids, Comfy notes, host modules, prompt cards, and
-train/infer entrypoints.
+Music 3 product integration for `MiniMaxAI/MiniMax-Music3`. This repository
+owns the CLI, product metadata and prompt cards. Training and checkpoint
+handling run through the shared `particle_sliders.ConditionalPG09` game with
+ParticleGAN **0.9.0**; this product contains no alternate GAN loop.
+
+The executable route currently qualifies the **LM/particle host on CPU**,
+using a random native Qwen3 model with hidden width 32. It trains the actual
+hooked routed adapter and particle bank. Transformer and condition-encoder
+training are refused until their native bindings are qualified. Native
+pretrained training, acoustic rendering and listening review remain pending.
+
+## Local integration dependencies
+
+Use the separately qualified PG 0.9 runtime and these exact source checkouts:
+
+| Source | Required commit | Prepared local checkout |
+|---|---|---|
+| Shared audio adapter/worker | `9262a930cd351459e93ac33cc542fa379c12fe52` | `/mnt/nvme/sliders/audio-adapters-pg09-20261017` |
+| Shared particle-sliders core | `3e94b13eb5d6cd1ceee3f018f019a68603f35696` | `/mnt/nvme/sliders/audio-core-pin-86fc4e0-20261017` |
+
+```bash
+export PARTICLE_SLIDERS_SHARED_CHECKOUT=/mnt/nvme/sliders/audio-adapters-pg09-20261017
+export PARTICLE_SLIDERS_CORE_CHECKOUT=/mnt/nvme/sliders/audio-core-pin-86fc4e0-20261017
+PYTHON=/mnt/nvme/sliders/qualification/envs/pg090/bin/python
+```
+
+The CLIs also accept `--shared_checkout` and `--core_checkout`. The source
+pins are an integration dependency, recorded in `shared.lock.json` and
+`core.lock.json`; they are
+not an installable public-core release claim. `requirements.txt` lists
+PyYAML, pytest and `particlegan==0.9.0`. Use the prequalified runtime rather
+than replacing a native environment or installing an older core git pin.
+No command downloads model weights.
+
+## CPU train, resume and probe
+
+Each output directory for training or probes must be new. `--steps` is the absolute
+completed-step target, default 3; the CPU recipe has an immutable total
+budget of 4 updates. A full shared checkpoint preserves the model, critic,
+optimizers, prior, controller and RNG state for continuation.
+
+```bash
+CUDA_VISIBLE_DEVICES='' "$PYTHON" scripts/train_music3.py \
+  --dummy --steps 1 --save_dir /tmp/music3-first
+CUDA_VISIBLE_DEVICES='' "$PYTHON" scripts/train_lm_slider_music3.py \
+  --dummy --steps 3 --resume /tmp/music3-first/checkpoint.pt \
+  --save_dir /tmp/music3-resumed
+CUDA_VISIBLE_DEVICES='' "$PYTHON" scripts/infer_music3.py \
+  --dummy --weights /tmp/music3-resumed/adapter-export.pt \
+  --scales 0,0.5,1 --out_dir /tmp/music3-probes
+```
+
+Training delegates to the bounded shared CPU worker and writes
+`checkpoint.pt`, `adapter-export.pt`, `qualification.pt` and `progress.json`,
+with a product source receipt in `product-integration.json`.
+Inference reloads the shared adapter export and writes `hidden-probes.pt`
+and `probe-card.json`. These are hidden-state responses, with neutral tokens at every
+slider scale and the frozen positive-caption state as the teacher. They
+are not generated audio. Negative, nonfinite and greater-than-one scales
+are refused; scale 0 is the exact frozen neutral response.
+
+| Entry point | Current behavior |
+|---|---|
+| `train_music3.py`, `train_lm_slider_music3.py`, `train_lora_music3_particle.py` | Shared LM/particle CPU route, or native execution plan |
+| `train_lora_music3.py` | Transformer host refused |
+| `train_encoder_music3.py` | Encoder host refused |
+| `infer_music3.py` | Shared-export CPU hidden probes; historical release card |
+
+`--live` prepares a plan for the root-owned shared native worker. It does
+not initialize CUDA or launch that worker. The coordinator supplies the
+separate GPU lease, guardian, admission and memory bounds. See
+[REPRODUCE.md](REPRODUCE.md) for the plan inputs and remaining gates, and
+[FORMULATION.md](FORMULATION.md) for the actual objective.
+
+## Historical published LoRA release
 
 **[Weights](https://huggingface.co/ntc-ai/minimax-music3-concept-sliders)** ·
 **[Space](https://huggingface.co/spaces/ntc-ai/minimax-music3-concept-sliders)** ·
-**[YuE2 weights](https://huggingface.co/ntc-ai/yue2-concept-sliders)** (sibling, not this product)
+**[YuE2 weights](https://huggingface.co/ntc-ai/yue2-concept-sliders)** (sibling)
 
-The September 16, 2026 release (`uni16-fresh-selected-v2`, policy
-`quality-later-v2`) has 16 voice and genre controls. Each listen pair keeps
-the neutral caption, lyrics, and seed **1709** fixed and changes strength
-from 0 to 1. Native files are under `weights/`, ComfyUI files under
-`comfyui/`, and Off/On clips under `samples/`. The reward adapter under
-`reward/` failed preservation checks and is not the product default.
+The September 16, 2026 release `uni16-fresh-selected-v2`, selected by
+`quality-later-v2`, has 16 voice and genre controls. Its native LoRA files,
+ComfyUI files and recordings are historical artifacts; the new PG 0.9
+worker does not train, load or qualify those files. Published listen pairs
+keep neutral caption, lyrics and seed 1709 fixed, comparing strengths 0
+and 1. The reward adapter under `reward/` failed preservation checks and
+is not the product default.
 
-| Control | Step | Native | ComfyUI |
-|---|---:|---|---|
-| Female | 1000 | `weights/uni16-fresh-selected-v2/female/` | `comfyui/uni16-fresh-selected-v2/female_step1000_comfyui.safetensors` |
-| Male | 3400 | `weights/uni16-fresh-selected-v2/male/` | `comfyui/uni16-fresh-selected-v2/male_step3400_comfyui.safetensors` |
-| Lo-fi | 3000 | `weights/uni16-fresh-selected-v2/lofi/` | `comfyui/uni16-fresh-selected-v2/lofi_step3000_comfyui.safetensors` |
-| Pop | 2000 | `weights/uni16-fresh-selected-v2/pop/` | `comfyui/uni16-fresh-selected-v2/pop_step2000_comfyui.safetensors` |
-| Hip-Hop | 3000 | `weights/uni16-fresh-selected-v2/hiphop/` | `comfyui/uni16-fresh-selected-v2/hiphop_step3000_comfyui.safetensors` |
-| R&B | 3400 | `weights/uni16-fresh-selected-v2/rnb/` | `comfyui/uni16-fresh-selected-v2/rnb_step3400_comfyui.safetensors` |
-| Indie Rock | 1000 | `weights/uni16-fresh-selected-v2/indie-rock/` | `comfyui/uni16-fresh-selected-v2/indie-rock_step1000_comfyui.safetensors` |
-| Pop Punk | 3400 | `weights/uni16-fresh-selected-v2/pop-punk/` | `comfyui/uni16-fresh-selected-v2/pop-punk_step3400_comfyui.safetensors` |
-| Metal | 2000 | `weights/uni16-fresh-selected-v2/metal/` | `comfyui/uni16-fresh-selected-v2/metal_step2000_comfyui.safetensors` |
-| Country | 1000 | `weights/uni16-fresh-selected-v2/country/` | `comfyui/uni16-fresh-selected-v2/country_step1000_comfyui.safetensors` |
-| Acoustic Folk | 2000 | `weights/uni16-fresh-selected-v2/acoustic-folk/` | `comfyui/uni16-fresh-selected-v2/acoustic-folk_step2000_comfyui.safetensors` |
-| House | 1000 | `weights/uni16-fresh-selected-v2/house/` | `comfyui/uni16-fresh-selected-v2/house_step1000_comfyui.safetensors` |
-| Disco Funk | 2000 | `weights/uni16-fresh-selected-v2/disco-funk/` | `comfyui/uni16-fresh-selected-v2/disco-funk_step2000_comfyui.safetensors` |
-| K-pop | 2000 | `weights/uni16-fresh-selected-v2/kpop/` | `comfyui/uni16-fresh-selected-v2/kpop_step2000_comfyui.safetensors` |
-| Reggaeton | 1000 | `weights/uni16-fresh-selected-v2/reggaeton/` | `comfyui/uni16-fresh-selected-v2/reggaeton_step1000_comfyui.safetensors` |
-| Afrobeats | 1000 | `weights/uni16-fresh-selected-v2/afrobeats/` | `comfyui/uni16-fresh-selected-v2/afrobeats_step1000_comfyui.safetensors` |
+| Control | Selected step |
+|---|---:|
+| Female | 1000 |
+| Male | 3400 |
+| Lo-fi | 3000 |
+| Pop | 2000 |
+| Hip-Hop | 3000 |
+| R&B | 3400 |
+| Indie Rock | 1000 |
+| Pop Punk | 3400 |
+| Metal | 2000 |
+| Country | 1000 |
+| Acoustic Folk | 2000 |
+| House | 1000 |
+| Disco Funk | 2000 |
+| K-pop | 2000 |
+| Reggaeton | 1000 |
+| Afrobeats | 1000 |
 
-Full paths are in `configs/music3/sample-cards.json`. Loading steps are in
-[COMFYUI.md](COMFYUI.md).
-
-## Install
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-The requirements pin is the only copy of the game:
-
-```text
-particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@a119ca1ecd3d5d6c437065839d22739b04f2f4d8#subdirectory=packages/particle-sliders-core
-```
-
-## Train and infer
-
-```bash
-python scripts/train_music3.py --dummy
-python scripts/train_lm_slider_music3.py --dummy
-python scripts/train_lora_music3.py --dummy --targets full
-python scripts/train_lora_music3_particle.py --dummy
-python scripts/train_encoder_music3.py --dummy
-python scripts/infer_music3.py --dummy
-python scripts/train_music3.py --print_card
-```
-
-`--dummy` runs the stamp on CPU (four steps, synthetic prompt states, no Hub
-download). Four steps is enough for the stamp's lazy gradient cap to fire once. Hosts:
-
-| Script | Host | Modules |
-|---|---|---|
-| `train_lm_slider_music3.py`, `train_lora_music3_particle.py`, `train_music3.py` | language model | `Qwen3Attention` (`lora_te`) |
-| `train_lora_music3.py` | flow transformer | `full` (222) or `--targets attn` (144) |
-| `train_encoder_music3.py` | condition encoder | `MiniMaxMusic3ConditionEncoder` |
-
-Prompt cards: `configs/music3/prompts-particle.yaml` (train) and
-`configs/music3/prompts-music3.yaml` (historical one-row energy listen).
-
-## What stayed behind
-
-Research trainers in HyperGAN/particle-sliders are untouched:
-
-- `conceptmod/textsliders/train_lora_music3.py`
-- `conceptmod/textsliders/train_lora_music3_particle.py`
-- `conceptmod/textsliders/train_lm_slider_music3.py`
-- `conceptmod/textsliders/train_encoder_music3.py`
-- `conceptmod/textsliders/infer_music3.py`
-- `conceptmod/textsliders/music3_particle_bridge.py`
-
-Formulation toys stay in HyperGAN/conceptmod. A one-line pointer from the
-particle-sliders README to this repo is a follow-up; see [REPRODUCE.md](REPRODUCE.md).
+Exact paths remain in `configs/music3/sample-cards.json` and the release
+card. [COMFYUI.md](COMFYUI.md) describes their historical loading contract.
+The transformer and encoder YAML cards and the signed energy demo are
+archived recipe information, not executable PG 0.9 training or scale gates.

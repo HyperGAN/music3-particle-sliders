@@ -1,4 +1,10 @@
-# ComfyUI: MiniMax Music 3 sliders
+# ComfyUI: historical MiniMax Music 3 LoRAs
+
+This guide applies to the historical conventional LoRA exports for
+`MiniMaxAI/MiniMax-Music3`. The PG 0.9 product route writes a shared
+`adapter-export.pt` containing a routed particle adapter. That export is
+not a stock ComfyUI LoRA and must not be passed to the converter below.
+No acoustic renderer or ComfyUI export for the new route is qualified.
 
 Published adapters are on
 [ntc-ai/minimax-music3-concept-sliders](https://huggingface.co/ntc-ai/minimax-music3-concept-sliders).
@@ -6,8 +12,8 @@ The September 16, 2026 release is `uni16-fresh-selected-v2`: 16 native
 exports and 16 ComfyUI exports converted from those checkpoints. This
 repository does not vendor the base model or the adapter weights.
 
-There is no custom node in this repo. Load the converted file with stock
-**Load LoRA**. A product-specific Comfy node is not part of this skeleton.
+There is no custom node in this repo. Load a historical converted file
+with stock **Load LoRA**.
 
 ## Language-model sliders (the published 16)
 
@@ -39,9 +45,11 @@ diffusion_model.diffusion_transformer.transformer.layers.N.self_attn.to_qkv.alph
 diffusion_model.diffusion_transformer.transformer.layers.N.self_attn.to_out.lora_A.weight
 ```
 
-Put the file in `ComfyUI/models/loras/` and load it on the MiniMax Music 3
-MODEL. Strength is the slider scale: `0` is off, `±1` is the trained unit on
-files whose sidecar says `unit_scale: 1.0`.
+Put a historical transformer file in `ComfyUI/models/loras/` and load it
+on the MiniMax Music 3 MODEL. Follow that file's sidecar for its trained
+signs and unit scale. A `unit_scale: 1.0` field alone does not establish
+that both signs were trained. The new PG 0.9 LM route is unipolar, with
+scale 0 off and +1 trained; it currently supports CPU hidden probes only.
 
 ## Converter
 
@@ -56,5 +64,7 @@ Detection is from `lora_unet-` / `lora_te-` keys.
 python /path/to/conceptmod/scripts/convert_lora_comfyui.py path/to/adapter.safetensors
 ```
 
-The published recordings were rendered with the native adapters. ComfyUI
-precision and sampler settings can change the audio.
+The historical published recordings were rendered with native adapters.
+ComfyUI precision and sampler settings can change the audio. These
+recordings do not qualify the new PG 0.9 adapter or its pending native
+sampling/decoder path.

@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-"""Train a Music 3 slider from this repo.
-
-    python scripts/train_music3.py --help
-    python scripts/train_music3.py --dummy
-
-The game is particle_sliders.winning_formulation. This script does not
-checkout HyperGAN/particle-sliders and does not copy the gmix modules.
-"""
+"""Route Music3 training to the reviewed shared PG09 worker; native runs require coordinator admission."""
 
 from __future__ import annotations
 

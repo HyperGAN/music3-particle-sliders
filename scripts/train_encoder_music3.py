@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Condition-encoder host Music 3 slider (MiniMaxMusic3ConditionEncoder).
-
-The historical MSE/curriculum encoder loop remains in HyperGAN/particle-sliders
-``conceptmod/textsliders/train_encoder_music3.py``. Rank and alpha are the
-stamp's adapter size. This entry does not copy that loop.
-"""
+"""Route Music3 training to the reviewed shared PG09 worker; native runs require coordinator admission."""
 
 from __future__ import annotations
 

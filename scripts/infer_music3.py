@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Write a Music 3 listen card from this repo.
-
-    python scripts/infer_music3.py --help
-    python scripts/infer_music3.py --dummy
-"""
+"""Execute source-verified shared Music3 PG09 hidden probes."""
 
 from __future__ import annotations
 

@@ -1,55 +1,71 @@
-# Formulation
+# Shared PG 0.9 integration
 
-`music3-particle-sliders` owns the Music 3 integration: the base id
-`MiniMaxAI/MiniMax-Music-3`, the adapter release
-`ntc-ai/minimax-music3-concept-sliders`, Comfy key notes, which host a
-slider attaches to (`Qwen3Attention`, `MiniMaxMusic3Attention`, or
-`MiniMaxMusic3ConditionEncoder`), the prompt cards under `configs/music3/`,
-and the train/infer entrypoints in `music3/` and `scripts/`.
+`music3-particle-sliders` owns Music 3 metadata, prompts and CLI routing. The
+executable training route delegates to the shared audio worker at commit
+`9262a930cd351459e93ac33cc542fa379c12fe52`, which calls
+`particle_sliders.ConditionalPG09` from shared core commit
+`3e94b13eb5d6cd1ceee3f018f019a68603f35696`. ParticleGAN is exactly 0.9.0.
+`shared.lock.json` and `core.lock.json` bind these local integration sources. This repository
+does not implement a loss, optimizer, critic update, particle update or
+checkpoint loop.
 
-The game is not implemented in this repo. Train calls:
+## Response and conditioning contract
 
-```python
-from particle_sliders import winning_formulation
+The qualified CPU route constructs an actual random Qwen3 causal model
+with hidden width 32, freezes its host weights and attaches the shared
+Music 3 routed adapter. The existing 128×4 particle bank participates in
+the hooked model forward and is owned once by the public optimizer.
 
-stamp = winning_formulation()
-stamp.require(declared)
-```
+Each row binds distinct neutral and positive token bytes and the same
+continuation history, when present. The teacher is the frozen positive
+final-token hidden state; the student uses the **neutral** tokens with
+adapter scale +1. The response remains the native final hidden state,
+without projection, truncation, field reshaping or a logits substitute.
+The conditional critic receives the frozen neutral response, token
+lengths, history length and unipolar adapter sign. Exact token, target and
+condition bytes are checkpoint-bound by the shared game.
 
-`declared` starts as `stamp.as_dict()`. Music 3 may override model-surface
-keys only (`g_lr`, `d_lr`, `particle_lr`, `adv_batch`, and the other names on
-`stamp.model_surface_keys`). The published particle bridge used `adv_batch`
-64; that override is the default here. Architecture, caps, particle count,
-teacher, and auxiliary weights stay on the stamp.
+The generator objective is the public PG 0.9 adversarial loss plus its
+public prior regularizer. The critic objective is its public adversarial
+loss plus public penalty. No MSE, NMSE, caption loss or auxiliary teacher
+objective is added by this product. Recipe construction, learning-rate
+schedule, sampled rows, constraints and RNG belong to the shared game.
+The bounded CPU route uses the `bispf_optimized` recipe with total budget 4;
+`--steps` selects the absolute completion target within that fixed budget.
 
-Today that stamp is gmix architecture plus the provisional overlay
-`particle-gmix-1600-v2` (`formulation_provisional` is true until
-[ParticleGAN #38](https://github.com/255BITS/ParticleGAN/pull/38) crowns a
-full live leaderboard winner: 9 toys and all 29 bounds). This repo picks up
-a new overlay by bumping the pin in `requirements.txt` and `core.lock.json`.
-It does not fork the knobs.
+## Adapter scale, exports and continuation
 
-The pin is:
+This route is unipolar: scale 0 bypasses the adapter exactly, and +1 is the
+trained treatment. CPU probes accept finite scales in [0,1], including
+0.5; an intermediate response does not establish acoustic quality. The
+historical energy demo's negative scales are not a PG 0.9 probe contract.
 
-```text
-particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@a119ca1ecd3d5d6c437065839d22739b04f2f4d8#subdirectory=packages/particle-sliders-core
-```
+`checkpoint.pt` contains the complete shared training state. Resume must
+use that full checkpoint and preserve its recipe horizon, source/runtime
+identity, conditioning, targets and RNG. `adapter-export.pt` is the shared
+inference export; it is loaded through the public export loader and is
+not a conventional native or ComfyUI LoRA file. `qualification.pt` and
+`progress.json` retain the shared worker's probes and execution evidence.
+Product inference loads the export and writes hidden responses, not tokens,
+latents or waveform audio.
 
-`stamp.bridge()`, `stamp.critic()`, `stamp.regularizer()`, `stamp.losses()`,
-and `stamp.noise_std_at()` are the routed adapter, global-mix critic,
-ParticleGAN gradient cap, paired losses plus particle VIC, and noise curve.
-This repo does not copy `RoutedMLP`, the gmix critic, `GradRegularizer`,
-`locked_shared`, or ParticleGAN excerpts.
+## Native-runtime qualification
 
-Formulation toys and the `--lm_target` menu (`v9`, `faithful_sub_e`, lyric
-holds, and the rest) stay in
-[HyperGAN/conceptmod](https://github.com/HyperGAN/conceptmod) and in the
-research trainers under
-[HyperGAN/particle-sliders](https://github.com/HyperGAN/particle-sliders)
-`conceptmod/textsliders/`. Those files are not deleted by this product. The
-historical transformer dust recipe (`--loss nmse`, `--targets full`, lr
-`2e-3`) and the encoder MSE loop are the same kind of research surface: the
-host names moved here, the old losses did not.
+The pretrained Music 3 LM has hidden width 4096. Unchanged released PG 0.9
+rejects flat continuous response widths of 170 or greater. Native planning
+therefore requires the exact separately reviewed
+`alz-continuous-v1`/`continuous` source and domain profile; the plan does
+not authorize or install that profile. It does not replace the native
+response with a smaller vector to avoid the domain guard.
 
-`locked_shared` is an endpoint recipe inside the core. It is not the Music 3
-product game. Do not call it from this repo.
+Only LM/particle routing has a completed product binding. Transformer and
+condition-encoder training fail closed rather than running the former
+MSE/NMSE recipes or a synthetic proxy. Native pretrained smoke, exact
+fresh-process resume/export replay on that runtime, acoustic rendering and
+listening review remain separate gates owned by the coordinator.
+
+The provisional `winning_formulation()` stamp may still supply the shared
+routed adapter architecture and historical release metadata. It is not
+proof that a CLI executed PG 0.9, and the old product-local synthetic game
+is no longer a training route. Research trainers remain in the shared
+checkout for their owners; this integration does not edit or dispatch them.

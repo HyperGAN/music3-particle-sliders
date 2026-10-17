@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-CORE_COMMIT = "a119ca1ecd3d5d6c437065839d22739b04f2f4d8"
-CORE_URL = (
-    "particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@"
-    f"{CORE_COMMIT}#subdirectory=packages/particle-sliders-core"
-)
+CORE_COMMIT = "3e94b13eb5d6cd1ceee3f018f019a68603f35696"
+# This reviewed core is an integration checkout, not a published dependency.
+SHARED_COMMIT = "9262a930cd351459e93ac33cc542fa379c12fe52"
 
 BASE_MODEL_ID = "MiniMaxAI/MiniMax-Music3"
 HUB_WEIGHTS_ID = "ntc-ai/minimax-music3-concept-sliders"

@@ -1,8 +1,8 @@
-# Condition-encoder card. The historical encoder loop used its own MSE loss.
-# This product's encoder entry still trains winning_formulation().
+# Historical condition-encoder recipe card; the PG 0.9 product does not execute it.
+# Encoder training is refused until a native shared-game binding is qualified.
 prompts_file: "configs/music3/prompts-music3.yaml"
 pretrained_model:
-  name_or_path: "MiniMaxAI/MiniMax-Music-3"
+  name_or_path: "MiniMaxAI/MiniMax-Music3"
 network:
   type: "lierla"
   rank: 8

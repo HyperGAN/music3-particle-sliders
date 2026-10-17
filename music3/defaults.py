@@ -2,10 +2,6 @@
 
 from __future__ import annotations
 
-CORE_COMMIT = "3e94b13eb5d6cd1ceee3f018f019a68603f35696"
-# This reviewed core is an integration checkout, not a published dependency.
-SHARED_COMMIT = "9262a930cd351459e93ac33cc542fa379c12fe52"
-
 BASE_MODEL_ID = "MiniMaxAI/MiniMax-Music3"
 HUB_WEIGHTS_ID = "ntc-ai/minimax-music3-concept-sliders"
 HUB_SPACE_ID = "ntc-ai/minimax-music3-concept-sliders"

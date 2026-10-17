@@ -1,0 +1,197 @@
+{
+  "schema": "music3-packaged-pg091-acceptance-v1",
+  "recorded_at": "2026-10-17T20:02:05.395670+00:00",
+  "status": "LOCAL_CPU_ACCEPTED_PUBLIC_INSTALL_AND_NATIVE_GATES_PENDING",
+  "product_repository": "https://github.com/HyperGAN/music3-particle-sliders.git",
+  "product_local_branch": "audit/music3-package-pg091-20261017",
+  "product_parent_head": "1cd5e2b9e43ee01659690b8684c712ff28cf5651",
+  "integration_target": {
+    "draft_pr": "https://github.com/HyperGAN/music3-particle-sliders/pull/5",
+    "source_ref": "HEAD",
+    "destination_ref": "refs/heads/audit/music3-shared-pg09-20261017",
+    "base_ref": "refs/heads/main",
+    "main_expected": "b40d2aa6fed745eda3043d3d3b11e362ec2f8dfe",
+    "merge_authority": "parent after Ada exact-head review"
+  },
+  "dependency": {
+    "commit": "9be81c1ccfc8ad87eac3efa93fd5a16d0d508bb5",
+    "cdf_base": "cdfb80a76b882b4b73861b12f555263bd64ffeb7",
+    "wheel_sha256": "60629b05298559340807084d278bb256781bf0421c6d928c23e57199e2b37dc8",
+    "version": "0.6.0",
+    "particlegan_version": "0.9.1",
+    "official_pg_wheel_sha256": "b01b7957169cb3de45887e22b4d525fd54071577e1de58089707cf05fe6992ec",
+    "source_lock_sha256": "822e24271142937b22351864074df756089fe3f85e4f279a1cb763a6f7c1b797",
+    "lineage": "music3-packaged-pg091-v1",
+    "installed_source_receipt": "evidence/pg091/installed-api-receipt.json",
+    "installation": "isolated exact local wheels --no-index --no-deps; native Music3 system packages",
+    "public_vcs_install_tested": false
+  },
+  "final_test_receipts": [
+    {
+      "path": "evidence/pg091/product-installed-tests.xml",
+      "sha256": "c6c77a79bba3b87b9d643d79ebca69763af26dd5b1a982110e798ef2d2165933",
+      "tests": 80,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_seconds": 73.946
+    },
+    {
+      "path": "evidence/pg091/final-shared-narrow-tests.xml",
+      "sha256": "c15daad7b7922eac4bae1863ef236f5020d69e23a5e38f1df9b17c5c7b36d3a2",
+      "tests": 49,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_seconds": 3.798
+    },
+    {
+      "path": "evidence/pg091/final-loader-regressions.xml",
+      "sha256": "af37dcf691cfdc3fc51c2f1582a7779983b467b327d996306a58d7b2f78deef8",
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_seconds": 6.107
+    }
+  ],
+  "extracted_test_sources": {
+    "packages/particle-sliders-core/tests/test_conditional_pg09.py": {
+      "commit": "cdfb80a76b882b4b73861b12f555263bd64ffeb7",
+      "sha256": "65addc40a7ea793c33b000693ca6819ca613e7b525dd47e9daca29d82dc544f0"
+    },
+    "packages/particle-sliders-core/tests/test_pg09_state_validation.py": {
+      "commit": "cdfb80a76b882b4b73861b12f555263bd64ffeb7",
+      "sha256": "a99f9d69707f728d96be3c4ce9f7171beac5543eed27e99e664e09454618ad1b"
+    },
+    "packages/particle-sliders-core/tests/test_music3_native.py": {
+      "commit": "cdfb80a76b882b4b73861b12f555263bd64ffeb7",
+      "sha256": "34093715ded32cfc8494533e3426261dae44fb2de59fe38263e32e8b98672ecd"
+    }
+  },
+  "source_free_test_guard_sha256": "347689abbc186a60df836f53d3dc8d722fb01d5aa9ba86c840f781404374786b",
+  "narrow_command_sha256": "376d5ed458abcf67abedd9d41edf62a3042ff2802ae10919f0cdbcced88fc369",
+  "commands": {
+    "product": "PYTHONDONTWRITEBYTECODE=1 CUDA_VISIBLE_DEVICES='' OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PARTICLE_SLIDERS_CONTINUOUS_PROFILE=/ml2/codex-storage/future-workspaces/2026-10-17/task-14/pg091-release/continuous ../venv-pg091/bin/python -m pytest -q -p no:cacheprovider --junitxml=evidence/pg091/product-installed-tests.xml",
+    "loader": "PYTHONDONTWRITEBYTECODE=1 CUDA_VISIBLE_DEVICES='' ../venv-pg091/bin/python -m pytest -q tests/test_surface.py --junitxml=evidence/pg091/final-loader-regressions.xml",
+    "installed_api": "PYTHONDONTWRITEBYTECODE=1 CUDA_VISIBLE_DEVICES='' OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 ../venv-pg091/bin/python -I evidence/pg091/verify_installed.py",
+    "native_plan": "PYTHONDONTWRITEBYTECODE=1 CUDA_VISIBLE_DEVICES='' OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 ../venv-pg091/bin/python -I evidence/pg091/verify_native_plan.py",
+    "narrow": "Exact CDF test files extracted into /tmp/music3-pg091-cdf-tests; python -I -m pytest -c /dev/null; installed package enforced by conftest; exact selector recorded in narrow-command.txt"
+  },
+  "tested_source_files": {
+    "core.lock.json": "822e24271142937b22351864074df756089fe3f85e4f279a1cb763a6f7c1b797",
+    "music3/__init__.py": "924b1f0301bb183037cded7917b473688989391d1d681803e3954c64951882ee",
+    "music3/cards.py": "d43f4816ddac5812e3848b98a3aa516dc284871556f474e5a4d59d84172f15fe",
+    "music3/defaults.py": "b6aac2dceba2f1bfe36937bc52d9647d7880d8bdfe78df54001d4d6528d1bd0c",
+    "music3/hosts.py": "eebd0bdc01fb24208fd6ee8e444619c3c3b1210ab408fda34ffa2849934be8e9",
+    "music3/infer.py": "7d761d28c0e6916df4734f289e36916f7dc15527b20a4845b04d7832c397a0ed",
+    "music3/loop.py": "42d3a6214b259dd710ab73b8f6bd404e47d13f0c356437040f869a540eca7b6e",
+    "music3/prompts.py": "df497de10bb41c0db74010d494dd62cea00a86a77a7b194f0d8cbf7f0212668e",
+    "music3/shared.py": "c9f7466a88e73d6ea6570620a8ce2be3236444b609ae90d6c969530decbecabe",
+    "music3/surface.py": "ce95a87584acf2cd0c2e7ff6a86926323bf8253e5cfc3ec7c1f029c7e1e46768",
+    "music3/train.py": "8ed79b9c3263fb2f23414afd4a18abe22849fac6d47169f39478a9f28b601b14",
+    "requirements.txt": "ccde5b9fcb5355563b83b2b7cbf9ccfd544b18042d98523e90d75c88082f04e0",
+    "scripts/infer_music3.py": "3acce395bdf4a1dc32ce65723ce2aa3259826214308879bc194eff18a539812c",
+    "scripts/train_encoder_music3.py": "43cd87221da6a9a98ab6ae8ca61b4eb47677ca57e0e0a45080c290d615343c48",
+    "scripts/train_lm_slider_music3.py": "34170f28c96cd5bd3a2702d3856ad209ed9e1ce5e3857fedfbbd7f98e94ff05b",
+    "scripts/train_lora_music3.py": "d1990db26bef6a3584d4456c1160ad1b84b5bdb9e68e4718b8951047fd605aec",
+    "scripts/train_lora_music3_particle.py": "29cce02ba938617a82d96e238fe0da468006b41727dbca031cb28e1362fc9c8b",
+    "scripts/train_music3.py": "da95d4170d531940ca8e47272af739e8cf8d8e625b57668a9607a6bf7486ab5a",
+    "tests/test_configs.py": "372dbbcdfd3ad38ffaf022ee355e6222e22e04aeaad3e00e3ec2413307e16cb5",
+    "tests/test_public_native.py": "c7fac2839df26eb3edf76b352d9ac3aa904776e8d12a8b750bd273bd11ea4f5c",
+    "tests/test_surface.py": "bc6225890b56ed18731b57405cd0fd7fad5a92561fb885a0ead85f34cbae0013",
+    "tests/test_train_infer.py": "040a049e7e24c02948b81443b84fab81288300221003c9c4c2a26a77325f6b8d",
+    "tests/test_wide_profile.py": "e276ae8fc6cc33a49eca0dfa5ed968d53d3c04ca989c97a81ec10ef2b68e8668"
+  },
+  "detailed_receipts": {
+    "installed-api-receipt.json": "070de75e96d9b11b783e1240e284997ca879470f56ec6bf8c276a8e2a0d0b6f9",
+    "native-plan.json": "8f3b3a9a16bfed8f12176542b8138f27f1bde2ace7df1b24ee80c2735cd69273"
+  },
+  "historical_receipts": [
+    {
+      "path": "evidence/pg091/core4be-narrow-tests.xml",
+      "sha256": "dfee946daaa41ae6c77307379faae3f13a7b33979cbb7d033553b6267a451092",
+      "tests": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_seconds": 3.624
+    },
+    {
+      "path": "evidence/pg091/product-installed-670-initial.xml",
+      "sha256": "68aba918b21cecfd539de3cdc4f5be32feaee5d94f9503679c75420e33e6cc7d",
+      "tests": 47,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_seconds": 89.229
+    },
+    {
+      "path": "evidence/pg091/wrong-family-regression.xml",
+      "sha256": "9de78953ba6d7f6ba4a6ae51415f8246acf7a54d9c0b8ddb437b396b2df9d2e5",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_seconds": 1.123
+    },
+    {
+      "path": "evidence/pg091/product-installed-9be-initial.xml",
+      "sha256": "89a35ab62edb4df9f2a41f6d4aedf94891f23ad2c371091519b48a02e9c1f865",
+      "tests": 52,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_seconds": 70.74
+    }
+  ],
+  "protected_training_checkouts": [
+    {
+      "path": "/mnt/nvme/sliders/audio-music3-source-20261017",
+      "head": "b40d2aa6fed745eda3043d3d3b11e362ec2f8dfe",
+      "branch": "main",
+      "status_porcelain": ""
+    },
+    {
+      "path": "/mnt/nvme/sliders/audio-adapters-pg09-20261017",
+      "head": "9262a930cd351459e93ac33cc542fa379c12fe52",
+      "branch": "integration/audio-pg09",
+      "status_porcelain": ""
+    },
+    {
+      "path": "/mnt/nvme/sliders/audio-core-pin-86fc4e0-20261017",
+      "head": "3e94b13eb5d6cd1ceee3f018f019a68603f35696",
+      "branch": "HEAD",
+      "status_porcelain": ""
+    }
+  ],
+  "safety": {
+    "gpu_jobs_launched": false,
+    "cuda_initialized": false,
+    "pretrained_weights_loaded": false,
+    "audio_rendered": false,
+    "quality_qualified": false,
+    "models_published": false,
+    "merged": false,
+    "services_permissions_credentials_changed": false,
+    "old_checkpoints_retargeted": false
+  },
+  "publication_blocker": {
+    "action": "push exact shared package commit9be81c1ccfc8ad87eac3efa93fd5a16d0d508bb5",
+    "target_repository": "https://github.com/HyperGAN/particle-sliders.git",
+    "target_ref": "refs/heads/audit/shared-audio-cli-20261017",
+    "status": "DENIED_NOT_EXECUTED",
+    "reported_by": "sole shared package owner",
+    "reason": "automatic approval review found trusted authorization named a different embedded branch",
+    "next_action": "parent obtains exact human repository/ref/payload authorization; only owner may retry once on materially new evidence",
+    "workaround_attempted": false,
+    "core_cdf_pr141_changed": false
+  },
+  "remaining_gates": [
+    "exact-head Ada review and parent integration",
+    "authorized shared publication and actual immutable public VCS fetch/build acceptance",
+    "coordinator-owned guardian/card/lease and fresh resource admission (MOSS priority)",
+    "native pretrained token/history producer and full3 versus fresh1+2/export replay on new source cohort",
+    "admitted native acoustic sampling and matched base/off/0.5/1/positive-caption listening review"
+  ]
+}

@@ -1,6 +1,5 @@
-# Integration-only draft: use the prequalified native runtime and exact source
-# checkouts recorded in shared.lock.json. The shared audio APIs are not packaged.
-# Installing this file alone does not qualify ParticleGAN/native runtime sources.
+# New source lineage. Install into an isolated interpreter; preserve old cohorts.
 PyYAML>=6
 pytest>=8
-particlegan==0.9.0
+particlegan==0.9.1
+particle-sliders-core[audio] @ git+https://github.com/HyperGAN/particle-sliders.git@9be81c1ccfc8ad87eac3efa93fd5a16d0d508bb5#subdirectory=packages/particle-sliders-core

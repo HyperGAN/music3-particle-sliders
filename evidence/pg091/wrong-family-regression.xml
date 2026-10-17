@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="1.123" timestamp="2026-10-17T13:39:53.679609-06:00" hostname="pop-os"><testcase classname="tests.test_train_infer" name="test_wrong_audio_family_rejected_before_factory_or_output" time="1.090" /></testsuite></testsuites>

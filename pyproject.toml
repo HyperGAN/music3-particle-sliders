@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "music3-particle-sliders"
+version = "0.2.0"
+description = "Music3 native AR numerical response sessions; source proposal"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["particle-sliders-core==0.8.2"]
+
+[project.optional-dependencies]
+response-fixture = ["transformers==5.15.0"]
+test = ["pytest>=8"]
+
+[project.entry-points."particle_sliders.response_backends"]
+music3 = "music3.lifecycle:BACKEND"
+
+[project.entry-points."particle_sliders.inference_backends"]
+music3 = "music3.lifecycle:INFERENCE"
+
+[tool.setuptools.packages.find]
+include = ["music3*"]
+
+[tool.setuptools.package-data]
+music3 = ["response-core.lock.json"]

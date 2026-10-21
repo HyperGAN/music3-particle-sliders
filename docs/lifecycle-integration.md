@@ -1,5 +1,10 @@
 # Music3 owned factory draft
 
+Historical first-pass notes at `f64874b`. The newer
+[response-session proposal](response-session-proposal.md) adopts the reviewed
+neutral contract and supersedes the image-registration/profile/module blockers
+below. The first source receipt remains evidence only for that original draft.
+
 This is a new, opt-in source draft based on PR5 at
 `471a7c9669fa30f19ec318f0fc6b39bd1de833c1`. It preserves PR5's package loader,
 requirements, lock, CLI routes, checkpoint schemas and evidence unchanged.

@@ -1,8 +1,10 @@
 # Music 3 particle sliders
 
-An opt-in owned-factory source draft for the shared 0.7.0 milestone is recorded
-in [the lifecycle handoff](docs/lifecycle-integration.md). It is not registered
-as an image backend, and the existing pinned CLI below remains unchanged.
+A separate [response-session source proposal](docs/response-session-proposal.md)
+registers the owned Music3 factory and data-independent response inference on
+reviewed core0.8.2 / PG0.9.1. Product runtime validation awaits a scheduled slot.
+The historical CLI and its core0.6.0 lock below remain unchanged and require
+their original environment; the two environments must remain separate.
 
 Music 3 product integration for `MiniMaxAI/MiniMax-Music3`. This branch
 moves training, resume, export and probing to the installed public

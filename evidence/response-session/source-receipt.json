@@ -1,0 +1,82 @@
+{
+  "schema": "music3-response-session-source-proposal-v1",
+  "status": "SOURCE_ONLY_PENDING_SCHEDULED_PRODUCT_CONFORMANCE",
+  "base_product_head": "f64874be480918581020e6451b779f149947231e",
+  "preserved_pr5_head": "471a7c9669fa30f19ec318f0fc6b39bd1de833c1",
+  "preserved_pr3_head": "2f1ff5a952b2c3e81365ba2aeeeb5edd94fcd76b",
+  "shared_core_commit": "21761ca8fd059439b58aa56a69bf8d1647f50e31",
+  "core_version": "0.8.2",
+  "particlegan_version": "0.9.1",
+  "core_wheel_sha256": "d28d082986accc486a4a9c2ce445f4981daaba6f51605b20ded4c0f424cb30ba",
+  "canonical_source_map_files": 38,
+  "companion_archive": "/ml2/codex-storage/future-workspaces/2026-10-21/task-2/evidence/response-packaging/091/reviewed-source.tar",
+  "companion_archive_sha256": "f90b93d4a402b0fbe499d9335b6243f20ab64229c2c0e0703da011743ccd30eb",
+  "canonical_lock_copied_unchanged": true,
+  "source_wheel_companion_map_verified_as_inert_bytes": true,
+  "parent_reported_shared_review": "71 independent installed checks passed per line; shared evidence does not qualify this product source",
+  "registrations": {
+    "particle_sliders.response_backends": {
+      "music3": "music3.lifecycle:BACKEND"
+    },
+    "particle_sliders.inference_backends": {
+      "music3": "music3.lifecycle:INFERENCE"
+    }
+  },
+  "source_sha256": {
+    "music3/lifecycle.py": "880e74960523c9a8a06650c82d7c39cf2b29a254a6c5bd5186de5bce5adb8ca1",
+    "music3/response_source.py": "efdfa190824e7dc4657459abb00c690a00560ddcec8690654bee5e759e684daf",
+    "music3/response-core.lock.json": "555351bfedf45d9e63541065c979bb2af869b051969ce0a6618a5948c8a48d26",
+    "pyproject.toml": "9e8770771543612e4a03439250125e45cad48ee04ec4b17883138e1e72d45504",
+    "README.md": "2e652e21ac6fa0de551ab3a5532ae2ba2eeb9423ea3a2b3007aa80b641d30d45",
+    "docs/response-session-proposal.md": "13d01272cc1a557026c359b9aa33b701bb4e669ff98ece4c17e921c311127fed",
+    "docs/response-session-test-plan.md": "b52cd5cac0a9216e65f87a196f142ac0a07858f54fce5715f4e7b83f06a3b76c",
+    "docs/shared-response/PROVIDER-OBSERVATION.md": "0c32d4a8588975c20eb1a77d1b45d1e98a39ae78a0f6a26804a0960165a1a07c",
+    "docs/shared-response/RESPONSE-SESSIONS.md": "d9296774ee8d440cccf8ef0f030ce77ddf9387811a6d6fec0fa35623cc9ee47b",
+    "docs/shared-response/CLI-ARTIFACTS.md": "ced2028933410b5d608fb9fda83b60f103bfd3281707078c77571d98eac503c5",
+    "examples/music3-response-request.json": "e20aa2a5cdd3bfd52843f2694e289d1842b0ee55e247b1fdcf0f28e5f308b0a7",
+    "examples/music3-response-runtime.json": "6ef46473c7d46e211f79a38314d548ede99f15fc265d2d5b8c415901b398420a",
+    "examples/music3-response.json": "60c515de33af9ed07e3ffeb3fd8512ef641decd3f61b0ad2c531e664967f9c57"
+  },
+  "historical_cli_inputs_unchanged": {
+    "core.lock.json": "822e24271142937b22351864074df756089fe3f85e4f279a1cb763a6f7c1b797",
+    "requirements.txt": "ccde5b9fcb5355563b83b2b7cbf9ccfd544b18042d98523e90d75c88082f04e0",
+    "music3/train.py": "8ed79b9c3263fb2f23414afd4a18abe22849fac6d47169f39478a9f28b601b14",
+    "music3/infer.py": "7d761d28c0e6916df4734f289e36916f7dc15527b20a4845b04d7832c397a0ed",
+    "music3/shared.py": "c9f7466a88e73d6ea6570620a8ce2be3236444b609ae90d6c969530decbecabe",
+    "music3/surface.py": "ce95a87584acf2cd0c2e7ff6a86926323bf8253e5cfc3ec7c1f029c7e1e46768",
+    "music3/loop.py": "42d3a6214b259dd710ab73b8f6bd404e47d13f0c356437040f869a540eca7b6e",
+    "scripts/train_encoder_music3.py": "43cd87221da6a9a98ab6ae8ca61b4eb47677ca57e0e0a45080c290d615343c48",
+    "scripts/train_lora_music3_particle.py": "29cce02ba938617a82d96e238fe0da468006b41727dbca031cb28e1362fc9c8b",
+    "scripts/train_lora_music3.py": "d1990db26bef6a3584d4456c1160ad1b84b5bdb9e68e4718b8951047fd605aec",
+    "scripts/train_lm_slider_music3.py": "34170f28c96cd5bd3a2702d3856ad209ed9e1ce5e3857fedfbbd7f98e94ff05b",
+    "scripts/train_music3.py": "da95d4170d531940ca8e47272af739e8cf8d8e625b57668a9607a6bf7486ab5a",
+    "scripts/infer_music3.py": "3acce395bdf4a1dc32ce65723ce2aa3259826214308879bc194eff18a539812c"
+  },
+  "source_inspection": [
+    "ast.parse of two changed Python modules",
+    "JSON data parsing",
+    "canonical38-file source/wheel/archive equality",
+    "exact guide and old CLI bytes",
+    "git diff --check"
+  ],
+  "product_tests_run": false,
+  "builds_run": false,
+  "installs": false,
+  "runtime_model_imports_or_loads": false,
+  "gpu_work": false,
+  "public_writes": false,
+  "active_pin_changes": false,
+  "response_support": "CPU float32 random Qwen3 below170 on exact official PG0.9.1 release/auto; finite strengths[0,1]",
+  "native4096_and_overlay_requests": "REFUSED_BEFORE_ALLOCATION; explicit-domain profile recovery/qualification pending",
+  "media_render": "UNAVAILABLE; numerical hidden responses only",
+  "remaining_common_gaps_found": [],
+  "remaining_gates": [
+    "scheduled installed product conformance",
+    "native continuous profile recovery/upstream selector work",
+    "native token/history/pretrained/acoustic qualification",
+    "matched-weight HNDL mapping/parity"
+  ],
+  "test_plan": "docs/response-session-test-plan.md",
+  "denied_actions": [],
+  "uncertain_actions": []
+}

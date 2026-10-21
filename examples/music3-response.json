@@ -1,0 +1,13 @@
+{
+  "backend": "music3",
+  "cohort": "new-music3-response-cpu-proposal",
+  "options": {
+    "dummy": true,
+    "width": 32,
+    "steps": 4,
+    "batch": 2,
+    "seed": 7,
+    "ema_decay": 0.9,
+    "checkpointing": true
+  }
+}

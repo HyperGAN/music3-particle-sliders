@@ -4,7 +4,8 @@ The new opt-in package registers `music3.lifecycle:BACKEND` under
 `particle_sliders.response_backends` and `music3.lifecycle:INFERENCE` under
 `particle_sliders.inference_backends`. No image backend is registered. The
 dependency remains on the existing PG0.9.1 line: exact reviewed core0.8.2 source
-`21761ca8fd059439b58aa56a69bf8d1647f50e31`. This is a new source cohort.
+`f6807a91546e43e198645a3f8925d2dc7c9e03b4`, including the independently cleared
+reversible checkpoint-ownership update. This is a new source cohort.
 The historical core0.6.0/PG0.9.1 `core.lock.json`, `requirements.txt`, six CLI
 scripts, loaders, saved results and checkpoint cohorts remain unchanged. PR5
 `471a7c9` and independent PR3 `2f1ff5a` remain preserved; no merge is proposed.
@@ -19,20 +20,25 @@ before importing the core. It permits no checkout or editable fallback.
 
 Use only the exact owner-reviewed wheel in a separate environment:
 
-- Core wheel SHA256: `d28d082986accc486a4a9c2ce445f4981daaba6f51605b20ded4c0f424cb30ba`.
-- Core wheel: `task-2/evidence/response-packaging/091/dist/particle_sliders_core-0.8.2-py3-none-any.whl`.
+- Canonical lock SHA256: `12e2310b2680173b5a6c3c220270d3d79cb9029d5660bf23f7d6e6f06fd986f3`.
+- Core wheel SHA256: `50a6a7d06240254357569fd3cacbb5cf5e9d3c1771f642dfb719733b5711f32a`.
+- Core wheel: `task-2/evidence/checkpoint-ownership-packaging/091/dist/particle_sliders_core-0.8.2-py3-none-any.whl`.
 - PG0.9.1 release wheel SHA256: `b01b7957169cb3de45887e22b4d525fd54071577e1de58089707cf05fe6992ec`.
-- Companion source archive SHA256: `f90b93d4a402b0fbe499d9335b6243f20ab64229c2c0e0703da011743ccd30eb`.
-- Companion source archive: `task-2/evidence/response-packaging/091/reviewed-source.tar`.
-- Shared packaging receipt: `task-2/evidence/response-packaging/receipt.json`.
+- Companion source archive SHA256: `6bad2ec9cd5ccac54c9b313004bf5b3937cefdd6b4207746b2586f75bb091127`.
+- Companion source archive: `task-2/evidence/checkpoint-ownership-packaging/091/reviewed-source.tar`.
+- Shared packaging receipt: `task-2/evidence/checkpoint-ownership-packaging/receipt.json`.
+- Corrected metadata: `task-2/evidence/checkpoint-ownership-packaging/metadata-correction.json`.
 
 The exact wheel, all38 source entries and companion archive were checked as
 inert bytes in this task. Nothing was installed or imported as runtime code.
-The three missing sdist guides were copied byte-for-byte from the verified
-archive to `docs/shared-response/`, with hashes in this proposal's source receipt.
-Their original source-only status prose is retained. The parent's later message
-reports independent installed-runtime review with71 checks per core line; that
-is shared-contract evidence, not Music3 product conformance.
+All four guides, including CHECKPOINT-OWNERSHIP.md, were copied byte-for-byte
+from the verified archive to `docs/shared-response/`. They are also included
+in these new sdists; the previous guide-distribution omission is fixed. Their
+original source-proposal status prose is retained. The parent reports independent
+installed artifact clearance of the60 selected ownership checks (30 per PG line),
+in addition to the earlier response-contract review. Shared artifact evidence
+does not qualify this Music3 product source. See the
+[ownership adoption](checkpoint-ownership-adoption.md) and its source receipt.
 
 The new `pyproject.toml` declares core0.8.2 as a dependency and uses separate
 registry entry points. That version constraint alone is insufficient provenance;
@@ -68,7 +74,13 @@ restores the native model's persistent/nonpersistent buffer registrations,
 buffer values, RoPE cache counters, modes, gradient flags and existing gradient
 objects/values. It encloses provider bounds/fetch and response forward, including
 exceptions. No frozen model weight clone is taken merely to observe a response.
-Setup/update cleanup restores exact owned forward hooks and checkpoint settings.
+Setup/update cleanup uses the adapter's shared reversible checkpoint handles
+before restoring the product's own LoRA forwards and the common native cleanup
+for modes, gradient flags and checkpoint settings. A conflict retains the live
+adapter and retry ledger in CleanupPending; no broader restoration runs while
+block cleanup refuses. The common session close policy is unchanged: resolve
+the conflicting owner, then call the error's retry_cleanup() or Binding.close()
+directly. LoRA forward replacement conflicts are also refused without overwrite.
 
 ## Data-independent inference
 
@@ -139,7 +151,9 @@ conformance slot, native continuous-profile recovery/upstream selector work,
 native tokenizer/history and pretrained acoustic qualification, and separate
 matched-weight HNDL mapping/parity of existing critic/router/LoRA definitions.
 No new concrete shared runtime gap was found by source inspection in this pass.
-See the [scheduled-slot test plan](response-session-test-plan.md).
+See the [scheduled-slot test plan](response-session-test-plan.md). Its first
+authored product selection is `tests/test_response_proposal.py`, with22
+parameterized cases pending execution.
 
 This source pass ran only AST/data parsing, artifact byte hashing and git diff
 checks. No tests, installs, native dependency imports/model loads, GPU work,

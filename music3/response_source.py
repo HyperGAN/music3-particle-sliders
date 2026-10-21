@@ -6,10 +6,11 @@ import json
 from pathlib import Path
 import sys
 
-CORE_COMMIT = "21761ca8fd059439b58aa56a69bf8d1647f50e31"
+CORE_COMMIT = "f6807a91546e43e198645a3f8925d2dc7c9e03b4"
 CORE_VERSION = "0.8.2"
 PG_VERSION = "0.9.1"
 LOCK = Path(__file__).with_name("response-core.lock.json")
+LOCK_SHA256 = "12e2310b2680173b5a6c3c220270d3d79cb9029d5660bf23f7d6e6f06fd986f3"
 
 
 def verify_response_core():
@@ -18,7 +19,10 @@ def verify_response_core():
     No source-tree fallback, environment mutation, package install or download.
     The exact local wheel and companion archive remain required review inputs.
     """
-    lock = json.loads(LOCK.read_text())
+    contents = LOCK.read_bytes()
+    if hashlib.sha256(contents).hexdigest() != LOCK_SHA256:
+        raise RuntimeError("Music3 response proposal requires the corrected canonical ownership lock bytes")
+    lock = json.loads(contents)
     if (lock["core"]["commit"] != CORE_COMMIT or lock["core"]["version"] != CORE_VERSION
             or lock["particlegan"]["version"] != PG_VERSION):
         raise RuntimeError("Music3 response proposal requires its canonical core0.8.2/PG0.9.1 lock")

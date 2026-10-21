@@ -13,7 +13,7 @@ from pathlib import Path, PurePosixPath
 import re
 
 
-MILESTONE = "21761ca8fd059439b58aa56a69bf8d1647f50e31"
+MILESTONE = "f6807a91546e43e198645a3f8925d2dc7c9e03b4"
 MODEL_REVISION = "bd348f9c49ea3c1b39f33ace3436f8fad435f24e"
 _OPTIONS = {
     "dummy", "host", "rows", "steps", "batch", "seed", "width", "device",
@@ -179,27 +179,62 @@ def _native_record(options):
 
 
 def _restore_host(model):
-    """Unwind exact forward attributes, checkpoint wrappers, flags and modes."""
-    keys = ("forward", "gradient_checkpointing", "_gradient_checkpointing_func", "_pg09_scale_checkpoint")
-    saved = [(module, module.training, {key: module.__dict__[key] for key in keys if key in module.__dict__})
-             for module in model.modules()]
-    flags = [(parameter, parameter.requires_grad) for parameter in model.parameters()]
+    """Own only native LoRA forwards; common cleanup owns flags/modes.
+
+    Shared checkpoint handles must close before this broader owner is restored.
+    In particular this callback never writes block checkpoint wrapper markers.
+    """
+    from particle_sliders.lifecycle import native_cleanup
+    from particle_sliders.native_lora import lora_target_plan
+    from particle_sliders.music3_native import TARGET_REPLACE
+    restore_native = native_cleanup(model)
+    targets = lora_target_plan(model, TARGET_REPLACE, prefix="lora_te", delimiter="-", train_method="full")
+    saved = [(module, "forward" in vars(module), vars(module).get("forward")) for _, module in targets]
+    attached = None
     closed = False
+    forwards_restored = False
+
+    def claim():
+        nonlocal attached
+        attached = [(module, module.forward) for module, _, _ in saved]
 
     def close():
-        nonlocal closed
+        nonlocal closed, forwards_restored
         if closed:
             return
-        closed = True
-        for module, mode, previous in saved:
-            for key in keys:
-                if key in previous:
-                    setattr(module, key, previous[key])
+        if not forwards_restored:
+            if attached is not None and any(module.forward is not forward for module, forward in attached):
+                raise RuntimeError("Music3 LoRA forward ownership changed; resolve the owner before retrying cleanup")
+            for module, instance_owned, forward in saved:
+                if instance_owned:
+                    module.forward = forward
                 else:
-                    module.__dict__.pop(key, None)
-            module.training = mode
-        for parameter, flag in flags:
-            parameter.requires_grad_(flag)
+                    vars(module).pop("forward", None)
+            forwards_restored = True
+        restore_native()
+        closed = True
+    close.claim = claim
+    return close
+
+
+class CleanupPending(RuntimeError):
+    """Retain the live adapter/cleanup ledger after an ownership refusal."""
+    def __init__(self, adapter, retry_cleanup):
+        super().__init__("Music3 cleanup pending: resolve the ownership conflict, then call retry_cleanup()")
+        self.adapter = adapter
+        self.retry_cleanup = retry_cleanup
+
+
+def _owned_cleanup(adapter, restore_native):
+    """Close shared reversible block handles before broader native ownership."""
+    def close():
+        try:
+            adapter.close_checkpointing()
+            restore_native()
+        except BaseException as error:
+            # The closure and exception retain the adapter's failed-handle ledger.
+            # Do not use a disposable ExitStack callback or restore in finally.
+            raise CleanupPending(adapter, close) from error
     return close
 
 
@@ -251,15 +286,22 @@ def _build_native(options, *, checkpointing=False):
         if dummy:
             from particle_sliders.pg09 import _hash
             identity["frozen_base_sha256"] = _hash(model.state_dict())
-        close = _restore_host(model)
+        restore = _restore_host(model)
+        adapter = None
         try:
             model.eval().requires_grad_(False)
             slider = ParticleNetwork(model)
+            restore.claim()
             adapter = Music3ARResponseAdapter(model, slider, model_identity=identity,
                 checkpoint_modules=tuple(model.model.layers) if checkpointing else (), **domain)
-            return adapter, tokenizer, close
+            return adapter, tokenizer, _owned_cleanup(adapter, restore)
         except BaseException:
-            close()
+            # Shared adapter construction transactionally rolls back its handles;
+            # this owner restores only its native LoRA/flags after that rollback.
+            if adapter is not None:
+                _owned_cleanup(adapter, restore)()
+            else:
+                restore()
             raise
 
 

@@ -3,6 +3,9 @@
 Status: planned, not executed. Parent owns resource admission and the exact
 installed environment. Use a fresh output directory and the reviewed exact
 core0.8.2/official PG0.9.1 wheels, canonical38-file lock and companion archive.
+The current exact core source is `f6807a91546e43e198645a3f8925d2dc7c9e03b4`,
+with corrected canonical lock SHA256
+`12e2310b2680173b5a6c3c220270d3d79cb9029d5660bf23f7d6e6f06fd986f3`.
 The legacy CLI/core0.6.0 environment remains untouched. Do not install native
 dependencies or build a product wheel before the slot is authorized.
 
@@ -10,6 +13,22 @@ CPU only, offline, one operator/interop thread, CUDA hidden/uninitialized, no
 pretrained files. Use the parent's resource caps, memory guard and timeout.
 Build/install the product only in the admitted isolated target, then execute
 from `/tmp` with `python -I` and installed product metadata/entry points.
+
+The first authored selection is `tests/test_response_proposal.py`:22 cases
+from10 test definitions. It covers product cleanup nesting, duplicate wrapper
+refusal, sibling release, forward/marker/LoRA conflicts and explicit retries;
+both response presets' exact split resume; raw/EMA v1 and separate data-free v2
+inference; setup-failure cleanup; native-width/profile/media refusal; registry/
+lock identity; and invalid restore. No collection or execution occurred.
+Run only this new module, not the historical old-core product suite.
+
+Initial scheduled bound: serial CPU, both Torch thread counts1, offline and
+CUDA hidden, hard2GiB process/group/address cap and16GiB host reserve, with a
+90-second worker deadline. The parent must confirm these limits and host/pilot
+availability before execution. Stop and report any guard failure; do not retry
+with relaxed limits or overlap the MOSS pilot. Save installed origins, resource
+telemetry, XML and exact artifact/source hashes. Broader CLI/fresh-process/
+injected-observation cases below remain a subsequent explicitly bounded phase.
 
 1. Verify the installed product commit/source hashes, response/inference entry
    points and every canonical core file. Reject altered/missing/extra core

@@ -2,7 +2,9 @@
 
 A separate [response-session source proposal](docs/response-session-proposal.md)
 registers the owned Music3 factory and data-independent response inference on
-reviewed core0.8.2 / PG0.9.1. Product runtime validation awaits a scheduled slot.
+reviewed core0.8.2 / PG0.9.1. **22 selected installed CPU checks passed**;
+see [publication and qualification status](PUBLICATION-STATUS.md). Native wide
+responses and acoustic rendering remain gated.
 The historical CLI and its core0.6.0 lock below remain unchanged and require
 their original environment; the two environments must remain separate.
 

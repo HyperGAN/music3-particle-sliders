@@ -1,7 +1,7 @@
 {
   "release": "uni16-fresh-selected-v2",
   "selection": "quality-later-v2",
-  "base_model": "MiniMaxAI/MiniMax-Music-3",
+  "base_model": "MiniMaxAI/MiniMax-Music3",
   "hub_weights": "ntc-ai/minimax-music3-concept-sliders",
   "seed": 1709,
   "scales": [0.0, 1.0],

@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Language-model host Music 3 slider (Qwen3Attention).
-
-The historical ``--lm_target v9`` menu remains in HyperGAN/particle-sliders
-``conceptmod/textsliders/train_lm_slider_music3.py``. This product entry uses
-the winning stamp's teacher (``faithful_plus_neu``) and refuses other targets.
-"""
+"""Route Music3 training to the reviewed shared PG09 worker; native runs require coordinator admission."""
 
 from __future__ import annotations
 

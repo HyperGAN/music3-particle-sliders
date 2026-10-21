@@ -1,10 +1,4 @@
-"""Train a Music 3 slider on the shared winning formulation.
-
-``python scripts/train_music3.py --dummy`` is the CPU smoke path. It does not
-download Hub weights. A non-dummy run is refused until a local Music 3
-checkout is passed with ``--live``.
-"""
-
+"""Thin Music3 entry points for the installed shared PG0.9.1 audio CLI."""
 from __future__ import annotations
 
 import argparse
@@ -12,209 +6,93 @@ import json
 from pathlib import Path
 
 from music3.cards import release_card
-from music3.defaults import (
-    ADAPTER_ALPHA,
-    ADAPTER_RANK,
-    BASE_MODEL_ID,
-    DEFAULT_PROMPTS,
-    DUMMY_HIDDEN,
-    DUMMY_MAX_STEPS,
-    HUB_WEIGHTS_ID,
-)
-from music3.hosts import resolve_host, target_replace
-from music3.loop import run_dummy
-from music3.prompts import load_prompts
-from music3.surface import declare, load_stamp
+from music3.defaults import BASE_MODEL_ID
+from music3.hosts import resolve_host
 
-def build_parser(host_name: str = "lm") -> argparse.ArgumentParser:
-    host = resolve_host(host_name)
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description=(
-            f"Train a Music 3 {host['kind']} slider with winning_formulation() "
-            f"on {BASE_MODEL_ID}. --dummy never downloads Hub weights."
-        ),
-    )
-    parser.add_argument("--name", default=f"music3-{host['name']}")
-    parser.add_argument("--host", default=host_name, choices=["lm", "transformer", "encoder", "particle"])
-    parser.add_argument("--prompts_file", default=DEFAULT_PROMPTS)
-    parser.add_argument("--config_file", default=None)
-    parser.add_argument("--save_dir", default="models/music3-slider")
-    parser.add_argument("--steps", type=int, default=1600)
+
+def build_parser(host_name="lm"):
+    parser = argparse.ArgumentParser(description=f"Packaged GAN-only PG0.9.1 Music3 training for {BASE_MODEL_ID}.")
+    parser.add_argument("--host", default=host_name, choices=["lm", "particle", "transformer", "encoder"])
+    parser.add_argument("--dummy", action="store_true", help="shared genuine random-Qwen3 CPU qualification")
+    parser.add_argument("--live", action="store_true", help="shared native plan only; coordinator owns admission")
+    parser.add_argument("--print_card", action="store_true", help="historical release catalog only")
+    parser.add_argument("--save_dir", default="models/music3-pg091")
+    parser.add_argument("--steps", type=int, default=3, help="absolute completed-step target")
+    parser.add_argument("--total_steps", type=int, default=None)
+    parser.add_argument("--resume", type=Path, help="full new-lineage shared checkpoint; old PG0.9.0 is rejected")
+    parser.add_argument("--preset", choices=["bispf", "bispf_optimized"], default="bispf_optimized")
     parser.add_argument("--seed", type=int, default=7)
-    parser.add_argument("--g_lr", type=float, default=None, help="model surface; default is the stamp")
-    parser.add_argument("--d_lr", type=float, default=None, help="model surface; default is the stamp")
-    parser.add_argument("--particle_lr", type=float, default=None, help="model surface; default is the stamp")
-    parser.add_argument("--adv_batch", type=int, default=None, help="model surface; Music default is 64")
-    parser.add_argument("--targets", default=None, choices=["attn", "full", "encoder"])
-    parser.add_argument("--rank", type=int, default=None)
-    parser.add_argument("--alpha", type=float, default=None)
-    parser.add_argument("--lm_target", default=None, help="locked by the stamp; omit this flag")
-    parser.add_argument("--loss", default=None, help="historical mse/nmse is not this game")
+    parser.add_argument("--width", type=int, default=32, help="CPU fixture response width;4096 requires explicit continuous profile")
+    parser.add_argument("--pg_source_profile", choices=["release", "alz-continuous-v1"], default="release")
+    parser.add_argument("--penalty_input_domain", choices=["auto", "continuous"], default="auto")
     parser.add_argument("--model_id", default=BASE_MODEL_ID)
-    parser.add_argument("--model_dir", default=None, help="local MiniMax-Music-3 checkout for --live")
-    parser.add_argument("--dummy", action="store_true", help="CPU stamp step, no Hub weights")
-    parser.add_argument("--live", action="store_true", help="require a local model checkout")
-    parser.add_argument("--allow_hub", action="store_true")
-    parser.add_argument("--print_card", action="store_true")
-    parser.set_defaults(_entry_host=host_name)
+    parser.add_argument("--model_dir", type=Path)
+    parser.add_argument("--manifest", type=Path)
+    parser.add_argument("--prompts_file")
+    parser.add_argument("--heldout_prompts", type=Path)
+    for name in ("name", "g_lr", "d_lr", "particle_lr", "adv_batch", "rank", "alpha", "lm_target", "loss", "targets", "config_file", "shared_checkout", "core_checkout"):
+        parser.add_argument(f"--{name}", default=None, help="historical/source-checkout option; refused")
+    parser.add_argument("--allow_hub", action="store_true", help="unsupported; local model inputs only")
     return parser
 
 
-def parse_args(argv: list[str] | None = None, *, host: str = "lm") -> argparse.Namespace:
+def parse_args(argv=None, *, host="lm"):
     return build_parser(host).parse_args(argv)
 
 
-def _reject_forks(parser: argparse.ArgumentParser, args: argparse.Namespace, stamp) -> None:
-    if args.rank is not None and int(args.rank) != int(stamp.spec["adapter_rank"]):
-        parser.error(
-            f"--rank {args.rank} forks adapter_rank {int(stamp.spec['adapter_rank'])}. "
-            "Change the stamp in HyperGAN/particle-sliders, not this repo."
-        )
-    if args.alpha is not None and float(args.alpha) != float(stamp.spec["adapter_alpha"]):
-        parser.error(
-            f"--alpha {args.alpha} forks adapter_alpha {float(stamp.spec['adapter_alpha'])}."
-        )
-    if args.lm_target is not None and str(args.lm_target) != str(stamp.spec["lm_target"]):
-        parser.error(
-            f"--lm_target {args.lm_target} is not the winning teacher {stamp.spec['lm_target']}. "
-            "The v9 / faithful_sub_e menu stays in HyperGAN/particle-sliders and conceptmod."
-        )
-    if args.loss not in (None, "winning"):
-        parser.error(
-            "--loss mse/nmse/cos is the historical LoRA trainer in HyperGAN/particle-sliders. "
-            "This product trains winning_formulation()."
-        )
+def train(args, parser=None):
+    parser = parser or build_parser(args.host)
     if args.model_id != BASE_MODEL_ID:
-        parser.error(f"Music 3 trains {BASE_MODEL_ID}, got {args.model_id}")
-    if args.live and args.dummy:
-        parser.error("choose either --live or --dummy")
-    if args.adv_batch is not None and int(args.adv_batch) < 1:
-        parser.error("--adv_batch must be positive")
-
-
-def _prompts_from_config(args: argparse.Namespace) -> str:
-    if not args.config_file:
-        return args.prompts_file
-    import yaml
-
-    raw = yaml.safe_load(Path(args.config_file).read_text(encoding="utf-8"))
-    if not isinstance(raw, dict):
-        raise ValueError("config file must be a mapping")
-    return str(raw.get("prompts_file") or args.prompts_file)
-
-
-def train(args: argparse.Namespace, parser: argparse.ArgumentParser | None = None) -> dict | Path:
-    parser = parser or build_parser(getattr(args, "_entry_host", args.host))
-    stamp = load_stamp()
-    _reject_forks(parser, args, stamp)
+        parser.error(f"Music3 requires {BASE_MODEL_ID}")
     if args.print_card:
         card = release_card()
-        card["train_host"] = resolve_host(args.host)["name"]
-        card["formulation_id"] = stamp.formulation_id
-        card["architecture_id"] = stamp.architecture_id
+        card.update(catalog_only=True, pg09_checkpoint_compatible=False, native_pg09_audio_qualified=False)
         print(json.dumps(card, indent=2))
         return card
-
-    host = resolve_host(args.host)
-    prompts_file = _prompts_from_config(args)
-    rows, meta = load_prompts(prompts_file)
-    if len(rows) < 2:
-        raise ValueError(
-            f"{prompts_file} has {len(rows)} row(s); the winning game needs at least two. "
-            "Use configs/music3/prompts-particle.yaml."
-        )
-    declared = declare(
-        stamp,
-        g_lr=args.g_lr,
-        d_lr=args.d_lr,
-        particle_lr=args.particle_lr,
-        adv_batch=args.adv_batch,
-    )
-    targets = target_replace(host, args.targets)
-    if not args.dummy:
-        if not args.live:
-            raise RuntimeError(
-                "Pass --dummy for the CPU stamp smoke, or --live with --model_dir "
-                f"for a local {BASE_MODEL_ID} checkout. This entry does not download Hub weights."
-            )
-        if not args.model_dir:
-            raise RuntimeError(
-                "--live requires --model_dir pointing at a local MiniMax-Music-3 checkout. "
-                "This command does not download it. Hub adapters stay at "
-                f"{HUB_WEIGHTS_ID}."
-            )
-        model_dir = Path(args.model_dir)
-        if not model_dir.exists():
-            raise FileNotFoundError(model_dir)
-        raise RuntimeError(
-            f"Found {model_dir}, and the winning formulation stamp is already required. "
-            "This skeleton does not load the Music 3 weights into host linears. "
-            "Use --dummy for the CPU game step. A follow-up attaches stamp.bridge() "
-            f"to {targets} inside that checkout."
-        )
-    steps = min(int(args.steps), DUMMY_MAX_STEPS)
-    logs, built = run_dummy(
-        stamp,
-        declared,
-        rows=len(rows),
-        steps=steps,
-        seed=int(args.seed),
-        hidden=DUMMY_HIDDEN,
-    )
-    save_dir = Path(args.save_dir)
-    save_dir.mkdir(parents=True, exist_ok=True)
-    log_path = save_dir / f"{args.name}_train.jsonl"
-    with log_path.open("w", encoding="utf-8") as handle:
-        for row in logs:
-            handle.write(json.dumps(row) + "\n")
-    sidecar = {
-        "kind": "music3_particle",
-        "entry_host": args.host,
-        "host": host["name"],
-        "host_kind": host["kind"],
-        "target_replace": targets,
-        "prefix": host["prefix"],
-        "name": args.name,
-        "model_id": BASE_MODEL_ID,
-        "hub_weights": HUB_WEIGHTS_ID,
-        "dummy": True,
-        "allow_hub": bool(args.allow_hub),
-        "live": False,
-        "model_dir": args.model_dir,
-        "prompts_file": meta.path,
-        "plus_label": meta.plus_label,
-        "minus_label": meta.minus_label,
-        "concept": meta.concept,
-        "recommended_range": list(meta.recommended_range),
-        "prompt_rows": len(rows),
-        "rank": ADAPTER_RANK,
-        "alpha": ADAPTER_ALPHA,
-        "architecture_id": stamp.architecture_id,
-        "formulation_id": stamp.formulation_id,
-        "formulation_provisional": bool(stamp.formulation_provisional),
-        "lm_target": stamp.spec["lm_target"],
-        "polarity": stamp.spec["polarity"],
-        "require": "ok",
-        "steps_requested": int(args.steps),
-        "steps_ran": len(logs),
-        "last": logs[-1] if logs else None,
-        "bridge_class": type(built["bridge"]).__name__,
-        "bridge_module": type(built["bridge"]).__module__,
-        "critic_class": type(built["critic"]).__name__,
-        "critic_module": type(built["critic"]).__module__,
-        "regularizer_class": type(built["regularizer"]).__name__,
-        "regularizer_module": type(built["regularizer"]).__module__,
-    }
-    sidecar_path = save_dir / f"{args.name}_last.json"
-    sidecar_path.write_text(json.dumps(sidecar, indent=2) + "\n", encoding="utf-8")
-    print(f"wrote {sidecar_path}")
-    return sidecar_path
+    if resolve_host(args.host)["name"] != "lm":
+        parser.error("PG09 currently qualifies only the LM/particle binding; transformer/encoder training is pending")
+    old = [name for name in ("name", "g_lr", "d_lr", "particle_lr", "adv_batch", "rank", "alpha", "lm_target", "loss", "targets", "config_file", "shared_checkout", "core_checkout") if getattr(args, name) is not None]
+    if old or args.allow_hub:
+        parser.error("historical/source-checkout options are refused: " + ", ".join(old or ["allow_hub"]))
+    if args.live == args.dummy:
+        parser.error("choose --dummy for CPU qualification or --live for a native plan")
+    total = args.total_steps if args.total_steps is not None else (4 if args.dummy else 20)
+    if not 1 <= args.steps <= total <= 20 or (args.dummy and total != 4):
+        parser.error("require1 <=steps <=total_steps <=20; CPU fixture horizon is4")
+    if args.dummy and any((args.model_dir, args.manifest, args.prompts_file, args.heldout_prompts)):
+        parser.error("--dummy uses the shared fixed fixture rows; model/prompt paths require --live")
+    argv = ["--family", "music3", "--out", str(Path(args.save_dir).resolve()), "--until", str(args.steps),
+            "--total-steps", str(total), "--preset", args.preset, "--seed", str(args.seed),
+            "--pg-source-profile", args.pg_source_profile, "--penalty-input-domain", args.penalty_input_domain]
+    if args.resume:
+        argv += ["--resume", str(args.resume.resolve())]
+    if args.live:
+        if args.resume:
+            parser.error("native continuation requires its coordinator-owned producer; --resume is CPU-only here")
+        argv = ["--family", "music3", "--out", str(Path(args.save_dir).resolve()),
+                "--until", str(args.steps), "--total-steps", str(total),
+                "--preset", args.preset, "--seed", str(args.seed),
+                "--pg-source-profile", args.pg_source_profile, "--penalty-input-domain", args.penalty_input_domain]
+        if any(value is None for value in (args.model_dir, args.manifest, args.prompts_file, args.heldout_prompts)):
+            parser.error("--live plan requires model_dir, manifest, prompts_file and heldout_prompts")
+        argv = ["plan", *argv, "--model-dir", str(args.model_dir.resolve()), "--manifest", str(args.manifest.resolve()),
+                "--train-prompts", str(Path(args.prompts_file).resolve()), "--heldout-prompts", str(args.heldout_prompts.resolve())]
+    else:
+        argv += ["--fixture", "--width", str(args.width)]
+    from music3.shared import bootstrap
+    shared = bootstrap()
+    result = shared.cli.main(argv)
+    if args.dummy:
+        receipt = dict(lineage="music3-packaged-pg091-v1", product="music3-particle-sliders",
+                       mode="shared-random-qwen3-cpu", source_receipt=shared.receipt,
+                       native_audio_qualified=False, old_checkpoint_migration=False)
+        (Path(args.save_dir) / "product-integration.json").write_text(json.dumps(receipt, indent=2) + "\n")
+    return result
 
 
-def main(argv: list[str] | None = None, *, host: str = "lm") -> None:
+def main(argv=None, *, host="lm"):
     parser = build_parser(host)
-    train(parser.parse_args(argv), parser)
+    return train(parser.parse_args(argv), parser)
 
 
 if __name__ == "__main__":

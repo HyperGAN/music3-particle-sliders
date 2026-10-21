@@ -1,0 +1,168 @@
+{
+  "schema": "audio-pg091-native-plan-v1",
+  "status": "PLAN_ONLY_NOT_ADMITTED",
+  "family": "music3",
+  "dispatch_allowed": false,
+  "output_directory": "/mnt/nvme/sliders/qualification/runs/music3-packaged-pg091-unadmitted",
+  "output_absent": true,
+  "model_directory": "/mnt/nvme/sliders/qualification/models/music3-bd348f9",
+  "manifest_sha256": "6f08547501d9d38294c91131d22b162fc5d04c683dd258d3b408522558ced7f2",
+  "source_domain_gate": {
+    "pg_source_profile": "alz-continuous-v1",
+    "penalty_input_domain": "continuous",
+    "pg_sources_sha256": "57831c50d77da70292632d9fcb8ba3e8e68c3d5557dfbd4675aeca6b2091763f",
+    "resolved_penalty_domain": "continuous"
+  },
+  "model_files": {
+    "language_model/config.json": "34ded58fcd5e8181557f1417e76af9f3e95109a5ce113a4771fd16f8625b53c0",
+    "language_model/generation_config.json": "c0f7c1612e174a7bdec9548464a7bf031a0292587033228e6767fb9e5dc367cd",
+    "language_model/model-00001-of-00004.safetensors": "1e95924a158b45b67cfad04fa0f0a352e5a263e69338734d7c1d558be776cc98",
+    "language_model/model-00002-of-00004.safetensors": "fde2d335eef7eafa268d35e53d4b040ee51d2f3fa727f9855b4c97d88a2892da",
+    "language_model/model-00003-of-00004.safetensors": "6549a831637ab678a573047e7fa8fdf966998c4f45330e6eb7573d67f7b9b4c6",
+    "language_model/model-00004-of-00004.safetensors": "a1c9865f357b64d3ae9f428fb98a844831e5a0aee9ed17b19bd7f7be32b964a9",
+    "language_model/model.safetensors.index.json": "a8bf9de1e8c0d680f39730a127d74445b4abf505623bd91d5ed4f97c0869cc2a",
+    "tokenizer/chat_template.jinja": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+    "tokenizer/tokenizer.json": "b1537fa9e59a537276ecbc2e12d0438edff635a1f4a4948e679774b5feb3e610",
+    "tokenizer/tokenizer_config.json": "1689852cc9c45010de040c8302a8acdc0d2c4c6c740dd7e9dd0a8c704e16eada"
+  },
+  "prompts": {
+    "train": {
+      "path": "/mnt/nvme/sliders/audio-adapters-pg09-20261017/conceptmod/textsliders/data/prompts-yue2-metal-arm-b.yaml",
+      "sha256": "67eed252927a2a55b521b04025360add48e8596ef4f7d13da9c4dcfd3f9647ba",
+      "count": 4
+    },
+    "heldout": {
+      "path": "/mnt/nvme/sliders/audio-adapters-pg09-20261017/conceptmod/textsliders/data/prompts-yue2-metal-arm-b-eval.yaml",
+      "sha256": "307e49d9f653619c79a66cab0f21a0a4baabe3c04e54b68c8eadfc5957012d77",
+      "count": 2
+    }
+  },
+  "until": 3,
+  "total_steps": 20,
+  "preset": "bispf_optimized",
+  "seed": 7,
+  "resume": null,
+  "native_audio_rendered": false,
+  "pending": [
+    "root guardian/card and fresh admission",
+    "native token/history producer qualification",
+    "native pretrained updates/resume/export",
+    "native acoustic implementation/parity/listening"
+  ],
+  "source_receipt": {
+    "distribution": "particle-sliders-core",
+    "version": "0.6.0",
+    "core_commit": "9be81c1ccfc8ad87eac3efa93fd5a16d0d508bb5",
+    "wheel_sha256": "60629b05298559340807084d278bb256781bf0421c6d928c23e57199e2b37dc8",
+    "particlegan_version": "0.9.1",
+    "source_lock_sha256": "822e24271142937b22351864074df756089fe3f85e4f279a1cb763a6f7c1b797",
+    "installation_root": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages",
+    "installation_provenance": {
+      "kind": "wheel",
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders_core-0.6.0.dist-info/direct_url.json",
+      "sha256": "831ce2f8f3d7094963bff9ab46f3eb885163559f1d870ac35edc8b51dd630229",
+      "archive_sha256": "60629b05298559340807084d278bb256781bf0421c6d928c23e57199e2b37dc8",
+      "archive_hash_verified": true
+    },
+    "wheel_metadata": {
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders_core-0.6.0.dist-info/WHEEL",
+      "sha256": "4a63b1614ee9ccd281a804af409ec38d7dd719417dda5ac684c6f747afe28aa2",
+      "reviewed_sha256": "4a63b1614ee9ccd281a804af409ec38d7dd719417dda5ac684c6f747afe28aa2",
+      "generator": "setuptools (79.0.1)",
+      "generator_independent_sha256": "26b7aa79ef6c9dd8fa9917b7cda4af2f5516426735d883889717b64c2afad219",
+      "generator_differs": false
+    },
+    "imported_modules": {
+      "particle_sliders._training": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/_training.py",
+        "sha256": "0a5802997adec58998beb6598861f6a0f0aa1245a10053666e16300b67d3bc44"
+      },
+      "particle_sliders.bispf_game": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/bispf_game.py",
+        "sha256": "3c95d19a9adcfde3a468359fec44dcf1f7dce2d63a5a6318d6c4b3b6d6091a5e"
+      },
+      "particle_sliders.pg09": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09.py",
+        "sha256": "190a7e6c3a8b53d7d495a577183deacce5c8a1250b674de87c349fb7aead84b3"
+      },
+      "particle_sliders.distillation": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/distillation.py",
+        "sha256": "b277e561517a9cb40d1a399ad07c6350aa22a287232aea816b7f6e434e18a232"
+      },
+      "particle_sliders.reference": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/reference.py",
+        "sha256": "2c5809edd3818fab9efdd0c5234ea6b5027de5fc0130155e537950471018a371"
+      },
+      "particle_sliders.teachers": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/teachers.py",
+        "sha256": "9a35fcff05a15d00f6aa67b5cb9e53cf55526d7e06631ef8cfeb0169519818d2"
+      },
+      "particle_sliders.endpoint_game": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/endpoint_game.py",
+        "sha256": "78ace462127468dff98eb2eccfbdae442d188999cace8f72137fefc2a4924f45"
+      },
+      "particle_sliders.formulation_game": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/formulation_game.py",
+        "sha256": "a11585b4dc6b549de6e62716f0b05d6810addcf61932e190ed50cd2469c21490"
+      },
+      "particle_sliders.grad_regularizers": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/grad_regularizers.py",
+        "sha256": "b1d27df47870814b8a3b05839c833792489e2fe5aff3b2875ab03c74f983a33a"
+      },
+      "particle_sliders.recipe": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/recipe.py",
+        "sha256": "63726226e681e517c49943f6150989a8277031762c6253a338892dac340b5600"
+      },
+      "particle_sliders.formulation": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/formulation.py",
+        "sha256": "a61b06e93efb24e92a72d826f696ede8694e97a3c27c5e6262a2912caac28e12"
+      },
+      "particle_sliders": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/__init__.py",
+        "sha256": "2424d5a850d1f10734f452175b40caa9761d579e69eb8f0eb2b919776beb1d25"
+      },
+      "particle_sliders.pg09_backends": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09_backends.py",
+        "sha256": "5db98918880af33f55ca7312975a0fd112bdae8a7c69a3e357433beb056e32c1"
+      },
+      "particle_sliders.pg09_audio": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09_audio.py",
+        "sha256": "b46a66c56fe237510f06b5d963c084c34bdb1ea87b2732c361f2665c9d221a79"
+      },
+      "particle_sliders.native_lora": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/native_lora.py",
+        "sha256": "9cb43b8b03148e11c9b957e81ed3897a965f2a21c69d440c6aaafee452aa6018"
+      },
+      "particle_sliders.music3_native": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/music3_native.py",
+        "sha256": "bbdd408259475b6d2a16158eaa283d302f22f6d8e7a64c44aad35d8a1e943819"
+      },
+      "particle_sliders.pg09_audio_cli": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09_audio_cli.py",
+        "sha256": "4749e39d0e26380bbb0c1720b41072b06538b70ab7f78ea01371eee2aa52cd2d"
+      }
+    },
+    "core_source": {
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09.py",
+      "sha256": "190a7e6c3a8b53d7d495a577183deacce5c8a1250b674de87c349fb7aead84b3"
+    },
+    "audio_source": {
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09_audio.py",
+      "sha256": "b46a66c56fe237510f06b5d963c084c34bdb1ea87b2732c361f2665c9d221a79"
+    },
+    "native_source": {
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/music3_native.py",
+      "sha256": "bbdd408259475b6d2a16158eaa283d302f22f6d8e7a64c44aad35d8a1e943819"
+    },
+    "workflows_source": {
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09_audio_cli.py",
+      "sha256": "4749e39d0e26380bbb0c1720b41072b06538b70ab7f78ea01371eee2aa52cd2d"
+    }
+  },
+  "profile_root": "/ml2/codex-storage/future-workspaces/2026-10-17/task-14/pg091-release/continuous",
+  "source_free_imports": true,
+  "models_constructed": false,
+  "tensors_deserialized": false,
+  "cuda_initialized": false,
+  "admission_granted": false
+}

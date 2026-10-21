@@ -1,0 +1,483 @@
+{
+  "status": "INSTALLED_PACKAGE_AND_LEGACY_REJECTION_PASSED",
+  "source_free": true,
+  "new_lineage": "music3-packaged-pg091-v1",
+  "source_receipt": {
+    "distribution": "particle-sliders-core",
+    "version": "0.6.0",
+    "core_commit": "9be81c1ccfc8ad87eac3efa93fd5a16d0d508bb5",
+    "wheel_sha256": "60629b05298559340807084d278bb256781bf0421c6d928c23e57199e2b37dc8",
+    "particlegan_version": "0.9.1",
+    "source_lock_sha256": "822e24271142937b22351864074df756089fe3f85e4f279a1cb763a6f7c1b797",
+    "installation_root": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages",
+    "installation_provenance": {
+      "kind": "wheel",
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders_core-0.6.0.dist-info/direct_url.json",
+      "sha256": "831ce2f8f3d7094963bff9ab46f3eb885163559f1d870ac35edc8b51dd630229",
+      "archive_sha256": "60629b05298559340807084d278bb256781bf0421c6d928c23e57199e2b37dc8",
+      "archive_hash_verified": true
+    },
+    "wheel_metadata": {
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders_core-0.6.0.dist-info/WHEEL",
+      "sha256": "4a63b1614ee9ccd281a804af409ec38d7dd719417dda5ac684c6f747afe28aa2",
+      "reviewed_sha256": "4a63b1614ee9ccd281a804af409ec38d7dd719417dda5ac684c6f747afe28aa2",
+      "generator": "setuptools (79.0.1)",
+      "generator_independent_sha256": "26b7aa79ef6c9dd8fa9917b7cda4af2f5516426735d883889717b64c2afad219",
+      "generator_differs": false
+    },
+    "imported_modules": {
+      "particle_sliders._training": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/_training.py",
+        "sha256": "0a5802997adec58998beb6598861f6a0f0aa1245a10053666e16300b67d3bc44"
+      },
+      "particle_sliders.bispf_game": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/bispf_game.py",
+        "sha256": "3c95d19a9adcfde3a468359fec44dcf1f7dce2d63a5a6318d6c4b3b6d6091a5e"
+      },
+      "particle_sliders.pg09": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09.py",
+        "sha256": "190a7e6c3a8b53d7d495a577183deacce5c8a1250b674de87c349fb7aead84b3"
+      },
+      "particle_sliders.distillation": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/distillation.py",
+        "sha256": "b277e561517a9cb40d1a399ad07c6350aa22a287232aea816b7f6e434e18a232"
+      },
+      "particle_sliders.reference": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/reference.py",
+        "sha256": "2c5809edd3818fab9efdd0c5234ea6b5027de5fc0130155e537950471018a371"
+      },
+      "particle_sliders.teachers": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/teachers.py",
+        "sha256": "9a35fcff05a15d00f6aa67b5cb9e53cf55526d7e06631ef8cfeb0169519818d2"
+      },
+      "particle_sliders.endpoint_game": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/endpoint_game.py",
+        "sha256": "78ace462127468dff98eb2eccfbdae442d188999cace8f72137fefc2a4924f45"
+      },
+      "particle_sliders.formulation_game": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/formulation_game.py",
+        "sha256": "a11585b4dc6b549de6e62716f0b05d6810addcf61932e190ed50cd2469c21490"
+      },
+      "particle_sliders.grad_regularizers": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/grad_regularizers.py",
+        "sha256": "b1d27df47870814b8a3b05839c833792489e2fe5aff3b2875ab03c74f983a33a"
+      },
+      "particle_sliders.recipe": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/recipe.py",
+        "sha256": "63726226e681e517c49943f6150989a8277031762c6253a338892dac340b5600"
+      },
+      "particle_sliders.formulation": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/formulation.py",
+        "sha256": "a61b06e93efb24e92a72d826f696ede8694e97a3c27c5e6262a2912caac28e12"
+      },
+      "particle_sliders": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/__init__.py",
+        "sha256": "2424d5a850d1f10734f452175b40caa9761d579e69eb8f0eb2b919776beb1d25"
+      },
+      "particle_sliders.pg09_backends": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09_backends.py",
+        "sha256": "5db98918880af33f55ca7312975a0fd112bdae8a7c69a3e357433beb056e32c1"
+      },
+      "particle_sliders.pg09_audio": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09_audio.py",
+        "sha256": "b46a66c56fe237510f06b5d963c084c34bdb1ea87b2732c361f2665c9d221a79"
+      },
+      "particle_sliders.native_lora": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/native_lora.py",
+        "sha256": "9cb43b8b03148e11c9b957e81ed3897a965f2a21c69d440c6aaafee452aa6018"
+      },
+      "particle_sliders.music3_native": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/music3_native.py",
+        "sha256": "bbdd408259475b6d2a16158eaa283d302f22f6d8e7a64c44aad35d8a1e943819"
+      },
+      "particle_sliders.pg09_audio_cli": {
+        "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09_audio_cli.py",
+        "sha256": "4749e39d0e26380bbb0c1720b41072b06538b70ab7f78ea01371eee2aa52cd2d"
+      }
+    },
+    "core_source": {
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09.py",
+      "sha256": "190a7e6c3a8b53d7d495a577183deacce5c8a1250b674de87c349fb7aead84b3"
+    },
+    "audio_source": {
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09_audio.py",
+      "sha256": "b46a66c56fe237510f06b5d963c084c34bdb1ea87b2732c361f2665c9d221a79"
+    },
+    "native_source": {
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/music3_native.py",
+      "sha256": "bbdd408259475b6d2a16158eaa283d302f22f6d8e7a64c44aad35d8a1e943819"
+    },
+    "workflows_source": {
+      "path": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particle_sliders/pg09_audio_cli.py",
+      "sha256": "4749e39d0e26380bbb0c1720b41072b06538b70ab7f78ea01371eee2aa52cd2d"
+    }
+  },
+  "runtime": {
+    "executable": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/music3-pg091/../venv-pg091/bin/python",
+    "torch_version": "2.11.0+cu128",
+    "torch_file": "/mnt/nvme/ai/conda/anaconda3/envs/minimax-music3/lib/python3.11/site-packages/torch/__init__.py",
+    "transformers_version": "5.15.0",
+    "transformers_file": "/mnt/nvme/ai/conda/anaconda3/envs/minimax-music3/lib/python3.11/site-packages/transformers/__init__.py",
+    "particlegan_version": "0.9.1",
+    "particlegan_file": "/ml2/codex-storage/future-workspaces/2026-10-17/task-12/venv-pg091/lib/python3.11/site-packages/particlegan/__init__.py",
+    "pg_sources": {
+      "__init__.py": "607c6bb12acd631ae1ff98f6e61d990ff4ab5b60ec86f5a8cb5864cda7c11864",
+      "_qr.py": "b59cd62cc27ed557b41b2d17ed86ed578c762a3a8a392d63731a5a3b2b018916",
+      "anchor_birth.py": "aa50983d8b61304acf4e1138f16fd4784798983df91e931863bcacd3b511f76f",
+      "autoencoder.py": "f3fbb9184e9f44112e15eccf0c0246dfba5ed490d3c7b81b0f837a5335916402",
+      "birth_death.py": "b14c50c611a8cf188347e391739fca50a5171200eb6be90e4e3d1509d64e47ed",
+      "birth_phase.py": "4af5a0915f927ca3d8e753195227d59c97f07304e9927ca1383bda9acd0ccb8f",
+      "bispf.py": "ec8274b7d1290032fd7329b5067d0c7e90f0a0f4fb0952cc4ed770908c87aa99",
+      "capabilities.py": "39df9c67dbedf612740057e5fa743bc724678a1bc323d1f7cf550b37c0c01177",
+      "conditional_transport.py": "4ffa96e7688825b83e618edbc1f0e2a6bc1ac6fb2e3e5d04d7f27274069e24ee",
+      "conditioning.py": "8734fe338868ace4b5851a8fdb1f071e46d47396f66a3765e6b1ef37f0481486",
+      "continuous.py": "4ceab49c7d51d1769ae91b7f8bc892eaf380ca6fbd77a948a086ade6627e9a41",
+      "coulomb_prior.py": "cd4fed5a3b22510911bc098e7b48bfb794366ef5a9c8c983d1672172f15b10a3",
+      "diffusion.py": "19c3aa8772703891551b9122fde8e74c07996f779892b7cb6be09553691efa61",
+      "discriminators.py": "0e2efb125ffb314577612ab7a2eba66b0a1a2d28ad25f403f42c18b6f6ee333f",
+      "execution.py": "015151489dd0b6c9933b9a9dc3f02edc721907770b82ab72d7e7ee2739d03c9d",
+      "feature_cells.py": "e0ea05f61abd7845c7437eed9a79c3a2511d5551ff04f4e619b6b9c8992e221a",
+      "feature_policy.py": "de1a50f70a37d4c9174c8850ce3eac2a2597ed01f19fc4fe1a2ce0ec3176a8b2",
+      "feature_reference.py": "58e076e9e04600be25e28afafc537a340de727371f4acbbfb2b7dd8bebac18b1",
+      "gan_loss.py": "f73cc593aef5d7507dc1a468ee261cc186c8dbfbee3a0aad769b6e252c2c143f",
+      "grad_regularizers.py": "a540d05a4a992540b6a5f3b5ff7ccc11ebaf18592135b87c95638adbe68aa747",
+      "init.py": "3534ff23efa413cdf8b4125b91e0d30671d873b3e2958547d4e744b750454b9b",
+      "initial_mmd.py": "59b9573dd79ac9d846779f2198d5864f865d0ae8207101ed8b3f4da720260615",
+      "k3p.py": "45ceabdc067fb420e163d3d4ac5a4edb0bb47d154c38c73865f95dabeaefcad7",
+      "ka2.py": "95fdaa58a2bdc229d5d146ef89548bc3fe07582d06181a149ed1bb4f5d632703",
+      "kinetic_transport.py": "8922627370b55e9e6b47e4c946f94cbd23f87bf17a94c6b9410fcf3c3967c1ee",
+      "mean_transport.py": "57a68e0a65c5424a4460f65002f3862a69e90af330a4d47c700dc773683a2c06",
+      "moment_tether.py": "16bc50edae9ca43464240c84ffd20cb93691194f2b285a1056b56ff3a98c0e5a",
+      "optim/__init__.py": "8e0403422e18e52c6fcd3bc73ddb138116bd910a6645207fe3b9f1e71a82274a",
+      "optim/constraint_geometry.py": "b78f2d6dec2d345c1357b3812a7f9adac8c4da0f86c8536ebfe0092c18269c5e",
+      "optim/convolution_frobenius.py": "0916f94d13c7213856faf5d40f5896891fb102f8995caa17e255ba8237bb9e3a",
+      "optim/convolution_quintic.py": "55441cfca6e5136ea3810a6f6d5dfb284be4629c373e2b9a5bdaf16218608f14",
+      "optim/critic_cap.py": "74950ecd95c56b9921e2ed28250c4c2694d764b1a9fd5a2d10585f283a45b999",
+      "optim/direction_blend.py": "f18900ba47c639dc5484022d294bec7fe199efbd770c92876c548f727822eb72",
+      "optim/dualnorm.py": "89c3d3279cf97181c9f2d5a8424a055ac1de13b5a1292cf87bba310afd9ffd8b",
+      "optim/prior_proximal.py": "50b20c11f0e7f7cabb9496d4874136172f36ce9997baf6db8d5dce91e3ca32ea",
+      "optim/strict_progress.py": "45f4764a3bdfbf4f0f6f6986817b8aef6aacc14cadbd1fc63e0d483011b2f577",
+      "output_moments.py": "dcf3e27228d2c3c9738e473c5b22ee9e6d5047ddcd60c538b66526adb53ef188",
+      "particle_prior.py": "0220878bebea227da63abbf9f5b1ebdabdc6aea54fd2332fd2cab02ed734238f",
+      "policy.py": "7b904bec09c4bbcfaa59b74465102489e5b45456f5725441b6538da6adf2accc",
+      "population_continuity.py": "378cd75cca45bc8da4da33e686a12cf99df853042687978314e37c532bc17fe6",
+      "recipe_compat.py": "030cbf25d52c6a9b8db54b84b6b50c89bcbe3570658aa0f287515f7c403ec265",
+      "recipe_schedules.py": "b675bdc9f72224b11e9887f8ed66b1a541ffc76d80242709969cc67ac47ca46a",
+      "recipes.py": "a50de8852cad1c606fb0061f6270c5151f133a9061d0612b7bb5c37ff22dc999",
+      "routing.py": "63249d808fccb3d4e113eb1d638a245ee665c3cade20a1542bb706f316b4abcc",
+      "row_evidence.py": "78be40141ef3946860458e9842159be9321f05c217a4800dd4134113b6eba93e",
+      "sigreg.py": "96bac4b2344f9d505a7d767ecfbb58ab06442e2a1de1a48ea479baa2288e048b",
+      "tensorflow_adam.py": "37f1192e48b84907446d8f676c62631bf87ff450b2a2e6b63e7489adc33e24e9",
+      "training.py": "3711700bcb1700d9446fb6ced07d8d98188860ff219828ec91f49e3bb10b8344",
+      "vicreg_loss.py": "177a68b98036e4725cacf6bc0d95277111184c0dcb9566d3f7fc1527046cefda"
+    },
+    "cuda_initialized": false
+  },
+  "fixture": {
+    "model_class": "transformers.models.qwen3.modeling_qwen3.Qwen3ForCausalLM",
+    "hidden_width": 32,
+    "vocab_size": 151670,
+    "audio_start_tokens": [
+      151669,
+      151669
+    ],
+    "native_model_source": {
+      "path": "/mnt/nvme/ai/conda/anaconda3/envs/minimax-music3/lib/python3.11/site-packages/transformers/models/qwen3/modeling_qwen3.py",
+      "sha256": "cbb7f2dc274c2f5592746c0dc6985ca50353efa07376f92cc922b77680a74f69"
+    }
+  },
+  "game_signature": {
+    "pg_version": "0.9.1",
+    "pg_release_wheel_sha256": "b01b7957169cb3de45887e22b4d525fd54071577e1de58089707cf05fe6992ec",
+    "pg_sources_sha256": "04624298310cd4b28d5bf687a1eac8951efd9439fb0310709ba5b9703208ceab",
+    "implementation_sources": {
+      "particle_sliders.pg09": "190a7e6c3a8b53d7d495a577183deacce5c8a1250b674de87c349fb7aead84b3",
+      "particle_sliders.pg09_audio": "b46a66c56fe237510f06b5d963c084c34bdb1ea87b2732c361f2665c9d221a79",
+      "particle_sliders.pg09_backends": "5db98918880af33f55ca7312975a0fd112bdae8a7c69a3e357433beb056e32c1",
+      "transformers.models.qwen3.modeling_qwen3": "cbb7f2dc274c2f5592746c0dc6985ca50353efa07376f92cc922b77680a74f69",
+      "particle_sliders.music3_native": "bbdd408259475b6d2a16158eaa283d302f22f6d8e7a64c44aad35d8a1e943819",
+      "torch.nn.modules.container": "2caff8043d111843e301e5b7086c303ed0e861780fced92a1eb3808461334cc5",
+      "torch.nn.modules.linear": "45aa464d373ca22cc2f063e25df64ed78f37bbf3ba4203e8220bd545920c45dd",
+      "torch.nn.modules.activation": "8b8076c9383f8faea0800e5312e6df32b0829a6fd9a149ae4dc9620d2d6885fd",
+      "torch.nn.modules.sparse": "4897b5402c35e49c830edaee1eacc1b1c3f802ddc8e7ddf4112a71c78bea81f5",
+      "transformers.activations": "5b20c0a3625edc0001a98f09ce3c6b5baa1100e1d7ad8dee649e4d45c8468665",
+      "particle_sliders.native_lora": "9cb43b8b03148e11c9b957e81ed3897a965f2a21c69d440c6aaafee452aa6018",
+      "particle_sliders.reference": "2c5809edd3818fab9efdd0c5234ea6b5027de5fc0130155e537950471018a371"
+    },
+    "pg_source_profile": "release",
+    "penalty_input_domain": "auto",
+    "resolved_penalty_domain": "continuous",
+    "response_shape": [
+      32
+    ],
+    "conditions_sha256": "7db9cdb81b2b28d2beae73f5c3ce0e919bc4ad6ca3215ece1cfa87a040194281",
+    "rows_sha256": "6a6db63961553c294d986a2a3b70973285c8dd52eae863511c0576ad62236180",
+    "sampling": "balanced",
+    "objective": "g_adv+public_prior;d_adv+public_penalty",
+    "generator_arm": "routed_particle_gan",
+    "recipe": {
+      "name": "bispf_optimized",
+      "critic_formulation": "bispf",
+      "model": "gan",
+      "training_precision": "float32",
+      "z_dim": 4,
+      "num_particles": 128,
+      "prior_kind": "particles",
+      "sigma_rel": 0.0,
+      "standardize": true,
+      "num_classes": null,
+      "conditioning": "scalar",
+      "ucd_target": "class",
+      "ucd_weight": 0.02,
+      "alpha_bar": [
+        1.0,
+        0.9,
+        0.5,
+        0.05,
+        0.0001
+      ],
+      "batch_size": 2,
+      "total_steps": 4,
+      "continuous_policy": null,
+      "lr": 0.012,
+      "d_lr_mult": 1.5,
+      "prior_lr_mult": 2.5,
+      "betas": [
+        0.0,
+        0.999
+      ],
+      "prior_betas": null,
+      "reg_arm": null,
+      "reg_coeff": 1.0,
+      "reg_kappa": 1.0,
+      "reg_every": 1,
+      "critic_step_mode": "none",
+      "prior_reg": 0.01,
+      "prior_update": "learned",
+      "prior_regularizer": "sbnp",
+      "prior_reg_target_std": 1.0,
+      "prior_reg_eps": 0.0001,
+      "prior_l2": 0.0,
+      "prior_proximal_strength": 0.0,
+      "prior_coulomb_softening": 0.1,
+      "prior_coulomb_confinement": 0.35,
+      "prior_coulomb_neighbors": 8,
+      "prior_sigreg_projections": 32,
+      "prior_sigreg_knots": 17,
+      "ema_decay": 0.0,
+      "lr_anneal_start": 0.6,
+      "lr_floor": 1.0,
+      "network_lr_floor": 1.0,
+      "network_lr_horizon_cap": null,
+      "reg_anchor_min_decay": 0.9,
+      "reg_anchor_weight": 0.0,
+      "direct_particle_gain": false,
+      "d_guard_ratio": 0.0,
+      "d_guard_min_steps": 200,
+      "latent_damping_max_rate": 0.0,
+      "direct_particle_betas": [
+        0.0,
+        0.9
+      ],
+      "input_noise_std": 0.0,
+      "input_noise_anneal_end": 0.1,
+      "output_noise_std": 0.0,
+      "output_noise_warmup": 0.0,
+      "encoder_mode": "none",
+      "routing_temperature": 0.25,
+      "distance_reduction": "sum",
+      "observation_sigma": 0.03,
+      "reconstruction_weight": 1.0,
+      "kinetic_transport_weight": 0.0,
+      "kinetic_transport_local_weight": 0.0,
+      "kinetic_transport_projections": 32,
+      "amsgrad": false,
+      "critic_r1_real": true,
+      "critic_payoff_damping": true,
+      "output_noise_mode": "fixed",
+      "lr_control": "mobility",
+      "particle_birth_death": false,
+      "row_evidence_gate": false,
+      "table_release_rule": "any",
+      "row_evidence_hot": true,
+      "row_evidence_exclude": true,
+      "row_evidence_hold": true,
+      "birth_death_space": "data",
+      "serve_average": 0.0,
+      "reopen_signal": "data",
+      "reopen_anchor": "hold",
+      "reopen_guard": null,
+      "row_evidence_null": "theory",
+      "birth_death_isolation": false,
+      "birth_death_feature_scale": "none",
+      "birth_death_backend": "knn",
+      "birth_death_cells": 64,
+      "birth_death_metric_rank": 8,
+      "birth_death_chunk": 256,
+      "birth_death_parent_policy": "real_anchor",
+      "row_policy": "independent",
+      "optimizer_family": "dualnorm",
+      "optimizer_momentum": 0.0,
+      "optimizer_smoothing": 0.001,
+      "optimizer_convolution": "per_offset",
+      "optimizer_convolution_rule": "quintic",
+      "optimizer_svd_backend": "batched",
+      "constraint_geometry_mode": "direction_blend",
+      "optimizer_adam_lr": null,
+      "eps": 1e-08,
+      "beta2_end": null,
+      "beta2_anneal_end": 0.2,
+      "reg_coeff_end": null,
+      "reg_coeff_anneal_end": 0.2,
+      "loss": "non_saturating",
+      "d_betas": null,
+      "d_eps": null,
+      "prior_eps": null,
+      "loss_labels": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "adam_variant": "pytorch",
+      "lr_schedule": "cosine",
+      "lr_decay_rate": 0.96,
+      "lr_decay_steps": 50000,
+      "lr_decay_staircase": false
+    },
+    "backend": {
+      "adapter_names": [
+        "particles",
+        "network.lora_te-model-layers-0-self_attn-q_proj.lora_down.weight",
+        "network.lora_te-model-layers-0-self_attn-q_proj.lora_up.weight",
+        "network.lora_te-model-layers-0-self_attn-k_proj.lora_down.weight",
+        "network.lora_te-model-layers-0-self_attn-k_proj.lora_up.weight",
+        "network.lora_te-model-layers-0-self_attn-v_proj.lora_down.weight",
+        "network.lora_te-model-layers-0-self_attn-v_proj.lora_up.weight",
+        "network.lora_te-model-layers-0-self_attn-o_proj.lora_down.weight",
+        "network.lora_te-model-layers-0-self_attn-o_proj.lora_up.weight",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.router.0.weight",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.router.0.bias",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.router.2.weight",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.router.2.bias",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.router.4.weight",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.router.4.bias",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.router.6.weight",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.router.6.bias",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.net.0.weight",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.net.0.bias",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.net.2.weight",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.net.2.bias",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.net.4.weight",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.net.4.bias",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.net.6.weight",
+        "bridges.lora_te-model-layers-0-self_attn-q_proj.net.6.bias",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.router.0.weight",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.router.0.bias",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.router.2.weight",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.router.2.bias",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.router.4.weight",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.router.4.bias",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.router.6.weight",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.router.6.bias",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.net.0.weight",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.net.0.bias",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.net.2.weight",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.net.2.bias",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.net.4.weight",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.net.4.bias",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.net.6.weight",
+        "bridges.lora_te-model-layers-0-self_attn-k_proj.net.6.bias",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.router.0.weight",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.router.0.bias",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.router.2.weight",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.router.2.bias",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.router.4.weight",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.router.4.bias",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.router.6.weight",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.router.6.bias",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.net.0.weight",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.net.0.bias",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.net.2.weight",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.net.2.bias",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.net.4.weight",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.net.4.bias",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.net.6.weight",
+        "bridges.lora_te-model-layers-0-self_attn-v_proj.net.6.bias",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.router.0.weight",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.router.0.bias",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.router.2.weight",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.router.2.bias",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.router.4.weight",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.router.4.bias",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.router.6.weight",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.router.6.bias",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.net.0.weight",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.net.0.bias",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.net.2.weight",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.net.2.bias",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.net.4.weight",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.net.4.bias",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.net.6.weight",
+        "bridges.lora_te-model-layers-0-self_attn-o_proj.net.6.bias"
+      ],
+      "audio_render_qualified": false,
+      "cfg_adapter_branch": "not applicable to hidden-state probe",
+      "checkpoint_scale_capture": "shared per-forward captured context",
+      "family": "music3_native_qwen3_ar",
+      "model_identity": {
+        "adapter_seed": 77,
+        "base_seed": 23,
+        "factory": {
+          "checkpointing": true,
+          "family": "music3",
+          "penalty_input_domain": "auto",
+          "pg_source_profile": "release",
+          "preset": "bispf_optimized",
+          "seed": 7,
+          "total_steps": 4,
+          "width": 32
+        },
+        "fixture": "audio-native-random-v1",
+        "token_policy": "native_audio_start_151669",
+        "worker_sha256": "4749e39d0e26380bbb0c1720b41072b06538b70ab7f78ea01371eee2aa52cd2d"
+      },
+      "pg_domain_gate": {
+        "penalty_input_domain": "auto",
+        "pg_source_profile": "release",
+        "pg_sources_sha256": "04624298310cd4b28d5bf687a1eac8951efd9439fb0310709ba5b9703208ceab",
+        "resolved_penalty_domain": "continuous"
+      },
+      "protocol": "audio-ar-last-hidden-pg090-v1",
+      "quality_qualified": false,
+      "response_coordinates": "native final AR token hidden state; no projection",
+      "response_domain": "continuous_vector",
+      "response_width": 32,
+      "student_conditioning": "neutral",
+      "target_convention": "frozen positive last hidden; shared continuation history",
+      "time_coordinates": "no diffusion time; AR history length",
+      "trained_scales": [
+        1.0
+      ]
+    }
+  },
+  "legacy_artifacts": {
+    "checkpoint.pt": {
+      "path": "/tmp/music3-first-probe-20261017/checkpoint.pt",
+      "sha256": "f28ce96557cbc71ebc4b764395df08db7098ae014ac6f218b2fafad17f0df113",
+      "rejected": true,
+      "state_and_rng_unchanged": true,
+      "bytes_unchanged": true,
+      "reason": "checkpoint objective, recipe, domain, source or conditioning mismatch"
+    },
+    "adapter-export.pt": {
+      "path": "/tmp/music3-first-probe-20261017/adapter-export.pt",
+      "sha256": "92b3c1b4247386ff27b03772fab87357719bcc44751d519277cc20d5513e35b8",
+      "rejected": true,
+      "state_and_rng_unchanged": true,
+      "bytes_unchanged": true,
+      "reason": "adapter export protocol differs"
+    }
+  },
+  "pretrained_weights_loaded": false,
+  "audio_rendered": false
+}

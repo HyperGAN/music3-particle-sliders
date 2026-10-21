@@ -1,0 +1,77 @@
+{
+  "schema": "music3-owned-factory-source-draft-v1",
+  "status": "SOURCE_DRAFT_PUBLIC_LIFECYCLE_ACTIVATION_BLOCKED",
+  "observed_main": "b40d2aa6fed745eda3043d3d3b11e362ec2f8dfe",
+  "base_pr": {
+    "number": 5,
+    "head": "471a7c9669fa30f19ec318f0fc6b39bd1de833c1",
+    "draft": true,
+    "reviews": []
+  },
+  "preserved_pr": {
+    "number": 3,
+    "head": "2f1ff5a952b2c3e81365ba2aeeeb5edd94fcd76b",
+    "draft": true,
+    "reviews": []
+  },
+  "shared_milestone": {
+    "commit": "fd89e1c780ab5210cd1be98ec3b70977e6349379",
+    "core_version": "0.7.0",
+    "existing_owner_wheel_sha256": "9637aede473939e4284cf05c4c8d950e5a84ab5b0fe3c482080eb10028abc4d9",
+    "wheel_receipt_origin": "task-2/evidence/milestone-build/build-receipt.json; not built or executed in this task",
+    "source_sha256": {
+      "lifecycle.py": "e3bd03acf94390b8813f232e828ec356e2d501914fc14a93e6e6f0332d1ff950",
+      "music3_native.py": "bbdd408259475b6d2a16158eaa283d302f22f6d8e7a64c44aad35d8a1e943819",
+      "pg09_audio.py": "b46a66c56fe237510f06b5d963c084c34bdb1ea87b2732c361f2665c9d221a79",
+      "pg09.py": "190a7e6c3a8b53d7d495a577183deacce5c8a1250b674de87c349fb7aead84b3"
+    }
+  },
+  "source_sha256": {
+    "music3/lifecycle.py": "2ee4348cdf12f679eacca3a3041f785842a66d073afc61b92c0be4255eeb1162",
+    "docs/lifecycle-integration.md": "dd995aac5447365d4076e36ad59c717016b864601d041d9fa9262126232a1d22",
+    "README.md": "8ab564948dabd88ed4bae36d82b50b2cc2e32ce53d9dc32fb220db9f013ea11f"
+  },
+  "factory_import_inventory": [
+    "copy",
+    "hashlib",
+    "json",
+    "math",
+    "particle_sliders",
+    "particle_sliders.lifecycle",
+    "particle_sliders.music3_native",
+    "particle_sliders.pg09_audio",
+    "pathlib",
+    "re",
+    "torch",
+    "transformers"
+  ],
+  "static_inspection": [
+    "ast.parse of new factory without imports",
+    "git diff --check"
+  ],
+  "tests_run": false,
+  "dependency_installs": false,
+  "builds_run": false,
+  "models_loaded": false,
+  "gpu_work": false,
+  "public_writes": false,
+  "active_pin_changes": false,
+  "checkpoint_migrations": false,
+  "pending": [
+    "parent-coordinated modality-neutral Backend/schema/registration",
+    "profile-aware common lifecycle preflight",
+    "reviewed package/wheel pin and installed conformance resource slot",
+    "HNDL matched-weight network mapping/parity",
+    "native pretrained, sampler and acoustic quality qualification"
+  ],
+  "parent_report": {
+    "target_thread": "01a157c0-24ba-7273-9be8-c36fa69e301f",
+    "action": "send early plan and blockers",
+    "status": "NOT_DELIVERED",
+    "reason": "thread not found; unqualified host and discovered durable host both returned error",
+    "fallback": "platform completion notification and this local handoff"
+  },
+  "actions_denied": [],
+  "uncertain_actions": [],
+  "historical_publication_blocker": "PR5 preserves the original shared-owner denied-not-executed package push in its existing receipt; this task did not retry it"
+}

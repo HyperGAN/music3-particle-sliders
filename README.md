@@ -1,5 +1,9 @@
 # Music 3 particle sliders
 
+An opt-in owned-factory source draft for the shared 0.7.0 milestone is recorded
+in [the lifecycle handoff](docs/lifecycle-integration.md). It is not registered
+as an image backend, and the existing pinned CLI below remains unchanged.
+
 Music 3 product integration for `MiniMaxAI/MiniMax-Music3`. This branch
 moves training, resume, export and probing to the installed public
 `particle-sliders-core` **0.6.0** API with ParticleGAN **0.9.1**. Product

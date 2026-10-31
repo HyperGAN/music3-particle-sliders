@@ -6,7 +6,7 @@ The new opt-in package registers `music3.lifecycle:BACKEND` under
 dependency remains on the existing PG0.9.1 line: exact reviewed core0.8.2 source
 `f6807a91546e43e198645a3f8925d2dc7c9e03b4`, including the independently cleared
 reversible checkpoint-ownership update. This is a new source cohort.
-The historical core0.6.0/PG0.9.1 `core.lock.json`, `requirements.txt`, six CLI
+The historical core0.6.0/PG0.9.1 `core.lock.json`, `requirements-legacy.txt`, six CLI
 scripts, loaders, saved results and checkpoint cohorts remain unchanged. PR5
 `471a7c9` and independent PR3 `2f1ff5a` remain preserved; no merge is proposed.
 

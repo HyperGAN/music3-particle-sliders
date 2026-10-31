@@ -1,3 +1,5 @@
+[Current and historical installation cohorts](INSTALL-COHORTS.md).
+
 # Music 3 particle sliders
 
 A separate [response-session source proposal](docs/response-session-proposal.md)
@@ -19,13 +21,13 @@ shared-state tests**. Native pretrained training, acoustic rendering and
 listening review remain pending. The package proposal and this derivative
 still require exact-head Ada review and parent integration.
 
-## Installed package contract
+## Historical core0.6.0 CLI contract
 
 `core.lock.json` binds proposed package commit
 `9be81c1ccfc8ad87eac3efa93fd5a16d0d508bb5`, wheel SHA-256
 `60629b05298559340807084d278bb256781bf0421c6d928c23e57199e2b37dc8`,
 and 39 installed-file hashes. Qualification used that exact local wheel.
-`requirements.txt` records the intended immutable Git dependency, but
+`requirements-legacy.txt` records the intended immutable Git dependency, but
 public Git resolution is **blocked**: automatic approval review rejected
 the package owner's push to `HyperGAN/particle-sliders`,
 `refs/heads/audit/shared-audio-cli-20261017`, because the authorization

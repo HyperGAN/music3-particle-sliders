@@ -38,7 +38,7 @@ remaining metadata bytes and all source/dependency metadata hashes stay
 locked. This handles the permitted build-backend version without claiming
 that an unpublished Git requirement has been fetched or built successfully.
 
-**Public dependency resolution is blocked.** `requirements.txt` contains
+**Public dependency resolution is blocked.** `requirements-legacy.txt` contains
 the intended immutable source pin, but the package owner's push of this
 exact head to `HyperGAN/particle-sliders`,
 `refs/heads/audit/shared-audio-cli-20261017`, was rejected by automatic

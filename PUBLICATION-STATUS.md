@@ -1,7 +1,9 @@
 # Publication and qualification status
 
-This source is proposed through [the existing draft PR](https://github.com/HyperGAN/music3-particle-sliders/pull/5).
-Its qualified candidate is `b16b756e08fa55004fd3dc93e699b5e8cd4a38e0`; tested runtime is
+The numerical-response proposal was integrated through
+[PR5](https://github.com/HyperGAN/music3-particle-sliders/pull/5), which is now closed.
+Public main was verified at `11b683ad7912b421ea3cd13642dda9356a73e2aa` on
+2026-10-31. Its historical qualified candidate is `b16b756e08fa55004fd3dc93e699b5e8cd4a38e0`; tested runtime is
 `b16b756e08fa55004fd3dc93e699b5e8cd4a38e0`. The publication follow-up changes Markdown
 only: runtime, tests, dependency declarations, locks and capability gates are
 unchanged. No new wheel or test execution is claimed for this docs-only commit.
@@ -19,7 +21,12 @@ at `ee5c2157074681367f8d4c80de1ab7018b6a5d43`. Keep the tested pin: current core
 Native libraries remain isolated per product. Existing checkpoints and result
 receipts retain their original source/model/architecture/profile/cohort.
 
-Publication is a Git draft update, not a package release, model release,
+The inventory maintenance work preserves this cohort and adds installed-package
+catalog assets, exact VCS subdirectory validation and a bounded ordinary-LoRA
+approximation helper. Its separate installed CPU receipt will accompany the
+maintenance PR. New checks do not replace the historical source receipt above.
+
+Publication is a Git source update, not a package release, model release,
 pretrained qualification or merge approval. Original historical/source-only
 assessment notes describe their earlier stage; this receipt index supersedes
 only their current CPU/public-source status. HyperGAN reporting and matched-

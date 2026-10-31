@@ -1,0 +1,26 @@
+{
+  "core.lock.json": {
+    "historical_bytes_unchanged": true,
+    "sha256": "822e24271142937b22351864074df756089fe3f85e4f279a1cb763a6f7c1b797"
+  },
+  "music3/response-core.lock.json": {
+    "historical_bytes_unchanged": true,
+    "sha256": "12e2310b2680173b5a6c3c220270d3d79cb9029d5660bf23f7d6e6f06fd986f3"
+  },
+  "music3_particle_sliders_hndl-0.1.0-py3-none-any.whl": {
+    "sha256": "08c1b543f9dcff65f9476c386bf4e15671901d18b7b0ddcfc08503235160586f",
+    "zip_verified": true
+  },
+  "music3_particle_sliders-0.2.0-py3-none-any.whl": {
+    "sha256": "df583f66ce41cb14fe2ef9a29fa8fe9f0b8fa3c26133713024190ebaa69c56c2",
+    "zip_verified": true
+  },
+  "music3_particle_sliders_hndl-0.1.0.tar.gz": {
+    "sha256": "f5849fe981ec8d1edf14b4fb5e6fced06fc6c46fddfdfe84814001543de9e341",
+    "source_data_included": true
+  },
+  "music3_particle_sliders-0.2.0.tar.gz": {
+    "sha256": "195876030f9185b04c4f4ee7f10536bd488a0a0203a4ef3f0d7649a046543d21",
+    "source_data_included": true
+  }
+}

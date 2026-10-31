@@ -7,6 +7,12 @@ registers the owned Music3 factory and data-independent response inference on
 reviewed core0.8.2 / PG0.9.1. **22 selected installed CPU checks passed**;
 see [publication and qualification status](PUBLICATION-STATUS.md). Native wide
 responses and acoustic rendering remain gated.
+The bounded [ordinary LoRA distillation helper](docs/ordinary-lora-distillation.md)
+uses the shared fitter and returns explicit approximation provenance. It is
+qualified only on tiny random CPU fixtures; it does not publish weights.
+The separately packaged [HyperGAN/HNDL candidate](cohorts/hndl/README.md) binds
+real shared HNDL projections and an AR readout to random native Qwen3 hosts.
+It preserves this package's supported cohort and native width gate.
 The historical CLI and its core0.6.0 lock below remain unchanged and require
 their original environment; the two environments must remain separate.
 

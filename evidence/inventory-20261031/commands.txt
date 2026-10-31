@@ -1,0 +1,14 @@
+# From task-11, after building/installing each wheel in its own venv.
+.venv/bin/python -m build --no-isolation music3 --outdir evidence/wheels
+.venv-hndl/bin/python -m build --no-isolation music3/cohorts/hndl --outdir evidence/hndl-wheels
+.venv/bin/python -m pip install --no-index --no-deps --force-reinstall evidence/wheels/music3_particle_sliders-0.2.0-py3-none-any.whl
+.venv-hndl/bin/python -m pip install --no-index --no-deps --force-reinstall evidence/hndl-wheels/music3_particle_sliders_hndl-0.1.0-py3-none-any.whl
+# Installed tests: use absolute executable and test paths when changing to /tmp.
+cd /tmp
+/ml2/codex-storage/future-workspaces/2026-10-31/task-11/.venv/bin/python -I -m pytest -c /dev/null --import-mode=importlib /ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/installed-tests -q
+/ml2/codex-storage/future-workspaces/2026-10-31/task-11/.venv-hndl/bin/python -I -m pytest -c /dev/null --import-mode=importlib /ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/hndl-tests -q
+# Source/config checks from task-11:
+.venv/bin/python -I -m pytest -c /dev/null --import-mode=importlib music3/tests/test_configs.py music3/tests/test_surface.py::test_lock_declares_exact_installed_wheel_and_new_lineage music3/tests/test_surface.py::test_product_has_no_loss_optimizer_or_training_loop_copy -q
+.venv/bin/python -I -m pip check
+.venv-hndl/bin/python -I -m pip check
+git -C music3 diff --check

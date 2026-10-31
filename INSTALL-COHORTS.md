@@ -25,3 +25,9 @@ The packaged numerical-response lifecycle does not select the historical audio
 CLI environment. Its optional tiny-model fixture uses `.[response-fixture]`;
 acoustic libraries and wide waveform behavior need separate qualification.
 The existing test extra is available through `.[test]`.
+
+The separate `cohorts/hndl` project contains actual core0.12/PG0.9.4,
+HyperGAN develop and HNDL0.10 CPU host integration. Its exact core candidate is
+not yet published. It has its own source lock and package metadata; build and
+install it only in a separate qualified environment. It does not override
+this package's dependency or admit native width4096.

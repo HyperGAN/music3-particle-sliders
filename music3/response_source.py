@@ -53,6 +53,7 @@ def verify_response_core():
             vcs = provenance["vcs_info"]
             url = provenance.get("url", "").rstrip("/").removesuffix(".git")
             if (url != lock["core"]["repository"] or vcs.get("vcs") != "git"
+                    or provenance.get("subdirectory") != "packages/particle-sliders-core"
                     or vcs.get("commit_id") != CORE_COMMIT or vcs.get("requested_revision") != CORE_COMMIT):
                 raise RuntimeError("core VCS provenance differs from the response proposal")
         elif "archive_info" in provenance:

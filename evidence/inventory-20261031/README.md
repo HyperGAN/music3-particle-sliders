@@ -48,8 +48,9 @@ External raw logs, wheels, runtime metadata, full diff and exact remote receipt
 are under `/ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/`.
 No generated tensor/adapter/model file is committed or published.
 
-Remaining gates: the core0.12 candidate is not publicly fetchable yet; its
-separate candidate dependency records an intended immutable source. Native
+The review follow-up verified an exact public Git fetch of core0.12 commit
+`4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231`; the earlier dependency-publication
+blocker is resolved. This does not establish a PyPI or native release. Native
 width4096 is still refused before allocation. Pretrained/tokenizer execution,
 GPU/acoustic sampling, listening quality, native distillation and new ComfyUI
 exports are unrun. The HNDL candidate is a bounded CPU integration, not a new

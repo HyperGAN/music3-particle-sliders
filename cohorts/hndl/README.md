@@ -9,10 +9,11 @@ The AR readout retains the existing linear/SiLU/linear architecture, executed
 as an HNDL graph through HyperGAN's verified builder. The shared
 `ConditionalPG09` owns all losses, optimizers, updates, prior and checkpointing.
 
-Install only in a separate Python3.11–3.14 environment. The exact core candidate
-is currently local and not published; the VCS dependency records the intended
-immutable cohort and cannot yet be assumed publicly fetchable. Qualification
-uses the owner's exact installed local wheel and source closure in
+Install only in a separate Python3.11–3.14 environment. An exact public Git fetch
+of core commit `4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231` passed during the
+2026-10-31 review follow-up. Source availability does not establish native
+qualification or a package release. Qualification uses the owner's exact local
+wheel and source closure in
 `music3_hndl/core.lock.json`. Build this candidate with
 `python -m build --no-isolation cohorts/hndl`, then install its wheel in that
 already qualified environment. This candidate does not install the historical

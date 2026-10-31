@@ -30,6 +30,7 @@ The existing test extra is available through `.[test]`.
 
 The separate `cohorts/hndl` project contains actual core0.12/PG0.9.4,
 HyperGAN develop and HNDL0.10 CPU host integration. Its exact core candidate is
-not yet published. It has its own source lock and package metadata; build and
+now publicly fetchable by its exact commit, verified during review. It has its
+own source lock and package metadata; build and
 install it only in a separate qualified environment. It does not override
 this package's dependency or admit native width4096.

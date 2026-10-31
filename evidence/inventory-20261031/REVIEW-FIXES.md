@@ -58,8 +58,10 @@ No core, default runtime pin, historical lock or checkpoint identity was changed
    detached5f368a checkout; builds/installs both products; then tests repository
    paths using `python -I` from `/tmp`. No copied test suites are used. Exact
    commands, input paths, wheel hashes and configurable source runtimes are in
-   `commands.txt` and the script. Local owner-provided wheels remain required;
-   this is not a claim that the unpublished core candidate is publicly fetchable.
+   `commands.txt` and the script. Local owner-provided wheels are the recorded
+   qualification inputs. An exact public Git fetch of core4abc0eb now also passes;
+   see `review/core-public-source-receipt.json`. Its public builder source was
+   fetched and verified byte-for-byte against the qualified core source.
 
 Completed fresh-environment results: **37 retained-cohort tests,24 HNDL tests,
 7 source/config tests passed**, both dependency checks pass, both wheel/sdist
@@ -68,7 +70,7 @@ Torch2.14.1+cpu/Python3.12.15 are reused read-only; no pretrained/GPU qualificat
 or Python matrix is claimed. The build source is clean HyperGAN5f368a with
 `dirty:false` provenance. No GPU, model weights, package upload, merge or release.
 
-Remaining gates are unchanged: native width4096 refusal, pretrained/tokenizer/
-audio/listening qualification, native distillation/ComfyUI, and publication of
-the exact shared core candidate. The candidate's source-validation hashes keep
+Remaining gates: native width4096 refusal, pretrained/tokenizer/audio/listening
+qualification and native distillation/ComfyUI. The previous exact-core source
+publication blocker is resolved. The candidate's source-validation hashes keep
 checkpoint cohorts distinct; historical environments remain intact.

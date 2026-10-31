@@ -1,0 +1,62 @@
+{
+  "python": "3.12.15 (main, Oct  3 2026, 01:03:07) [Clang 22.1.3 ]",
+  "site_packages": "/ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/clean-public/lib/python3.12/site-packages",
+  "dependency_symlinks": [],
+  "include_system_site_packages": false,
+  "packages": {
+    "torch": {
+      "version": "2.6.0+cpu",
+      "direct_url": {
+        "archive_info": {
+          "hash": "sha256=59e78aa0c690f70734e42670036d6b541930b8eabbaa18d94e090abf14cc4d91",
+          "hashes": {
+            "sha256": "59e78aa0c690f70734e42670036d6b541930b8eabbaa18d94e090abf14cc4d91"
+          }
+        },
+        "url": "file:///ml2/codex-storage/future-workspaces/2026-10-31/task-3/evidence/torch26-wheelhouse/torch-2.6.0%2Bcpu-cp312-cp312-linux_x86_64.whl"
+      }
+    },
+    "particle-sliders-core": {
+      "version": "0.12.0",
+      "direct_url": {
+        "subdirectory": "packages/particle-sliders-core",
+        "url": "https://github.com/HyperGAN/particle-sliders.git",
+        "vcs_info": {
+          "commit_id": "4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231",
+          "requested_revision": "4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231",
+          "vcs": "git"
+        }
+      }
+    },
+    "hypergan": {
+      "version": "2.0.0",
+      "direct_url": {
+        "url": "https://github.com/HyperGAN/HyperGAN.git",
+        "vcs_info": {
+          "commit_id": "5f368a3770cf5bdae0448995c9f76e29af8049f7",
+          "requested_revision": "5f368a3770cf5bdae0448995c9f76e29af8049f7",
+          "vcs": "git"
+        }
+      }
+    },
+    "hndl": {
+      "version": "0.10.0",
+      "direct_url": {}
+    },
+    "particlegan": {
+      "version": "0.9.4",
+      "direct_url": {}
+    },
+    "transformers": {
+      "version": "5.22.1",
+      "direct_url": {}
+    }
+  },
+  "installed_product_source_sha256": {
+    "__init__.py": "89904e94f55d7638a1bff9f8032d169dc3b2517f29ab9b813a4462c2951c1001",
+    "critic.hndl": "2719d8f0effe2df30fa2fc498103feb325b1f38f101ea203eea7c461b88dcb4a",
+    "core.lock.json": "cbcee964496c66d0722576904c16c75911b022ca6bc3c4bcfea807585c73cf7f",
+    "source.py": "8d341ea1bced6653dc384d91659575b387670098068a67afdbd815b1f563fc14",
+    "binding.py": "ec8dc64955b53896799c4c7ef5d79b083d4201ecd8c06544c99695e6ef0c82cc"
+  }
+}

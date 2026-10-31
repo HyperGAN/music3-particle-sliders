@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Offline reproduction in the selected executor, using read-only CPU dependency
-# runtimes and exact provided wheels. No pretrained files or copied test suites.
+# Owner-machine-only offline receipt replay: dependencies are reused read-only,
+# unpinned symlinks, not a portable clean installation. No model files are used.
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -9,7 +9,8 @@ RUN_DIR="${RUN_DIR:-$REPO_DIR/../evidence/review-repro}"
 STABLE_SOURCE_PYTHON="${STABLE_SOURCE_PYTHON:-$COORDINATOR_DIR/.venv082/bin/python}"
 HNDL_SOURCE_PYTHON="${HNDL_SOURCE_PYTHON:-$COORDINATOR_DIR/.venv-joint/bin/python}"
 STABLE_CORE_WHEEL="${STABLE_CORE_WHEEL:-/ml2/codex-storage/future-workspaces/2026-10-21/task-2/evidence/checkpoint-ownership-packaging/091/dist/particle_sliders_core-0.8.2-py3-none-any.whl}"
-HNDL_CORE_WHEEL="$COORDINATOR_DIR/evidence/joint-wheels/particle_sliders_core-0.12.0-py3-none-any.whl"
+HNDL_CORE_WHEEL="${HNDL_CORE_WHEEL:-$COORDINATOR_DIR/evidence/joint-wheels/particle_sliders_core-0.12.0-py3-none-any.whl}"
+HYPERGAN_CHECKOUT="${HYPERGAN_CHECKOUT:-$COORDINATOR_DIR/repos/hypergan-develop-20261031}"
 
 test ! -e "$RUN_DIR/stable"
 test ! -e "$RUN_DIR/hndl"
@@ -47,7 +48,7 @@ PY
     "$COORDINATOR_DIR/evidence/wheels/particlegan-0.9.4-py3-none-any.whl" \
     "$COORDINATOR_DIR/evidence/wheels/hndl-0.10.0-py3-none-any.whl" "$HNDL_CORE_WHEEL"
 
-git clone --no-hardlinks "$COORDINATOR_DIR/repos/hypergan-develop-20261031" "$RUN_DIR/HyperGAN"
+git clone --no-hardlinks "$HYPERGAN_CHECKOUT" "$RUN_DIR/HyperGAN"
 git -C "$RUN_DIR/HyperGAN" checkout --detach 5f368a3770cf5bdae0448995c9f76e29af8049f7
 test -z "$(git -C "$RUN_DIR/HyperGAN" status --porcelain)"
 "$HNDL_PYTHON" -m pip wheel --no-index --no-build-isolation --no-deps \

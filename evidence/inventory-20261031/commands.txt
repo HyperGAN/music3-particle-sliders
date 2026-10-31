@@ -1,4 +1,5 @@
-# Full offline reproduction from this repository's root in the selected executor.
+# Owner-machine-only offline receipt replay using unpinned dependency symlinks.
+# This is not portable clean-install evidence. See CLEAN-PUBLIC-CPU.md for that lane.
 # Choose a fresh directory each time; the script refuses reused venvs.
 RUN_DIR="$(mktemp -d /tmp/music3-inventory-cpu.XXXXXX)" bash scripts/reproduce_inventory_cpu.sh
 

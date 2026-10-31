@@ -1,7 +1,9 @@
-"""Select read-only installed CPU dependencies for a fresh local test venv.
+"""Owner-machine-only replay of read-only installed CPU dependencies.
 
 Run with the named source environment's Python. No .pth or editable installation
 is copied, and core/PG/HNDL/HyperGAN/product packages are installed separately.
+Dependency bytes are reused without pins/hashes; this is not clean-install or
+portable dependency-resolution evidence.
 """
 import argparse
 from importlib import metadata

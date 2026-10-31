@@ -33,6 +33,20 @@ The factory calls it before Qwen3 allocation, and projection/critic construction
 also use it. Product graph bytes are recorded in the critic identity and signed
 by the shared checkpoint architecture. No check is replaced by a version pin.
 
+`scripts/reproduce_inventory_cpu.sh` is an **owner-machine-only receipt replay**.
+Its absolute defaults refer to the original executor; dependency binaries are
+reused through read-only, unpinned symlinks. It is not portable clean-install
+evidence. Input locations, including `HNDL_CORE_WHEEL` and `HYPERGAN_CHECKOUT`,
+can be overridden. Separate public-source installation evidence is recorded in
+the final review receipt.
+
+Closing always attempts both cleanup owners and restores native modes/gradient
+flags. If a foreign forward remains attached, `cleanup_pending` stays true and
+the failed ledger remains reachable. The game and slider are closed and unusable:
+game access and adapter response calls raise before executing the host. Keep raw
+model/adapter references only to resolve ownership and retry cleanup; restoring
+modes does not certify that a conflicted host is clean or safe to reuse.
+
 ```python
 from music3_hndl import build_cpu_game
 

@@ -113,9 +113,19 @@ def test_forward_owner_conflict_can_be_resolved_and_cleanup_retried():
     with pytest.raises(RuntimeError, match='owner changed'):
         run.close()
     assert host.forward is external
+    assert run.closed and run.cleanup_pending
+    assert run.slider.closed and run.slider.cleanup_pending
+    # Native modes/flags are restored, but the foreign forward is still present.
+    # Game access and response calls must reject the conflicted host.
+    assert run.model.training and all(p.requires_grad for p in run.model.parameters())
+    with pytest.raises(RuntimeError, match='unusable: cleanup pending'):
+        run.game
+    with pytest.raises(RuntimeError, match='slider is closed'):
+        run.adapter._response((11, 13, 17), scale=1.)
     host.forward = ours
     run.close()
     run.close()
+    assert run.closed and not run.cleanup_pending and not run.slider.cleanup_pending
     assert 'forward' not in vars(host)
     assert '_pg09_scale_checkpoint' not in vars(run.model.model.layers[0])
 

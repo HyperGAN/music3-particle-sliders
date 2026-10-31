@@ -1,0 +1,22 @@
+# Clean public-source lane; repository checkout is the working directory's music3/.
+# CPython3.12, Linux x86_64. The venv began with pip25.0.1 only.
+/ml2/codex-storage/future-workspaces/2026-10-31/task-3/.venv082/bin/python -m venv evidence/clean-public
+evidence/clean-public/bin/python -I -m pip list --format=json
+
+# Actual verified cached official Torch archive; no source/package symlink reuse.
+sha256sum /ml2/codex-storage/future-workspaces/2026-10-31/task-3/evidence/torch26-wheelhouse/torch-2.6.0+cpu-cp312-cp312-linux_x86_64.whl
+evidence/clean-public/bin/python -m pip install --no-index --no-deps /ml2/codex-storage/future-workspaces/2026-10-31/task-3/evidence/torch26-wheelhouse/torch-2.6.0+cpu-cp312-cp312-linux_x86_64.whl
+
+PIP_CACHE_DIR="$PWD/evidence/clean-public-cache" TMPDIR="$PWD/evidence/clean-public-tmp" evidence/clean-public/bin/python -m pip install --index-url https://pypi.org/simple 'setuptools==84.2.1' 'build==1.6.1' 'pytest==9.1.1' 'safetensors==0.8.0'
+PIP_CACHE_DIR="$PWD/evidence/clean-public-cache" TMPDIR="$PWD/evidence/clean-public-tmp" evidence/clean-public/bin/python -m pip install --index-url https://pypi.org/simple --no-build-isolation --report evidence/clean-public-install-report.json 'torch==2.6.0+cpu' 'particle-sliders-core[hypergan-hndl] @ git+https://github.com/HyperGAN/particle-sliders.git@4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231#subdirectory=packages/particle-sliders-core' 'hypergan @ git+https://github.com/HyperGAN/HyperGAN.git@5f368a3770cf5bdae0448995c9f76e29af8049f7' ./music3/cohorts/hndl
+
+cd /tmp
+CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 OMP_NUM_THREADS=2 /ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/clean-public/bin/python -I -m pytest -c /dev/null --import-mode=importlib /ml2/codex-storage/future-workspaces/2026-10-31/task-11/music3/cohorts/hndl/tests -q
+/ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/clean-public/bin/python -I -m pip check
+
+# For another clean install, choose a new venv path and a checkout of the exact
+# reviewed product head. A platform-specific public Torch archive may replace
+# the verified cache path, using the same SHA256. No owner runtime symlinks or
+# owner-built core/HyperGAN wheel are required in this lane.
+# Public Torch URL for the platform actually tested:
+# https://download-r2.pytorch.org/whl/cpu/torch-2.6.0%2Bcpu-cp312-cp312-linux_x86_64.whl#sha256=59e78aa0c690f70734e42670036d6b541930b8eabbaa18d94e090abf14cc4d91

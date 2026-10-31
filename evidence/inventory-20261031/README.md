@@ -19,6 +19,9 @@ bound to the exact owner-built wheel, not a version-only assertion.
 
 Latest review follow-up: [REVIEW-FIXES.md](REVIEW-FIXES.md). It supersedes the
 initial copied-suite commands with fresh venvs and repository test paths.
+Final bounded polish and separate clean public-source CPU qualification:
+[CLEAN-PUBLIC-CPU.md](CLEAN-PUBLIC-CPU.md). The offline replay below is explicitly
+owner-machine-only and reuses unpinned dependency symlinks.
 
 Completed checks on installed wheels, Python3.12.15 / Torch2.14.1+cpu:
 

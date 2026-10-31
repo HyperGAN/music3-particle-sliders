@@ -67,6 +67,7 @@ class Music3HNDLNetwork(nn.Module):
         self.particles = nn.Parameter(torch.randn(128, 4))
         self.projections = nn.ModuleDict()
         self.scale = 0.
+        self.closed = self.cleanup_pending = False
         self._forwards = []
         self._restore_native = native_cleanup(model)
         try:
@@ -92,6 +93,8 @@ class Music3HNDLNetwork(nn.Module):
 
     @contextmanager
     def scaled(self, scale):
+        if self.closed:
+            raise RuntimeError('Music3 HNDL slider is closed; resolve any pending cleanup before releasing the host')
         previous = self.scale
         self.scale = scale
         for projection in self.projections.values():
@@ -107,6 +110,7 @@ class Music3HNDLNetwork(nn.Module):
         return json.dumps(dict(protocol='music3-hndl-routed-qwen3-v1', **self.identity), sort_keys=True)
 
     def close(self):
+        self.closed = True
         failures = []
         try:
             for index in range(len(self._forwards) - 1, -1, -1):
@@ -129,6 +133,7 @@ class Music3HNDLNetwork(nn.Module):
                 self._restore_native()
             except BaseException as error:
                 failures.append(error)
+        self.cleanup_pending = bool(failures)
         if failures:
             primary = failures[0]
             _retain_cleanup(primary, failures, self.close)
@@ -156,16 +161,35 @@ class Music3HNDLCritic(nn.Module):
 class OwnedGame:
     """Keep the cleanup ledger reachable after a forward ownership conflict."""
     def __init__(self, model, slider, adapter, game):
-        self.model, self.slider, self.adapter, self.game = model, slider, adapter, game
+        self.model, self.slider, self.adapter, self._game = model, slider, adapter, game
+        self.closed = self.cleanup_pending = False
+    @property
+    def game(self):
+        if self.closed:
+            state = 'cleanup pending' if self.cleanup_pending else 'closed'
+            raise RuntimeError('Music3 HNDL game is unusable: ' + state)
+        return self._game
     def close(self):
-        _close_or_raise(self.adapter, self.slider)
+        self.closed = True
+        try:
+            _close_or_raise(self.adapter, self.slider)
+        except BaseException as error:
+            self.cleanup_pending = True
+            error.retry_cleanup = self.close
+            raise
+        else:
+            self.cleanup_pending = False
     def __enter__(self):
+        if self.closed:
+            raise RuntimeError('Music3 HNDL game is closed')
         return self
     def __exit__(self, error_type, primary, traceback):
         if primary is None:
             self.close()
         else:
+            self.closed = True
             failures = _cleanup_parts(self.adapter, self.slider)
+            self.cleanup_pending = bool(failures)
             if failures:
                 _retain_cleanup(primary, failures, self.close)
 

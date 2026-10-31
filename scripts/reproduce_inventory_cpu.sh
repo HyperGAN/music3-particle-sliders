@@ -9,7 +9,7 @@ RUN_DIR="${RUN_DIR:-$REPO_DIR/../evidence/review-repro}"
 STABLE_SOURCE_PYTHON="${STABLE_SOURCE_PYTHON:-$COORDINATOR_DIR/.venv082/bin/python}"
 HNDL_SOURCE_PYTHON="${HNDL_SOURCE_PYTHON:-$COORDINATOR_DIR/.venv-joint/bin/python}"
 STABLE_CORE_WHEEL="${STABLE_CORE_WHEEL:-/ml2/codex-storage/future-workspaces/2026-10-21/task-2/evidence/checkpoint-ownership-packaging/091/dist/particle_sliders_core-0.8.2-py3-none-any.whl}"
-HNDL_CORE_WHEEL="${HNDL_CORE_WHEEL:-$COORDINATOR_DIR/evidence/joint-wheels/particle_sliders_core-0.12.0-py3-none-any.whl}"
+HNDL_CORE_WHEEL="${HNDL_CORE_WHEEL:-$COORDINATOR_DIR/evidence/gpu-qualification-a794e3b/wheels/particle_sliders_core-0.12.0-py3-none-any.whl}"
 HYPERGAN_CHECKOUT="${HYPERGAN_CHECKOUT:-$COORDINATOR_DIR/repos/hypergan-develop-20261031}"
 
 test ! -e "$RUN_DIR/stable"
@@ -35,7 +35,7 @@ import hashlib, sys
 from pathlib import Path
 for path, expected in zip(sys.argv[1:], [
     '50a6a7d06240254357569fd3cacbb5cf5e9d3c1771f642dfb719733b5711f32a',
-    '9afad3afc1f6c653a574074dc14f0da1f1c43975c31ca45c4eac049df0b0b4ad',
+    '22e47ced4af8cb874d818db2f4006738f5f978cfcff324693931b6ab23f21c8a',
 ]):
     assert hashlib.sha256(Path(path).read_bytes()).hexdigest() == expected, path
 PY

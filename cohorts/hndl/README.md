@@ -1,23 +1,29 @@
 # Music3 HyperGAN/HNDL candidate
 
-This separately packaged CPU integration uses core0.12 at
-`4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231`, official PG0.9.4, actual clean
-HyperGAN develop `5f368a3770cf5bdae0448995c9f76e29af8049f7` and HNDL0.10.0.
+This separately packaged CPU integration uses core 0.12 at
+`a794e3b4a8813b012f2c4faa3da82b78d4a90214`, official PG 0.9.4, actual clean
+HyperGAN develop `5f368a3770cf5bdae0448995c9f76e29af8049f7` and HNDL 0.10.0.
 It binds the existing shared HNDL routed projection to the genuine Qwen3
-attention q/k/v/o linears, using one owned128x4 bank, rank8 and alpha8.
+attention q/k/v/o linears, using one owned 128×4 bank, rank 8 and alpha 8.
 The AR readout retains the existing linear/SiLU/linear architecture, executed
 as an HNDL graph through HyperGAN's verified builder. The shared
 `ConditionalPG09` owns all losses, optimizers, updates, prior and checkpointing.
 
-Install only in a separate Python3.11–3.14 environment. An exact public Git fetch
-of core commit `4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231` passed during the
-2026-10-31 review follow-up. Source availability does not establish native
-qualification or a package release. Qualification uses the owner's exact local
-wheel and source closure in
-`music3_hndl/core.lock.json`. Build this candidate with
+Install only in a separate Python 3.11–3.14 environment. The final coordinated
+source pin is `a794e3b4a8813b012f2c4faa3da82b78d4a90214`; version 0.12.0 alone
+does not admit a different commit. The recursively generated source/data map in
+`music3_hndl/core.lock.json` binds 51 files, the exact VCS identity, and the owner's
+canonical reference wheel SHA256. The tested public VCS build has its own wheel
+archive digest and must match all 51 source/data bytes. Build this candidate with
 `python -m build --no-isolation cohorts/hndl`, then install its wheel in that
 already qualified environment. This candidate does not install the historical
-Music3 package or change its core0.8.2/PG0.9.1 pin.
+Music3 package or change its core 0.8.2/PG 0.9.1 pin.
+
+The previous 4abc preview remains an old cohort in its original receipts and
+packets. It is not relabeled: actual old preview training and raw-export packets
+are refused without live mutation by the final candidate. See
+[FINAL-CORE-PIN.md](FINAL-CORE-PIN.md) for the exact pin, install commands, artifact
+identities and current tests. Earlier review notes remain historical evidence.
 
 Both product manifests contain direct VCS dependencies. PyPI does not accept
 those dependencies; these artifacts must not be uploaded to PyPI. Their use is
@@ -27,7 +33,7 @@ is authorized or performed.
 Source checks have two owners. `music3_hndl.source.verify_core` binds the exact
 core wheel/VCS provenance, complete installed core source/data inventory and
 import origins. Shared core's `fibo_hndl.verified_builder` then requires
-HNDL0.10.0, verifies every HNDL Python source, the six-file HyperGAN builder
+HNDL 0.10.0, verifies every HNDL Python source, the six-file HyperGAN builder
 closure, and clean build provenance for commit `5f368a3770cf5bdae0448995c9f76e29af8049f7`.
 The factory calls it before Qwen3 allocation, and projection/critic construction
 also use it. Product graph bytes are recorded in the critic identity and signed
@@ -55,11 +61,14 @@ with build_cpu_game() as run:
     checkpoint = run.game.state_dict()
 ```
 
-`build_cpu_game` exposes a bounded random CPU width32 Qwen3 fixture, 1..4 steps,
-and explicit seed/checkpointing/preset. Native width4096 is rejected by the
+`build_cpu_game` exposes a bounded random CPU width 32 Qwen3 fixture, one to four steps,
+and explicit seed/checkpointing/preset. Native width 4096 is rejected by the
 shared continuous-domain admission gate before model allocation. No pretrained
 loader, model download, AR sampler, decoder or acoustic output is exposed.
 The fixture's vocabulary is synthetic; it does not qualify native tokenization.
+This product API exposes raw game checkpoints/exports and no session EMA option;
+`ema_decay` is explicitly refused. Upstream synthetic CUDA fixture results do not
+admit Music3 native width, pretrained loading, audio rendering or quality.
 
 This is a fresh checkpoint cohort. Keep historical environment, source locks
 and checkpoint identities. Old routed exports are not ordinary LoRAs; this

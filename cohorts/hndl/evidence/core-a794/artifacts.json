@@ -1,0 +1,26 @@
+{
+  "music3_particle_sliders-0.2.0": {
+    "wheel_sha256": "df583f66ce41cb14fe2ef9a29fa8fe9f0b8fa3c26133713024190ebaa69c56c2",
+    "sdist_sha256": "195876030f9185b04c4f4ee7f10536bd488a0a0203a4ef3f0d7649a046543d21",
+    "package_data": [
+      "response-core.lock.json",
+      "data/sample-cards.json"
+    ],
+    "source_files_checked": 15,
+    "installed_files_checked": 15,
+    "direct_vcs_dependency": true,
+    "pypi_upload_supported": false
+  },
+  "music3_particle_sliders_hndl-0.1.0": {
+    "wheel_sha256": "3d0f0a0d050ae823119be60a7f5a6ba6cd0f8019533de8da7c95ccfe3586e19f",
+    "sdist_sha256": "600f1d25dde25ee3b4189e91ca2f72728ef583f16bbd4d3d771d1a7b32fd94f1",
+    "package_data": [
+      "core.lock.json",
+      "critic.hndl"
+    ],
+    "source_files_checked": 5,
+    "installed_files_checked": 5,
+    "direct_vcs_dependency": true,
+    "pypi_upload_supported": false
+  }
+}

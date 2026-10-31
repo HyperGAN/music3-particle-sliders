@@ -5,8 +5,8 @@ import json
 from pathlib import Path
 import sys
 
-CORE_COMMIT = "4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231"
-LOCK_SHA256 = "cbcee964496c66d0722576904c16c75911b022ca6bc3c4bcfea807585c73cf7f"
+CORE_COMMIT = "a794e3b4a8813b012f2c4faa3da82b78d4a90214"
+LOCK_SHA256 = "9c354ffa98523fa9ed22f3936aea8922a120e530ce171db4ba8c7ed2e2707887"
 
 
 def verify_core():
@@ -18,7 +18,7 @@ def verify_core():
         raise RuntimeError('Music3 HNDL candidate source lock contradicts its cohort')
     dist = metadata.distribution('particle-sliders-core')
     if dist.version != '0.12.0' or metadata.version('particlegan') != '0.9.4':
-        raise RuntimeError('Music3 HNDL requires its separate exact core0.12/PG0.9.4 environment')
+        raise RuntimeError('Music3 HNDL requires its separate exact core 0.12/PG 0.9.4 environment')
     registered = {str(name) for name in dist.files or ()}
     expected = lock['sources']
     source_names = {name for name in registered if name.startswith(('particle_sliders/', 'concept_slider_core/'))

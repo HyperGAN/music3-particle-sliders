@@ -1,0 +1,36 @@
+# Commands completed from task-11. All runtime tests use installed distributions.
+# No checkout directory is on Python's import path; repository test paths are
+# explicit inputs. All old preview tensors stay private and unmodified.
+mkdir -p evidence/final-pin/tmp
+
+# Before the pin, preserve actual old packets using the old installed environment:
+evidence/clean-public/bin/python -I - <<'PY'
+from pathlib import Path
+import torch
+from music3_hndl import build_cpu_game
+from music3_hndl.source import verify_core
+assert verify_core()['commit'] == '4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231'
+with build_cpu_game() as run:
+    run.game.step()
+    torch.save(run.game.state_dict(), 'evidence/final-pin/old4abc-checkpoint.pt')
+    torch.save(run.game.export_state_dict(), 'evidence/final-pin/old4abc-export.pt')
+PY
+
+# Create a clean CPU environment and explicitly resolve exact public sources.
+/ml2/codex-storage/future-workspaces/2026-10-31/task-3/.venv082/bin/python -m venv evidence/final-pin/venv
+PIP_CACHE_DIR="$PWD/evidence/clean-public-cache" TMPDIR="$PWD/evidence/final-pin/tmp" evidence/final-pin/venv/bin/python -m pip install --index-url https://pypi.org/simple /ml2/codex-storage/future-workspaces/2026-10-31/task-3/evidence/torch26-wheelhouse/torch-2.6.0+cpu-cp312-cp312-linux_x86_64.whl 'setuptools==84.2.1' 'build==1.6.1' 'pytest==9.1.1' 'safetensors==0.8.0'
+evidence/final-pin/venv/bin/python -m build --no-isolation music3/cohorts/hndl --outdir evidence/final-pin/dist
+PIP_CACHE_DIR="$PWD/evidence/clean-public-cache" TMPDIR="$PWD/evidence/final-pin/tmp" evidence/final-pin/venv/bin/python -m pip install --index-url https://pypi.org/simple --no-build-isolation --report evidence/final-pin/install-report.json 'torch==2.6.0+cpu' 'particle-sliders-core[hypergan-hndl] @ git+https://github.com/HyperGAN/particle-sliders.git@a794e3b4a8813b012f2c4faa3da82b78d4a90214#subdirectory=packages/particle-sliders-core' 'hypergan @ git+https://github.com/HyperGAN/HyperGAN.git@5f368a3770cf5bdae0448995c9f76e29af8049f7' evidence/final-pin/dist/music3_particle_sliders_hndl-0.1.0-py3-none-any.whl
+
+# Final wheel was reinstalled after the focused prose pass, then tested:
+evidence/final-pin/venv/bin/python -m pip install --no-index --no-deps --force-reinstall evidence/final-pin/dist/music3_particle_sliders_hndl-0.1.0-py3-none-any.whl
+cd /tmp
+CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 OMP_NUM_THREADS=2 MUSIC3_OLD_PACKET_DIR=/ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/final-pin /ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/final-pin/venv/bin/python -I -m pytest -c /dev/null --import-mode=importlib /ml2/codex-storage/future-workspaces/2026-10-31/task-11/music3/cohorts/hndl/tests -q
+
+# From task-11 again, install the self-contained sdist and repeat that test command:
+PIP_CACHE_DIR="$PWD/evidence/clean-public-cache" TMPDIR="$PWD/evidence/final-pin/tmp" evidence/final-pin/venv/bin/python -m pip install --no-index --no-build-isolation --no-deps --force-reinstall --report evidence/final-pin/sdist-install-report.json evidence/final-pin/dist/music3_particle_sliders_hndl-0.1.0.tar.gz
+evidence/final-pin/venv/bin/python -I -m pip check
+evidence/final-pin/venv/bin/python -I music3/scripts/check_inventory_artifacts.py evidence/wheels evidence/final-pin/dist --stable-site .venv/lib/python3.12/site-packages --hndl-site evidence/final-pin/venv/lib/python3.12/site-packages
+
+# For another run, use fresh paths. FINAL-CORE-PIN.md provides a public-input
+# recipe for CPython 3.12 on Linux x86_64 CPU, without owner dependency symlinks.

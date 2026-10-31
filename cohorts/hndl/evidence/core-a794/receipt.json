@@ -1,0 +1,27 @@
+{
+  "previous_product_head": "9ae3eb4988cda66337900c2efe2f7c9c47708155",
+  "target_core": "a794e3b4a8813b012f2c4faa3da82b78d4a90214",
+  "version": "0.12.0",
+  "particlegan": "0.9.4",
+  "hndl": "0.10.0",
+  "hypergan": "5f368a3770cf5bdae0448995c9f76e29af8049f7",
+  "recursive_locked_files": 51,
+  "wheel_tests": {
+    "passed": 34,
+    "skipped": 0
+  },
+  "sdist_tests": {
+    "passed": 34,
+    "skipped": 0
+  },
+  "pip_check": "passed",
+  "source_import_origin": "installed distributions only; no checkout path or dependency symlinks",
+  "old_preview_packets": "actual 4abc checkpoint and raw export refused without mutation",
+  "EMA": "not exposed; requesting ema_decay is refused",
+  "native_width_4096": "refused",
+  "GPU": "not run in this task",
+  "stable_default_files": "unchanged",
+  "binding_and_bank_architecture": "unchanged",
+  "review": "pending root Claude actual-diff and RETURN review; no independent merge",
+  "release": "no package upload, deployment, workflow, visibility or access changes"
+}

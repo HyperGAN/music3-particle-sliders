@@ -17,6 +17,47 @@ from particle_sliders.pg09_audio import Music3ARResponseAdapter, AudioRow, audio
 verify_core()  # Check origins again after importing the shared implementation.
 
 
+def _cleanup_parts(adapter, slider):
+    """Attempt both independent owners, retaining every cleanup failure."""
+    failures = []
+    try:
+        if adapter is not None:
+            try:
+                adapter.close_checkpointing()
+            except BaseException as error:
+                failures.append(error)
+    finally:
+        if slider is not None:
+            try:
+                slider.close()
+            except BaseException as error:
+                failures.append(error)
+    return failures
+
+
+def _retain_cleanup(primary, failures, retry):
+    """Keep the original error and the reachable cleanup ledger together."""
+    pending, collected = list(failures), []
+    while pending:
+        error = pending.pop(0)
+        if any(error is previous for previous in collected):
+            continue
+        collected.append(error)
+        pending.extend(getattr(error, 'cleanup_errors', ()))
+    primary.cleanup_errors = tuple(collected)
+    primary.retry_cleanup = retry
+    for error in collected:
+        primary.add_note('Music3 HNDL cleanup pending: ' + repr(error))
+
+
+def _close_or_raise(adapter, slider):
+    failures = _cleanup_parts(adapter, slider)
+    if failures:
+        primary = failures[0]
+        _retain_cleanup(primary, failures, lambda: _close_or_raise(adapter, slider))
+        raise primary
+
+
 class Music3HNDLNetwork(nn.Module):
     """Attach the existing shared HNDL projection to genuine Music3 q/k/v/o."""
     def __init__(self, model):
@@ -36,11 +77,17 @@ class Music3HNDLNetwork(nn.Module):
             for name, host in targets:
                 saved = ('forward' in vars(host), vars(host).get('forward'))
                 projection = HNDLParticleProjection(name, host, self.particles, 8, 8,
-                    builder=builder, identity=identity)
-                self._forwards.append((host, saved, host.forward))
+                    builder=builder, identity=identity, attach=False)
                 self.projections[name] = projection
-        except BaseException:
-            self.close()
+                attached = projection.forward
+                # Record rollback before mutation, including setters that mutate
+                # then raise. Graph construction itself never patches the host.
+                self._forwards.append((host, saved, attached))
+                host.forward = attached
+        except BaseException as primary:
+            failures = _cleanup_parts(None, self)
+            if failures:
+                _retain_cleanup(primary, failures, self.close)
             raise
 
     @contextmanager
@@ -60,15 +107,32 @@ class Music3HNDLNetwork(nn.Module):
         return json.dumps(dict(protocol='music3-hndl-routed-qwen3-v1', **self.identity), sort_keys=True)
 
     def close(self):
-        if any(host.forward is not attached for host, _, attached in self._forwards):
-            raise RuntimeError('Music3 HNDL forward owner changed; resolve before retrying close')
-        for host, (owned, previous), _ in self._forwards:
-            if owned:
-                host.forward = previous
-            else:
-                vars(host).pop('forward', None)
-        self._forwards.clear()
-        self._restore_native()
+        failures = []
+        try:
+            for index in range(len(self._forwards) - 1, -1, -1):
+                host, (owned, previous), attached = self._forwards[index]
+                original = (vars(host).get('forward') is previous if owned else 'forward' not in vars(host))
+                try:
+                    if not original:
+                        if host.forward is not attached:
+                            raise RuntimeError('Music3 HNDL forward owner changed; resolve before retrying close')
+                        if owned:
+                            host.forward = previous
+                        else:
+                            vars(host).pop('forward', None)
+                except BaseException as error:
+                    failures.append(error)
+                else:
+                    del self._forwards[index]
+        finally:
+            try:
+                self._restore_native()
+            except BaseException as error:
+                failures.append(error)
+        if failures:
+            primary = failures[0]
+            _retain_cleanup(primary, failures, self.close)
+            raise primary
 
 
 class Music3HNDLCritic(nn.Module):
@@ -94,12 +158,16 @@ class OwnedGame:
     def __init__(self, model, slider, adapter, game):
         self.model, self.slider, self.adapter, self.game = model, slider, adapter, game
     def close(self):
-        self.adapter.close_checkpointing()
-        self.slider.close()
+        _close_or_raise(self.adapter, self.slider)
     def __enter__(self):
         return self
-    def __exit__(self, *error):
-        self.close()
+    def __exit__(self, error_type, primary, traceback):
+        if primary is None:
+            self.close()
+        else:
+            failures = _cleanup_parts(self.adapter, self.slider)
+            if failures:
+                _retain_cleanup(primary, failures, self.close)
 
 
 def build_cpu_game(*, width=32, steps=2, seed=7, checkpointing=True, preset='bispf_optimized'):
@@ -112,6 +180,7 @@ def build_cpu_game(*, width=32, steps=2, seed=7, checkpointing=True, preset='bis
         raise ValueError('invalid seed')
     if preset not in ('bispf', 'bispf_optimized'):
         raise ValueError('unsupported PG preset')
+    verified_builder()  # HyperGAN/HNDL source admission before allocating Qwen3.
     from transformers import Qwen3Config, Qwen3ForCausalLM
     slider = adapter = None
     try:
@@ -135,9 +204,8 @@ def build_cpu_game(*, width=32, steps=2, seed=7, checkpointing=True, preset='bis
                 response_domain='continuous_vector', preset=preset, batch_size=2, total_steps=steps,
                 seed=seed, pg_source_profile=PG_SOURCE_PROFILE)
         return OwnedGame(model, slider, adapter, game)
-    except BaseException:
-        if adapter is not None:
-            adapter.close_checkpointing()
-        if slider is not None:
-            slider.close()
+    except BaseException as primary:
+        failures = _cleanup_parts(adapter, slider)
+        if failures:
+            _retain_cleanup(primary, failures, lambda: _close_or_raise(adapter, slider))
         raise

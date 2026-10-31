@@ -17,13 +17,16 @@ the verified HyperGAN builder. Its exact core0.12 candidate is
 `5f368a3770cf5bdae0448995c9f76e29af8049f7`, HNDL0.10.0. Its source map is
 bound to the exact owner-built wheel, not a version-only assertion.
 
+Latest review follow-up: [REVIEW-FIXES.md](REVIEW-FIXES.md). It supersedes the
+initial copied-suite commands with fresh venvs and repository test paths.
+
 Completed checks on installed wheels, Python3.12.15 / Torch2.14.1+cpu:
 
 - Retained core0.8.2/PG0.9.1 lane: **37 passed** (22 existing +15 new).
   Actual particle gradients, frozen weights, zero replay, checkpoint restore,
   ordinary factor strict load/on/off, bounded collection, failure cleanup,
   source provenance, response/inference ownership and resume are exercised.
-- Separate real HyperGAN/HNDL lane: **15 passed**. Matched-weight whole Qwen3
+- Separate real HyperGAN/HNDL lane: **24 passed** after review fixes. Matched-weight whole Qwen3
   responses and particle VJPs, AR critic outputs and first/second derivatives,
   both PG presets, exact split resume, export response reload, state rejection,
   cleanup conflict retry, partial construction rollback and native width refusal.
@@ -32,12 +35,14 @@ Completed checks on installed wheels, Python3.12.15 / Torch2.14.1+cpu:
   state mutation. Wheel ZIP checks, wheel/sdist package data and unchanged
   historical lock bytes pass. Both isolated environments pass `pip check`.
 
-Commands are recorded in `commands.txt`. Tests were copied byte-for-byte outside
-the checkout and run from `/tmp` using `python -I`, so the installed product and
-core are imported. The source/config tests intentionally read repository cards.
-Environments reuse read-only local CPU runtime dependencies; this is not a fresh
-full pretrained model dependency resolution or Python-version matrix. Initial
-failed test attempts remain in the task workspace.
+Commands are recorded in `commands.txt` and `scripts/reproduce_inventory_cpu.sh`.
+The latest run creates fresh virtual environments, explicitly installs both exact
+core wheels, builds clean HyperGAN at its exact commit, and runs repository tests
+from `/tmp` using `python -I`; product and core imports resolve to installed wheels.
+The source/config tests intentionally read repository cards. Dependency binaries
+reuse selected read-only CPU runtimes, with versions/origins recorded; this is
+not a fresh pretrained dependency resolution or Python-version matrix. Initial
+copied-suite and failed attempts remain as historical evidence in the task workspace.
 
 External raw logs, wheels, runtime metadata, full diff and exact remote receipt
 are under `/ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/`.
@@ -51,6 +56,7 @@ exports are unrun. The HNDL candidate is a bounded CPU integration, not a new
 default or a native release. No mathematical gate or loss was changed.
 
 Release impact: source-only changes; existing package version0.2.0 retained and
-new candidate distribution0.1.0 remains unpublished. No workflow, package/model
+new candidate distribution0.1.0 remains unpublished. Both manifests contain direct
+VCS dependencies and cannot be uploaded to PyPI. No workflow, package/model
 release, deployment, security/driver/permission change or GPU job is added.
 Parent owns Claude/Ada review and merge. No independent review/merge is claimed.

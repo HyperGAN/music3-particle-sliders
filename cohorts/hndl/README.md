@@ -18,6 +18,20 @@ uses the owner's exact installed local wheel and source closure in
 already qualified environment. This candidate does not install the historical
 Music3 package or change its core0.8.2/PG0.9.1 pin.
 
+Both product manifests contain direct VCS dependencies. PyPI does not accept
+those dependencies; these artifacts must not be uploaded to PyPI. Their use is
+source installation and local wheel qualification only. No package publication
+is authorized or performed.
+
+Source checks have two owners. `music3_hndl.source.verify_core` binds the exact
+core wheel/VCS provenance, complete installed core source/data inventory and
+import origins. Shared core's `fibo_hndl.verified_builder` then requires
+HNDL0.10.0, verifies every HNDL Python source, the six-file HyperGAN builder
+closure, and clean build provenance for commit `5f368a3770cf5bdae0448995c9f76e29af8049f7`.
+The factory calls it before Qwen3 allocation, and projection/critic construction
+also use it. Product graph bytes are recorded in the critic identity and signed
+by the shared checkpoint architecture. No check is replaced by a version pin.
+
 ```python
 from music3_hndl import build_cpu_game
 

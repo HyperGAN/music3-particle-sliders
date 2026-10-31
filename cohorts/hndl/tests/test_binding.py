@@ -155,6 +155,173 @@ def test_candidate_canonical_source_lock_cannot_be_rewritten(tmp_path, monkeypat
         source.verify_core()
 
 
+def test_initial_and_restored_zero_scale_equal_unmodified_base_outside_context():
+    from music3_hndl.binding import Music3HNDLNetwork
+    from transformers import Qwen3Config, Qwen3ForCausalLM
+    model = Qwen3ForCausalLM(Qwen3Config(hidden_size=32, intermediate_size=64,
+        num_hidden_layers=1, num_attention_heads=2, num_key_value_heads=1,
+        head_dim=16, vocab_size=256, max_position_embeddings=256)).eval().requires_grad_(False)
+    ids = torch.tensor([[11, 13, 17]])
+    with torch.no_grad():
+        expected = model.model(input_ids=ids, use_cache=False).last_hidden_state.clone()
+    slider = Music3HNDLNetwork(model)
+    try:
+        for projection in slider.projections.values():
+            torch.nn.init.normal_(projection.lora_up.weight, std=.2)
+        assert slider.scale == 0. and all(p.multiplier == 0. for p in slider.projections.values())
+        with torch.no_grad():
+            assert torch.equal(model.model(input_ids=ids, use_cache=False).last_hidden_state, expected)
+            with slider.scaled(1.):
+                assert not torch.equal(model.model(input_ids=ids, use_cache=False).last_hidden_state, expected)
+            assert torch.equal(model.model(input_ids=ids, use_cache=False).last_hidden_state, expected)
+    finally:
+        slider.close()
+
+
+@pytest.mark.parametrize('after_mutation', [False, True])
+def test_partial_forward_assignment_failure_rolls_back_all_patches(after_mutation):
+    from music3_hndl.binding import Music3HNDLNetwork
+    from transformers import Qwen3Config, Qwen3ForCausalLM
+    model = Qwen3ForCausalLM(Qwen3Config(hidden_size=32, intermediate_size=64,
+        num_hidden_layers=1, num_attention_heads=2, num_key_value_heads=1,
+        head_dim=16, vocab_size=256, max_position_embeddings=256))
+    primary = RuntimeError('injected forward setter failure')
+    class Linear(torch.nn.Linear):
+        def __setattr__(self, name, value):
+            if name == 'forward' and getattr(self, 'fail_next_forward', False):
+                object.__setattr__(self, 'fail_next_forward', False)
+                if after_mutation:
+                    super().__setattr__(name, value)
+                raise primary
+            super().__setattr__(name, value)
+    original = model.model.layers[0].self_attn.k_proj
+    replacement = Linear(original.in_features, original.out_features, bias=original.bias is not None)
+    replacement.load_state_dict(original.state_dict())
+    replacement.fail_next_forward = True
+    model.model.layers[0].self_attn.k_proj = replacement
+    modes = [m.training for m in model.modules()]
+    flags = [p.requires_grad for p in model.parameters()]
+    state = _hash(model.state_dict())
+    with pytest.raises(RuntimeError) as caught:
+        Music3HNDLNetwork(model)
+    assert caught.value is primary
+    assert all('forward' not in vars(m) for m in model.modules() if isinstance(m, torch.nn.Linear))
+    assert modes == [m.training for m in model.modules()]
+    assert flags == [p.requires_grad for p in model.parameters()]
+    assert state == _hash(model.state_dict())
+
+
+def test_checkpoint_close_failure_still_closes_slider_and_retains_retry(monkeypatch):
+    run = build_cpu_game()
+    close = run.adapter.close_checkpointing
+    primary = RuntimeError('injected checkpoint close failure')
+    def fail():
+        raise primary
+    monkeypatch.setattr(run.adapter, 'close_checkpointing', fail)
+    with pytest.raises(RuntimeError) as caught:
+        run.close()
+    assert caught.value is primary
+    assert all('forward' not in vars(p.org_forward.__self__) for p in run.slider.projections.values())
+    assert run.adapter._checkpointing  # Failed shared handles remain reachable.
+    monkeypatch.setattr(run.adapter, 'close_checkpointing', close)
+    primary.retry_cleanup()
+    assert not run.adapter._checkpointing
+
+
+def test_context_body_error_is_preserved_when_both_cleanup_owners_fail():
+    from types import SimpleNamespace
+    from music3_hndl.binding import OwnedGame
+    primary = RuntimeError('primary context error')
+    checkpoint_error, slider_error = RuntimeError('checkpoint owner'), RuntimeError('slider owner')
+    attempts = []
+    def checkpoint_close():
+        attempts.append('checkpoint')
+        raise checkpoint_error
+    def slider_close():
+        attempts.append('slider')
+        raise slider_error
+    adapter = SimpleNamespace(close_checkpointing=checkpoint_close)
+    slider = SimpleNamespace(close=slider_close)
+    with pytest.raises(RuntimeError) as caught:
+        with OwnedGame(None, slider, adapter, None):
+            raise primary
+    assert caught.value is primary
+    assert attempts == ['checkpoint', 'slider']
+    assert primary.cleanup_errors == (checkpoint_error, slider_error)
+    adapter.close_checkpointing = lambda: attempts.append('checkpoint retry')
+    slider.close = lambda: attempts.append('slider retry')
+    primary.retry_cleanup()
+    assert attempts[-2:] == ['checkpoint retry', 'slider retry']
+
+
+def test_multiple_native_forward_conflicts_keep_all_errors_and_retry_ledgers():
+    run = build_cpu_game()
+    hosts = [run.model.model.layers[0].self_attn.q_proj, run.model.model.layers[0].self_attn.k_proj]
+    forwards = [host.forward for host in hosts]
+    for host in hosts:
+        host.forward = lambda *args: None
+    with pytest.raises(RuntimeError, match='owner changed') as caught:
+        run.close()
+    assert len(caught.value.cleanup_errors) == 2
+    assert len(run.slider._forwards) == 2
+    for host, ours in zip(hosts, forwards):
+        host.forward = ours
+    caught.value.retry_cleanup()
+    assert not run.slider._forwards
+    assert all('forward' not in vars(host) for host in hosts)
+
+
+def test_factory_primary_error_survives_checkpoint_cleanup_failure(monkeypatch):
+    from music3_hndl import binding
+    primary = RuntimeError('primary critic construction failure')
+    cleanup_error = RuntimeError('injected checkpoint cleanup failure')
+    observed = []
+    adapter_class = binding.Music3ARResponseAdapter
+    def make_adapter(*args, **kwargs):
+        adapter = adapter_class(*args, **kwargs)
+        observed.append(adapter)
+        close = adapter.close_checkpointing
+        attempts = []
+        def fail_once():
+            attempts.append(True)
+            if len(attempts) == 1:
+                raise cleanup_error
+            close()
+        adapter.close_checkpointing = fail_once
+        return adapter
+    def fail_critic(*args):
+        raise primary
+    monkeypatch.setattr(binding, 'Music3ARResponseAdapter', make_adapter)
+    monkeypatch.setattr(binding, 'Music3HNDLCritic', fail_critic)
+    with pytest.raises(RuntimeError) as caught:
+        binding.build_cpu_game()
+    assert caught.value is primary and primary.cleanup_errors == (cleanup_error,)
+    adapter = observed[0]
+    assert adapter._checkpointing
+    assert all('forward' not in vars(p.org_forward.__self__) for p in adapter.slider.projections.values())
+    primary.retry_cleanup()
+    assert not adapter._checkpointing
+
+
+@pytest.mark.parametrize('dependency', ['hndl', 'hypergan'])
+def test_shared_verified_builder_rejects_changed_dependency_sources_before_model_allocation(monkeypatch, dependency):
+    import hndl
+    import hypergan.hndl_networks
+    import transformers
+    from pathlib import Path
+    from particle_sliders import fibo_hndl
+    target = (Path(hndl.__file__) if dependency == 'hndl'
+              else Path(hypergan.hndl_networks.__file__))
+    original_sha = fibo_hndl._sha
+    monkeypatch.setattr(fibo_hndl, '_sha',
+        lambda path: '0' * 64 if Path(path) == target else original_sha(path))
+    def forbidden(*args, **kwargs):
+        raise AssertionError('unverified dependency allocated a model')
+    monkeypatch.setattr(transformers, 'Qwen3ForCausalLM', forbidden)
+    with pytest.raises(ValueError, match='source closure|builder closure'):
+        build_cpu_game()
+
+
 @pytest.mark.parametrize('options', [
     {'width': 4096}, {'width': 170}, {'width': 64}, {'steps': 5},
     {'steps': True}, {'seed': -1}, {'checkpointing': 1}, {'preset': 'other'},

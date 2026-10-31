@@ -19,7 +19,9 @@ continuous-response/render operations. Those require distinct reviewed cohorts.
 
 Keep this PG0.9.1 environment separate from core0.11.0/PG0.9.3 and
 HyperGAN develop, which currently requires PG0.9.4/HNDL0.10.
-These Git dependency wheels are for source installation, not a PyPI release.
+Both manifests contain direct VCS dependencies, which PyPI rejects. These Git
+dependency wheels are for source installation and local qualification only;
+they must not be uploaded to PyPI. No package publication is performed.
 
 The packaged numerical-response lifecycle does not select the historical audio
 CLI environment. Its optional tiny-model fixture uses `.[response-fixture]`;

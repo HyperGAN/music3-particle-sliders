@@ -1,5 +1,19 @@
 # Publication and qualification status
 
+The current root package targets core0.12.0 at
+`8ffca928550f97fdb9713151ca3023fc71e77e2c` / official ParticleGAN0.9.4 source
+`330eb94ee748cdcad131b0275d8de75fd5a7f96f` with exact profile `release-0.9.4`.
+Its canonical runtime is the installed numerical-response/inference lifecycle.
+Current validation is recorded in `evidence/pg094-upgrade/README.md`.
+
+The upgrade keeps native width4096, pretrained/GPU training, token sampling and
+acoustic rendering refused. Small random CPU fixtures verify software wiring,
+resume, ownership and source identity; they establish no native audio quality.
+It creates no new sliders or published model artifacts. The historical 44
+trained controls and selected published releases retain their original recipes.
+
+## Historical evidence
+
 The numerical-response proposal was integrated through
 [PR5](https://github.com/HyperGAN/music3-particle-sliders/pull/5), which is now closed.
 Public main was verified at `11b683ad7912b421ea3cd13642dda9356a73e2aa` on

@@ -1,6 +1,6 @@
 {
   "backend": "music3",
-  "cohort": "new-music3-response-cpu-proposal",
+  "cohort": "music3-pg094-new-cpu-run",
   "options": {
     "dummy": true,
     "width": 32,
@@ -8,6 +8,8 @@
     "batch": 2,
     "seed": 7,
     "ema_decay": 0.9,
-    "checkpointing": true
+    "checkpointing": true,
+    "pg_source_profile": "release-0.9.4",
+    "penalty_input_domain": "auto"
   }
 }

@@ -1,31 +1,30 @@
-[Current and historical installation cohorts](INSTALL-COHORTS.md).
-
 # Music 3 particle sliders
 
-A separate [response-session source proposal](docs/response-session-proposal.md)
-registers the owned Music3 factory and data-independent response inference on
-reviewed core0.8.2 / PG0.9.1. **22 selected installed CPU checks passed**;
-see [publication and qualification status](PUBLICATION-STATUS.md). Native wide
-responses and acoustic rendering remain gated.
-The bounded [ordinary LoRA distillation helper](docs/ordinary-lora-distillation.md)
-uses the shared fitter and returns explicit approximation provenance. It is
-qualified only on tiny random CPU fixtures; it does not publish weights.
-The separately packaged [HyperGAN/HNDL candidate](cohorts/hndl/README.md) binds
-real shared HNDL projections and an AR readout to random native Qwen3 hosts.
-It preserves this package's supported cohort and native width gate.
-The historical CLI and its core0.6.0 lock below remain unchanged and require
-their original environment; the two environments must remain separate.
+The current root package uses shared **core0.12.0 / official ParticleGAN0.9.4**
+at immutable source `8ffca928550f97fdb9713151ca3023fc71e77e2c` (Python 3.11+).
+Use the installed numerical-response lifecycle for train/resume/export/inference:
 
-Music 3 product integration for `MiniMaxAI/MiniMax-Music3`. This branch
-moves training, resume, export and probing to the installed public
-`particle-sliders-core` **0.6.0** API with ParticleGAN **0.9.1**. Product
-entry points call `particle_sliders.pg09_audio_cli`; the package owns all
-GAN losses, updates, native loading and workflow orchestration.
+```sh
+python -m pip install '.[response-fixture,test]'
+particle-slider train --interface response --config examples/music3-response.json \
+  --out new-response-run --export-format both --selection ema
+```
 
-The exact final local wheel passed **80 product CPU tests and 49 focused
-shared-state tests**. Native pretrained training, acoustic rendering and
-listening review remain pending. The package proposal and this derivative
-still require exact-head Ada review and parent integration.
+See [current usage and exact source checks](docs/response-session-proposal.md),
+[installation cohorts](INSTALL-COHORTS.md), and
+[publication and qualification status](PUBLICATION-STATUS.md).
+The example is a small random Qwen3 CPU fixture. Genuine Music3 width4096,
+pretrained training, token generation and acoustic rendering remain gated;
+o projection or image-field reshape bypasses the official flat-vector limit.
+
+The bounded [ordinary LoRA helper](docs/ordinary-lora-distillation.md) remains
+available for explicit CPU approximation. The separately packaged
+[HyperGAN/HNDL candidate](cohorts/hndl/README.md) retains its independent pin.
+Published historical controls and loading paths are unchanged; no weights are
+retrained or migrated by the current dependency upgrade.
+
+Everything below describes the preserved historical core0.6.0/PG0.9.1 CLI
+cohort. Its scripts and locks require their separate historical environment.
 
 ## Historical core0.6.0 CLI contract
 

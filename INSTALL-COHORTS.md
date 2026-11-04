@@ -1,36 +1,28 @@
 # Installation cohorts
 
-The current packaged lifecycle uses `particle-sliders-core` 0.8.2 at
-`f6807a91546e43e198645a3f8925d2dc7c9e03b4` with exact official ParticleGAN `0.9.1`.
-Install from this repository root with `python -m pip install -r requirements.txt`.
-The requirements entry delegates to `pyproject.toml`, so the two install paths
-resolve the same immutable shared core. No unpublished PyPI core release is assumed.
+The root package is the current **core0.12.0 / official ParticleGAN0.9.4**
+numerical-response cohort. Its immutable shared source is
+`8ffca928550f97fdb9713151ca3023fc71e77e2c`; use Python 3.11+ and
+`python -m pip install '.[response-fixture,test]'` in a new isolated environment.
+`requirements.txt` delegates to this same package pin. Current training and
+inference use `particle-slider --interface response` as documented in
+[the current response guide](docs/response-session-proposal.md).
 
-`requirements-legacy.txt` preserves the previous installer verbatim for historical
-trainer reproduction in a separate environment. Existing source locks, model
-identities, checkpoints and receipts retain their original meaning. Do not combine
-legacy requirements and the packaged lifecycle in one environment, or repoint a
-historical lock to newer bytes. The product runtime still verifies its own
-canonical source map; a successful installation alone does not qualify execution.
+| Cohort | Entry point / lock | Status |
+|---|---|---|
+| Current core0.12.0 / PG0.9.4 | Installed response/inference registry; `music3/response-core.lock.json` | Tiny CPU fixtures; width4096 and acoustic output remain gated |
+| Historical core0.8.2 / PG0.9.1 | Product source `ed1c667` before this upgrade; archived lock and guide in `cohorts/legacy-response/` | Reproduce in a separate checkout and environment |
+| Historical core0.6.0 / PG0.9.1 | `scripts/train_*.py`, `scripts/infer_music3.py`, `core.lock.json`, `requirements-legacy.txt` | Original locked CLI only; tests skip in other core environments |
+| Independent HNDL/core0.12 candidate | `cohorts/hndl/pyproject.toml` and its own source lock | Separate environment; unchanged by this upgrade |
 
-This repairs installation consistency. It does not adopt core0.11.0/PG0.9.3 or
-PG0.9.4, migrate checkpoints, qualify pretrained/GPU output, or enable refused
-continuous-response/render operations. Those require distinct reviewed cohorts.
+Never combine these environments or rewrite old checkpoint/source identity.
+The root's historical CLI scripts retain their original implementation and
+core0.6.0 lock; they are not the current training command. The archived response
+lock retains the exact core0.8.2 bytes. Published ordinary native LoRAs and
+ComfyUI recordings preserve their original model identities and load path.
+No existing weights are retrained, converted or republished by this change.
 
-Keep this PG0.9.1 environment separate from core0.11.0/PG0.9.3 and
-HyperGAN develop, which currently requires PG0.9.4/HNDL0.10.
-Both manifests contain direct VCS dependencies, which PyPI rejects. These Git
-dependency wheels are for source installation and local qualification only;
-they must not be uploaded to PyPI. No package publication is performed.
-
-The packaged numerical-response lifecycle does not select the historical audio
-CLI environment. Its optional tiny-model fixture uses `.[response-fixture]`;
-acoustic libraries and wide waveform behavior need separate qualification.
-The existing test extra is available through `.[test]`.
-
-The separate `cohorts/hndl` project contains actual core0.12/PG0.9.4,
-HyperGAN develop and HNDL0.10 CPU host integration. Its exact core candidate is
-now publicly fetchable by its exact commit, verified during review. It has its
-own source lock and package metadata; build and
-install it only in a separate qualified environment. It does not override
-this package's dependency or admit native width4096.
+The direct VCS dependency is intentional for immutable source installation;
+these wheels must not be uploaded to PyPI. A successful package installation
+is not native audio qualification. Official width>=170 flat AR response and
+media rendering gates remain enforced.

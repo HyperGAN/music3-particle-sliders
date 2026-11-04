@@ -1,4 +1,4 @@
-# Current packaged lifecycle cohort; run from this repository root.
+# Current core0.12.0 / official PG0.9.4 lifecycle; run from this repository root.
 # Historical trainer dependencies remain in requirements-legacy.txt.
 # Its checkpoint/source lock is historical; never retarget old artifacts.
 .[test]

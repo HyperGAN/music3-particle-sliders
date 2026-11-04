@@ -1,4 +1,4 @@
-"""Verify the separate reviewed response proposal without changing old locks."""
+"""Verify the current PG0.9.4 response cohort; historical locks stay separate."""
 import hashlib
 from importlib import metadata
 from importlib import util
@@ -6,29 +6,29 @@ import json
 from pathlib import Path
 import sys
 
-CORE_COMMIT = "f6807a91546e43e198645a3f8925d2dc7c9e03b4"
-CORE_VERSION = "0.8.2"
-PG_VERSION = "0.9.1"
+CORE_COMMIT = "8ffca928550f97fdb9713151ca3023fc71e77e2c"
+CORE_VERSION = "0.12.0"
+PG_VERSION = "0.9.4"
 LOCK = Path(__file__).with_name("response-core.lock.json")
-LOCK_SHA256 = "12e2310b2680173b5a6c3c220270d3d79cb9029d5660bf23f7d6e6f06fd986f3"
+LOCK_SHA256 = "be137bb7062af8e52d27ea6c919ff8ea97ecbb39e01c3cb94811fb4a4a86d7bb"
 
 
 def verify_response_core():
     """Check installed distribution ownership and the owner's canonical map.
 
     No source-tree fallback, environment mutation, package install or download.
-    The exact local wheel and companion archive remain required review inputs.
+    Accept only the pinned VCS build or the recorded matching wheel archive.
     """
     contents = LOCK.read_bytes()
     if hashlib.sha256(contents).hexdigest() != LOCK_SHA256:
-        raise RuntimeError("Music3 response proposal requires the corrected canonical ownership lock bytes")
+        raise RuntimeError("Music3 PG0.9.4 requires its exact canonical source lock bytes")
     lock = json.loads(contents)
     if (lock["core"]["commit"] != CORE_COMMIT or lock["core"]["version"] != CORE_VERSION
             or lock["particlegan"]["version"] != PG_VERSION):
-        raise RuntimeError("Music3 response proposal requires its canonical core0.8.2/PG0.9.1 lock")
+        raise RuntimeError("Music3 response proposal requires its canonical core0.12.0/PG0.9.4 lock")
     dist = metadata.distribution("particle-sliders-core")
     if dist.version != CORE_VERSION or metadata.version("particlegan") != PG_VERSION:
-        raise RuntimeError("use the exact reviewed core0.8.2/PG0.9.1 response environment; old CLI has its own lock")
+        raise RuntimeError("use the exact reviewed core0.12.0/PG0.9.4 response environment; old CLI has its own lock")
     registered = {str(path) for path in dist.files or ()}
     expected = lock["source_sha256"]
     root = Path(dist.locate_file("")).resolve()

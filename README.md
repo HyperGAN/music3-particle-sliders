@@ -146,3 +146,5 @@ the release card. [COMFYUI.md](COMFYUI.md) covers those conventional LoRAs.
 The transformer/encoder YAML cards and signed energy demo remain archived
 recipe information. Earlier PG 0.9.0 qualification evidence is retained as
 history and cannot be reused as a PG 0.9.1 test receipt.
+
+Learning-rate controls and preserved defaults: [LEARNING-RATES.md](LEARNING-RATES.md).

@@ -19,6 +19,7 @@ _OPTIONS = {
     "dummy", "host", "rows", "steps", "batch", "seed", "width", "device",
     "base_precision", "ema_decay", "preset", "checkpointing", "max_sequence_length",
     "pg_source_profile", "penalty_input_domain", "model_dir", "manifest", "manifest_sha256",
+    "lr", "d_lr_mult", "prior_lr_mult",
 }
 _FIXTURE_ROWS = (
     {"neutral_ids": [11, 13, 17, 19], "positive_ids": [29, 31, 17, 19], "history_tokens": 2},
@@ -44,6 +45,8 @@ def validate(options):
     """Check configuration and small local metadata before model allocation."""
     if not isinstance(options, dict) or set(options) - _OPTIONS:
         raise ValueError("unknown Music3 factory options; legacy loader options are unsupported")
+    from .learning_rates import recipe_overrides
+    recipe_overrides(**{key: options.get(key) for key in ("lr", "d_lr_mult", "prior_lr_mult")})
     for name, default in (("dummy", False), ("checkpointing", False)):
         if type(options.get(name, default)) is not bool:
             raise ValueError(name + " must be boolean")
@@ -391,6 +394,8 @@ def _configuration(options):
 def prepare(options):
     """Owned provider/game Binding through the shared response lifecycle."""
     validate(options)
+    from .learning_rates import recipe_overrides
+    rates = recipe_overrides(**{key: options.get(key) for key in ("lr", "d_lr_mult", "prior_lr_mult")})
     import torch
     from particle_sliders import ConditionalPG09
     from particle_sliders.lifecycle import Binding
@@ -426,7 +431,7 @@ def prepare(options):
                 preset=options.get("preset", "bispf_optimized"), batch_size=options.get("batch", 2),
                 total_steps=options.get("steps", 4), seed=options.get("seed", 7),
                 pg_source_profile=options.get("pg_source_profile", "release-0.9.4"),
-                penalty_input_domain=options.get("penalty_input_domain", "auto"))
+                penalty_input_domain=options.get("penalty_input_domain", "auto"), recipe_overrides=rates)
             specification = INFERENCE.specification(adapter, model_identity=adapter.model_identity,
                 protocol="music3-native-final-ar-hidden-v1", configuration=_configuration(options))
         return Binding(game, close, inference=specification, observation=lambda: observe_native(adapter.model, adapter.network))

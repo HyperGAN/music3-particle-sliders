@@ -1,10 +1,17 @@
 {
-  "backend": "music3",
-  "cohort": "music3-new-owned-run",
-  "options": {
-    "steps": 128,
-    "dummy": false,
-    "width": 4096,
-    "device": "cuda:0"
+  "schema": "particle-slider-train-v1",
+  "profile": "training_profile.json",
+  "training": {
+    "backend": "music3",
+    "cohort": "music3-new-owned-run",
+    "options": {
+      "steps": 128,
+      "dummy": false,
+      "width": 4096,
+      "device": "cuda:0"
+    }
+  },
+  "execution": {
+    "runner": "local"
   }
 }

@@ -13,13 +13,13 @@ from pathlib import Path, PurePosixPath
 import re
 
 
-MILESTONE = "ddb41423bcefc1fe76cd94d0f9b367353b3ea137"
+MILESTONE = "5d68473a098801ee1ab3ebbb12463daef51c6346"
 MODEL_REVISION = "bd348f9c49ea3c1b39f33ace3436f8fad435f24e"
 _OPTIONS = {
     "dummy", "host", "rows", "steps", "batch", "seed", "width", "device",
     "base_precision", "ema_decay", "preset", "checkpointing", "max_sequence_length",
     "pg_source_profile", "penalty_input_domain", "model_dir", "manifest", "manifest_sha256",
-    "lr", "d_lr_mult", "prior_lr_mult",
+    "lr", "d_lr_mult", "prior_lr_mult", "native_numerical_profile",
 }
 _FIXTURE_ROWS = (
     {"neutral_ids": [11, 13, 17, 19], "positive_ids": [29, 31, 17, 19], "history_tokens": 2},
@@ -105,7 +105,7 @@ def describe(options, *, operation="train", strength=1., references=False):
         time_coordinates="AR continuation history length; no diffusion scheduler",
         student_conditioning="neutral caption/lyrics with shared continuation IDs",
         target="frozen positive final AR state", native_render=False,
-        qualification="bounded CPU response cohort; native sampling qualification pending",
+        qualification="separate narrow CPU fixture / explicit native4096 source candidate; acoustic quality unqualified",
         shared_milestone=MILESTONE,
     )
 
@@ -121,14 +121,28 @@ def _validate_model(options):
     device = options.get("device", "cpu")
     if not isinstance(device, str) or (device != "cpu" and not re.fullmatch(r"cuda:[0-9]+", device)):
         raise ValueError("device must be cpu or an explicit cuda index")
-    if (options.get("pg_source_profile", "release-0.9.4"), options.get("penalty_input_domain", "auto")) != ("release-0.9.4", "auto"):
-        raise UnsupportedOperation("Music3 uses official PG0.9.4 release-0.9.4/auto; other source profiles are unqualified")
-    if width >= 170 or not dummy:
-        raise UnsupportedOperation("native Music3 width4096 is gated: official PG0.9.4 release/auto refuses flat vectors of width >=170; no projection or profile fallback")
-    if device != "cpu" or options.get("base_precision", "float32") != "float32":
-        raise UnsupportedOperation("Music3 random Qwen3 fixture requires CPU float32")
-    if any(key in options for key in ("model_dir", "manifest", "manifest_sha256")):
-        raise ValueError("random fixture cannot use native model identity")
+    pair=(options.get("pg_source_profile", "release-0.9.4"),options.get("penalty_input_domain", "auto"))
+    if dummy:
+        if pair!=("release-0.9.4","auto"):
+            raise UnsupportedOperation("Music3 fixture uses official PG0.9.4 release-0.9.4/auto; other source profiles are unqualified")
+        if width>=170:
+            raise UnsupportedOperation("native Music3 width4096 is gated: official PG0.9.4 release/auto refuses flat vectors of width >=170; no projection or profile fallback")
+        if device!="cpu" or options.get("base_precision","float32")!="float32":
+            raise UnsupportedOperation("Music3 random Qwen3 fixture requires CPU float32")
+        if any(key in options for key in ("model_dir","manifest","manifest_sha256","native_numerical_profile")):
+            raise ValueError("random fixture cannot use native model identity or numerical policy")
+        return
+    if pair!=("source-801ae1e-continuous-v1","continuous"):
+        raise UnsupportedOperation("native Music3 width4096 is gated unless the explicit source-801ae1e-continuous-v1/continuous pair is selected; official release/auto remains refused")
+    if width!=4096:
+        raise UnsupportedOperation("native Music3 requires the genuine 4096-wide Qwen3 state; no projection")
+    if not device.startswith("cuda:") or options.get("base_precision")!="bfloat16":
+        raise UnsupportedOperation("native Music3 requires explicit CUDA device and bfloat16 base precision")
+    from particle_sliders.pg09_audio import require_audio_width
+    require_audio_width(width,pg_source_profile=pair[0],penalty_input_domain=pair[1])
+    from .native_assets import verify_native
+    verify_native(options)
+    _native_record(options)
 
 
 def _sha_file(path):
@@ -284,18 +298,38 @@ def _build_native(options, *, checkpointing=False):
             model = AutoModelForCausalLM.from_pretrained(str(root / "language_model"),
                 local_files_only=True, trust_remote_code=False, use_safetensors=True,
                 torch_dtype=torch.bfloat16, attn_implementation="eager")
+            from transformers import Qwen3ForCausalLM
+            if type(model) is not Qwen3ForCausalLM:
+                raise ValueError("native Music3 requires the exact genuine Qwen3ForCausalLM class")
             identity = dict(manifest_sha256=options["manifest_sha256"], revision=MODEL_REVISION, files=files)
         model = model.to(device)
         if dummy:
             from particle_sliders.pg09 import _hash
             identity["frozen_base_sha256"] = _hash(model.state_dict())
+        if not dummy:
+            from .native_assets import verify_loaded_model,verify_native,numerical_profile
+            if any('forward' in vars(m) or m._forward_hooks or m._forward_pre_hooks for m in model.modules()):
+                raise ValueError("native Music3 requires pristine unwrapped model forwards before attachment")
+            model.eval().requires_grad_(False)
+            identity.update(loaded_checkpoint=verify_loaded_model(model,options),native_assets=verify_native(options),
+                native_numerical_profile=numerical_profile(options,model),initialization_rng_profile='cpu-and-requested-cuda-full-prepare-v1')
+            identity['frozen_base_sha256']=identity['loaded_checkpoint']['frozen_base_sha256']
         restore = _restore_host(model)
         adapter = None
         try:
             model.eval().requires_grad_(False)
             slider = ParticleNetwork(model)
             restore.claim()
-            adapter = Music3ARResponseAdapter(model, slider, model_identity=identity,
+            adapter_type=Music3ARResponseAdapter
+            if not dummy:
+                class StrictNativeMusic3Adapter(Music3ARResponseAdapter):
+                    def _response(self,*args,**kwargs):
+                        from .native_assets import numerical_profile
+                        if numerical_profile(options,self.model)!=identity['native_numerical_profile']:
+                            raise ValueError('native Music3 numerical policy changed before response')
+                        return super()._response(*args,**kwargs)
+                adapter_type=StrictNativeMusic3Adapter
+            adapter = adapter_type(model, slider, model_identity=identity,
                 checkpoint_modules=tuple(model.model.layers) if checkpointing else (), **domain)
             return adapter, tokenizer, _owned_cleanup(adapter, restore)
         except BaseException:
@@ -309,7 +343,7 @@ def _build_native(options, *, checkpointing=False):
 
 
 @contextmanager
-def observe_native(model, network=None):
+def observe_native(model, network=None, native_options=None):
     """Preserve native buffers and modes beyond the adapter's common scope.
 
     Qwen3 forwards use_cache=False, so no KV history is produced. RoPE native
@@ -317,6 +351,10 @@ def observe_native(model, network=None):
     Frozen model weights are never cloned to observe a response.
     """
     import torch
+    policy=None
+    if native_options is not None:
+        from .native_assets import numerical_profile
+        policy=numerical_profile(native_options,model)
     modules = tuple(model.modules())
     modes = [(module, module.training) for module in modules]
     buffers = [(module, dict(module._buffers), set(module._non_persistent_buffers_set)) for module in modules]
@@ -356,6 +394,8 @@ def observe_native(model, network=None):
                 parameter.grad = gradient
             for module, mode in modes:
                 module.training = mode
+            if native_options is not None and numerical_profile(native_options,model)!=policy:
+                raise ValueError('native Music3 numerical policy changed during observation')
 
 
 class AudioProvider:
@@ -388,10 +428,32 @@ def _configuration(options):
         seed=options.get("seed", 7), max_sequence_length=options.get("max_sequence_length", 256),
         base_precision=options.get("base_precision", "float32" if dummy else "bfloat16"),
         pg_source_profile=options.get("pg_source_profile", "release-0.9.4"),
-        penalty_input_domain=options.get("penalty_input_domain", "auto"))
+        penalty_input_domain=options.get("penalty_input_domain", "auto"),
+        **({"native_numerical_profile":options["native_numerical_profile"]} if not dummy else {}))
+
+
+@contextmanager
+def native_initialization_rng(options):
+    """Whole-factory seed scope: CPU plus only the explicitly requested CUDA."""
+    import torch
+    device=torch.device(options.get('device','cpu'))
+    if device.type not in ('cpu','cuda') or (device.type=='cuda' and device.index is None):
+        raise ValueError('native Music3 requires CPU or explicit CUDA device index')
+    devices=[device.index] if device.type=='cuda' else []
+    with torch.random.fork_rng(devices=devices):
+        torch.random.default_generator.manual_seed(options.get('seed',7))
+        if devices:torch.cuda.default_generators[device.index].manual_seed(options.get('seed',7))
+        yield
 
 
 def prepare(options):
+    # All metadata/source/asset/numerical refusals precede CUDA RNG initialization.
+    validate(options)
+    if options.get('dummy',False):return _prepare(options)
+    with native_initialization_rng(options):return _prepare(options)
+
+
+def _prepare(options):
     """Owned provider/game Binding through the shared response lifecycle."""
     validate(options)
     from .learning_rates import recipe_overrides
@@ -404,13 +466,13 @@ def prepare(options):
     adapter, tokenizer, close = _build_native(options, checkpointing=options.get("checkpointing", False))
     try:
         rows = []
-        with torch.random.fork_rng(devices=[]), observe_native(adapter.model, adapter.network):
+        with torch.random.fork_rng(devices=[]), observe_native(adapter.model, adapter.network, None if options.get("dummy") else options):
             torch.set_rng_state(torch.Generator().manual_seed(options.get("seed", 7) + 1).get_state())
             for row in options.get("rows", deepcopy(_FIXTURE_ROWS)):
                 if options.get("dummy"):
                     neutral, positive = tuple(row["neutral_ids"]), tuple(row["positive_ids"])
                     history = row.get("history_tokens", 0)
-                else:  # Retain native packing for a future separately qualified pin.
+                else:  # Exact native packing under the explicit separate source candidate.
                     history_ids = tuple(row.get("history_ids", []))
                     values = []
                     for key in ("neutral", "positive"):
@@ -434,7 +496,7 @@ def prepare(options):
                 penalty_input_domain=options.get("penalty_input_domain", "auto"), recipe_overrides=rates)
             specification = INFERENCE.specification(adapter, model_identity=adapter.model_identity,
                 protocol="music3-native-final-ar-hidden-v1", configuration=_configuration(options))
-        return Binding(game, close, inference=specification, observation=lambda: observe_native(adapter.model, adapter.network))
+        return Binding(game, close, inference=specification, observation=lambda: observe_native(adapter.model, adapter.network, None if options.get("dummy") else options))
     except BaseException:
         close()
         raise
@@ -446,7 +508,10 @@ def capabilities(options):
     operations = ("train", "resume", "evaluate", "export", "response")
     supported = (dummy is True and type(width) is int and 1 <= width < 170
                  and options.get("pg_source_profile", "release-0.9.4") == "release-0.9.4"
-                 and options.get("penalty_input_domain", "auto") == "auto")
+                 and options.get("penalty_input_domain", "auto") == "auto") or (dummy is False and width==4096
+                 and options.get("pg_source_profile")=="source-801ae1e-continuous-v1"
+                 and options.get("penalty_input_domain")=="continuous"
+                 and options.get("native_numerical_profile")=="music3-bf16-eager-strict-v1")
     unavailable = (("render", "Music3 acoustic/token sampling is unqualified; numerical hidden responses only"),)
     if not supported:
         reason = "Music3 native/wide AR responses are gated pending explicit continuous-domain source qualification"
@@ -456,7 +521,7 @@ def capabilities(options):
         options.get("pg_source_profile", "release-0.9.4"), options.get("penalty_input_domain", "auto"),
         base_precisions=("float32",) if dummy else ("bfloat16",),
         operations=operations if supported else (), unavailable_reasons=unavailable,
-        qualification="Music3 PG0.9.4 response cohort; native width and acoustic quality gated")
+        qualification="Music3 narrow official fixture / separate explicit native continuous source candidate; acoustic quality gated")
 
 
 def preflight(options, request, staged):
@@ -468,7 +533,9 @@ def _inference_options(options, spec):
     if set(options) - {"device", "model_dir", "manifest", "manifest_sha256"}:
         raise ValueError("inference runtime accepts only local model locations/device; no training data or configuration overrides")
     config = spec.configuration
-    if set(config) != {"dummy", "width", "seed", "max_sequence_length", "base_precision", "pg_source_profile", "penalty_input_domain"}:
+    expected={"dummy", "width", "seed", "max_sequence_length", "base_precision", "pg_source_profile", "penalty_input_domain"}
+    if not config.get('dummy',False):expected.add('native_numerical_profile')
+    if set(config) != expected:
         raise ValueError("unsupported Music3 native inference configuration")
     return dict(config, **options)
 
@@ -483,9 +550,9 @@ def validate_inference(options, spec):
 
 def _probe_ids(options, native):
     if set(native) != {"ids"}:
-        raise ValueError("Music3 fixture inference requires an unpadded ids array; no image/waveform inputs")
+        raise ValueError("Music3 response inference requires an unpadded ids array; no image/waveform inputs")
     ids = _ids(native["ids"])
-    if max(ids) >= 256 or len(ids) > options["max_sequence_length"]:
+    if max(ids) >= (256 if options.get("dummy",False) else 200000) or len(ids) > options["max_sequence_length"]:
         raise ValueError("complete response request exceeds native token budget; no truncation")
     return ids
 
@@ -499,7 +566,14 @@ def preflight_inference(options, request, spec):
         _probe_ids(_inference_options(options, spec), native)
 
 
-def prepare_inference(options, spec):
+def prepare_inference(options,spec):
+    validate_inference(options,spec)
+    merged=_inference_options(options,spec)
+    if merged.get('dummy',False):return _prepare_inference(options,spec)
+    with native_initialization_rng(merged):return _prepare_inference(options,spec)
+
+
+def _prepare_inference(options, spec):
     """Base/adapter only: never construct provider, teachers, critic or PG game."""
     validate_inference(options, spec)
     from particle_sliders.inference import InferenceBinding, native_identity
@@ -512,7 +586,7 @@ def prepare_inference(options, spec):
             del seed  # Common inference scope owns deterministic observation RNG.
             return adapter._response(_probe_ids(merged, native), scale=strength).detach().clone()
         return InferenceBinding(adapter.network, identity, close, response=response,
-                                observation=lambda: observe_native(adapter.model, adapter.network))
+                                observation=lambda: observe_native(adapter.model, adapter.network, None if merged.get("dummy") else merged))
     except BaseException:
         close()
         raise

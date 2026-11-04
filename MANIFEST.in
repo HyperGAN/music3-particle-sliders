@@ -1,5 +1,5 @@
 
 include LEARNING-RATES.md
-recursive-include compatibility *.txt *.json
-recursive-include cohorts/pre-lr-hndl *.py *.json
-include docs/lr-migration.json
+include NATIVE-CONTINUOUS.md
+recursive-include cohorts *
+recursive-exclude cohorts __pycache__ *.pyc

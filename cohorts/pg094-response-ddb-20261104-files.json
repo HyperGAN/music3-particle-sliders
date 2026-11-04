@@ -1,0 +1,25 @@
+{
+  "product_source": "38733953d911018918671df0ba3ede89ca1c4734",
+  "files": {
+    "LICENSE": "39b8baf062ff547541c82ca14da48ce58e685617187c7ea49aa2e58980caa615",
+    "NOTICE": "3bcb9c84d6bed77293124844db2189818c19383471a1b4c72a47facb99bbc634",
+    "README.md": "9ce5d25247b481e7c6c03b85d9df4b59878411d30323d0c9689d0fdfcb91cb49",
+    "music3/__init__.py": "53ab3cec488312c80d20b8a359feeb9054eb80838f68fe6762b307c856a4bc30",
+    "music3/cards.py": "0f2c3052e65407aeddcf6943ecc46e203d65be0727e0c0f222bcd45d1b132072",
+    "music3/data/sample-cards.json": "f98610d3a19fd6a60b0ea142c07fbba55fa0113704058efd8acc68602790a366",
+    "music3/defaults.py": "b6aac2dceba2f1bfe36937bc52d9647d7880d8bdfe78df54001d4d6528d1bd0c",
+    "music3/distill.py": "a0ae72689b6908149b5ab2a5c0e592edba5188fb7955a8cc405bc3273bd2064c",
+    "music3/hosts.py": "eebd0bdc01fb24208fd6ee8e444619c3c3b1210ab408fda34ffa2849934be8e9",
+    "music3/infer.py": "7d761d28c0e6916df4734f289e36916f7dc15527b20a4845b04d7832c397a0ed",
+    "music3/learning_rates.py": "7f6ad71e970fc4e9cf9bdce078be3268c6af4ff8e818073e21b8279489c2b307",
+    "music3/lifecycle.py": "40fde000a470ffa32dd8016ba3e4edefd954fd33944829c2fcbe0461457c7bcc",
+    "music3/loop.py": "42d3a6214b259dd710ab73b8f6bd404e47d13f0c356437040f869a540eca7b6e",
+    "music3/prompts.py": "df497de10bb41c0db74010d494dd62cea00a86a77a7b194f0d8cbf7f0212668e",
+    "music3/response-core.lock.json": "dd3b1937bf1dd6c8712064a2ad1c42e3f098a026a2d85c7a69cb5013be5f45eb",
+    "music3/response_source.py": "5fc4cb3f3f4888f8a3112964e327716215bf5c0aee1133d54b20cea3c2132509",
+    "music3/shared.py": "c9f7466a88e73d6ea6570620a8ce2be3236444b609ae90d6c969530decbecabe",
+    "music3/surface.py": "ce95a87584acf2cd0c2e7ff6a86926323bf8253e5cfc3ec7c1f029c7e1e46768",
+    "music3/train.py": "8ed79b9c3263fb2f23414afd4a18abe22849fac6d47169f39478a9f28b601b14",
+    "pyproject.toml": "baa3c82e35c6377daad8c396b52efed381d836033fd4addf46a02e23b8a03815"
+  }
+}

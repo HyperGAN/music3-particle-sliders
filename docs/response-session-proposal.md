@@ -2,12 +2,14 @@
 
 The root package registers the Music3 numerical-response backend and independent
 native-only inference backend. It pins shared core **0.12.0**, commit
-`ddb41423bcefc1fe76cd94d0f9b367353b3ea137`, with official **ParticleGAN 0.9.4**
+`5d68473a098801ee1ab3ebbb12463daef51c6346`, with official **ParticleGAN 0.9.4**
 (source `330eb94ee748cdcad131b0275d8de75fd5a7f96f`). Python 3.11+ is required.
-The exact source profile is `release-0.9.4` with penalty input domain `auto`.
-Aliases such as `release` and recovered continuous overlays are refused.
+The default source profile is `release-0.9.4` with penalty input domain `auto`.
+Aliases such as `release` and recovered continuous overlays are refused. A
+[separate exact native source candidate](../NATIVE-CONTINUOUS.md) requires the
+explicit current continuous source/domain pair and strict numerical profile.
 
-`music3/response-core.lock.json` binds all 574 packaged core source/data files,
+`music3/response-core.lock.json` binds all 575 packaged core source/data files,
 the exact core wheel, and the upstream release manifest. Registration checks
 distribution ownership, file bytes, versions, import origins and available
 installation provenance. Editable/source-checkout fallbacks are refused.
@@ -42,10 +44,12 @@ ledger, and successful sibling cleanups are not repeated.
 ## Native boundaries
 
 Official PG0.9.4 still does not admit flat continuous AR vectors of width >=170.
-Music3's genuine hidden width is 4096. Native/pretrained training, wider random
-fixtures, token generation, acoustic decoding and waveform rendering remain
-refused before model allocation. The factory does not project, truncate or
-reshape these responses into an image field. Transformer/encoder hosts, signed
+Music3's genuine hidden width is 4096. The official source still refuses this
+geometry before model allocation. The explicit native candidate is CPU-source
+and asset ready; full pretrained GPU updates, resume and media quality remain
+unqualified. Wider random product fixtures, token generation, acoustic decoding
+and waveform rendering remain refused. The factory does not project, truncate
+or reshape these responses into an image field. Transformer/encoder hosts, signed
 or extrapolated strengths, image references and media outputs remain refused.
 Accepted response strengths are finite values in [0,1].
 

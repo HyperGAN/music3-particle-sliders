@@ -77,7 +77,7 @@ def cleanup_fixture():
 
 
 def test_exact_new_lock_and_separate_registrations():
-    assert CORE_COMMIT == '8ffca928550f97fdb9713151ca3023fc71e77e2c'
+    assert CORE_COMMIT == 'ddb41423bcefc1fe76cd94d0f9b367353b3ea137'
     assert hashlib.sha256(LOCK.read_bytes()).hexdigest() == LOCK_SHA256
     assert len(entry_points(group='particle_sliders.response_backends', name='music3')) == 1
     assert len(entry_points(group='particle_sliders.inference_backends', name='music3')) == 1

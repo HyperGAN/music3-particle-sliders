@@ -6,13 +6,13 @@ weights were downloaded, trained on GPU, migrated or published.
 ## Exact source
 
 - Root package: Music3 0.2.0, Python >=3.11, immutable VCS dependency on
-  `HyperGAN/particle-sliders@8ffca928550f97fdb9713151ca3023fc71e77e2c`.
-- Shared core: 0.12.0. All 568 packaged source/data files in the locally built
-  wheel matched that clean source checkout before installation.
+  `HyperGAN/particle-sliders@ddb41423bcefc1fe76cd94d0f9b367353b3ea137`.
+- Shared core: 0.12.0. All 574 packaged source/data files in the locally built
+  wheel matched an exact git archive of that commit before installation.
 - Official ParticleGAN: 0.9.4, upstream source
   `330eb94ee748cdcad131b0275d8de75fd5a7f96f`, profile `release-0.9.4` / `auto`.
 - Canonical response lock SHA256:
-  `be137bb7062af8e52d27ea6c919ff8ea97ecbb39e01c3cb94811fb4a4a86d7bb`.
+  `dd3b1937bf1dd6c8712064a2ad1c42e3f098a026a2d85c7a69cb5013be5f45eb`.
 
 [Runtime](runtime.json) records installed versions, exact core wheel hash and
 CPU-only CLI output. [Packaging](packaging.json) records product wheel/sdist
@@ -41,10 +41,15 @@ sets `closed=True` only after successful cleanup. The tests now verify retained
 ownership, resolution, retry and successful final closure under that actual
 public contract.
 
-The installed `particle-slider` session CLI also completed two fixture steps,
-resumed to four, exported both adapter forms with EMA selection, and produced a
-finite [1,32] numerical response through native-only inference. No audio file
-or pretrained quality claim is produced by this route.
+The installed `particle-slider` session CLI completed a fixture update and
+produced a finite [1,32] numerical response through native-only EMA inference.
+The newly merged unified dispatcher also passed allocation-free plan/check,
+trained two updates with a periodic checkpoint, then resumed to four updates
+with unchanged semantic request identity and both EMA export formats. Reporting
+was explicitly disabled. The reproducible evidence-only profile is
+`dispatcher-profile.json` with `dispatcher-config.json`; this fixture status
+does not admit the real native model. No audio file or pretrained quality claim
+is produced by either route.
 
 ## Preserved boundaries
 
@@ -57,5 +62,7 @@ The root historical `core.lock.json`, `requirements-legacy.txt`, `configs/`,
 legacy train/infer/shared modules and independent HNDL cohort are unchanged
 relative to parent PR7. The previous core0.8.2 response lock is archived byte for
 byte (SHA256 `12e2310b2680173b5a6c3c220270d3d79cb9029d5660bf23f7d6e6f06fd986f3`).
-The separate `feat/unified-training-command-20261104` branch is neither modified
-nor included: its dispatcher needs core APIs outside this canonical pin.
+The separate `feat/unified-training-command-20261104` product branch is neither
+modified nor included. Canonical core `ddb41423` includes the newly merged
+shared execution APIs, whose compatibility is exercised by the evidence-only
+fixture above.

@@ -16,7 +16,7 @@ def test_installed_product_and_runtime_select_one_official_release():
     lock = verify_response_core()
     assert metadata.version("particlegan") == pg09.PG_VERSION == "0.9.4"
     assert metadata.version("particle-sliders-core") == lock["core"]["version"] == "0.12.0"
-    assert lock["core"]["commit"] == product.MILESTONE == "8ffca928550f97fdb9713151ca3023fc71e77e2c"
+    assert lock["core"]["commit"] == product.MILESTONE == "ddb41423bcefc1fe76cd94d0f9b367353b3ea137"
     assert lock["particlegan"]["release_commit"] == "330eb94ee748cdcad131b0275d8de75fd5a7f96f"
     assert metadata.metadata("music3-particle-sliders")["Requires-Python"] == ">=3.11"
     requirements = metadata.requires("music3-particle-sliders")

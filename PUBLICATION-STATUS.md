@@ -1,7 +1,7 @@
 # Publication and qualification status
 
 The current root package targets core0.12.0 at
-`8ffca928550f97fdb9713151ca3023fc71e77e2c` / official ParticleGAN0.9.4 source
+`ddb41423bcefc1fe76cd94d0f9b367353b3ea137` / official ParticleGAN0.9.4 source
 `330eb94ee748cdcad131b0275d8de75fd5a7f96f` with exact profile `release-0.9.4`.
 Its canonical runtime is the installed numerical-response/inference lifecycle.
 Current validation is recorded in `evidence/pg094-upgrade/README.md`.

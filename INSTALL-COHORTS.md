@@ -2,7 +2,7 @@
 
 The root package is the current **core0.12.0 / official ParticleGAN0.9.4**
 numerical-response cohort. Its immutable shared source is
-`8ffca928550f97fdb9713151ca3023fc71e77e2c`; use Python 3.11+ and
+`ddb41423bcefc1fe76cd94d0f9b367353b3ea137`; use Python 3.11+ and
 `python -m pip install '.[response-fixture,test]'` in a new isolated environment.
 `requirements.txt` delegates to this same package pin. Current training and
 inference use `particle-slider --interface response` as documented in

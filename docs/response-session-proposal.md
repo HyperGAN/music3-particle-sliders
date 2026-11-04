@@ -2,12 +2,12 @@
 
 The root package registers the Music3 numerical-response backend and independent
 native-only inference backend. It pins shared core **0.12.0**, commit
-`8ffca928550f97fdb9713151ca3023fc71e77e2c`, with official **ParticleGAN 0.9.4**
+`ddb41423bcefc1fe76cd94d0f9b367353b3ea137`, with official **ParticleGAN 0.9.4**
 (source `330eb94ee748cdcad131b0275d8de75fd5a7f96f`). Python 3.11+ is required.
 The exact source profile is `release-0.9.4` with penalty input domain `auto`.
 Aliases such as `release` and recovered continuous overlays are refused.
 
-`music3/response-core.lock.json` binds all 568 packaged core source/data files,
+`music3/response-core.lock.json` binds all 574 packaged core source/data files,
 the exact core wheel, and the upstream release manifest. Registration checks
 distribution ownership, file bytes, versions, import origins and available
 installation provenance. Editable/source-checkout fallbacks are refused.

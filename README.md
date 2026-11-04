@@ -1,7 +1,7 @@
 # Music 3 particle sliders
 
 The current root package uses shared **core0.12.0 / official ParticleGAN0.9.4**
-at immutable source `8ffca928550f97fdb9713151ca3023fc71e77e2c` (Python 3.11+).
+at immutable source `ddb41423bcefc1fe76cd94d0f9b367353b3ea137` (Python 3.11+).
 Use the installed numerical-response lifecycle for train/resume/export/inference:
 
 ```sh

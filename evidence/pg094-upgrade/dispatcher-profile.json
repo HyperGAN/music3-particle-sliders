@@ -1,0 +1,20 @@
+{
+  "schema": "particle-slider-profile-v1",
+  "name": "music3-pg094-cpu-qualification",
+  "product": "music3-particle-sliders",
+  "config_kind": "session",
+  "backend": "music3",
+  "interface": "response",
+  "status": "fixture",
+  "runtime": {
+    "python": "python3"
+  },
+  "capabilities": {
+    "resume": true,
+    "periodic_checkpoint": true,
+    "check": true
+  },
+  "default_checkpoint_every": 2,
+  "evidence": "evidence/pg094-upgrade/README.md",
+  "status_reason": "Explicit tiny random CPU fixture only; native width4096 and media rendering remain gated."
+}

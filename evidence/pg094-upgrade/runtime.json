@@ -9,19 +9,37 @@
     "setuptools": "84.2.1"
   },
   "installed_product": "/ml2/particlesliders-working/pg094-upgrades/music3-particle-sliders/.venv-pg094/lib/python3.12/site-packages/music3/__init__.py",
-  "core_commit": "8ffca928550f97fdb9713151ca3023fc71e77e2c",
-  "core_wheel_sha256": "68fb1a696b7cc1197c38e07d70adde93356eb7ad5ebaa4184acc25339cb7b6ad",
-  "source_entries": 568,
-  "source_lock_sha256": "be137bb7062af8e52d27ea6c919ff8ea97ecbb39e01c3cb94811fb4a4a86d7bb",
-  "cli": {
-    "first_steps": 2,
-    "resumed_steps": 4,
+  "core_commit": "ddb41423bcefc1fe76cd94d0f9b367353b3ea137",
+  "core_wheel_sha256": "a6050e2c1fd7d4f17bfebadaf02bc6d680e49989c136731ac9dec09670d2d93d",
+  "source_entries": 574,
+  "source_lock_sha256": "dd3b1937bf1dd6c8712064a2ad1c42e3f098a026a2d85c7a69cb5013be5f45eb",
+  "direct_session_cli": {
+    "completed_steps": 1,
     "output_kind": "native response",
     "output_shape": [
       1,
       32
     ],
     "output_finite": true,
+    "native_audio_qualified": false
+  },
+  "unified_dispatcher": {
+    "plan": true,
+    "check": "passed",
+    "profile": "music3-pg094-cpu-qualification",
+    "first_status": "checkpointed",
+    "first_steps": 2,
+    "resumed_status": "completed",
+    "resumed_steps": 4,
+    "semantic_identity_preserved": true,
+    "periodic_checkpoint": true,
+    "export_formats": [
+      "v1",
+      "v2"
+    ],
+    "selection": "ema",
+    "reporting": "explicitly disabled",
+    "rendered_images": 0,
     "native_audio_qualified": false
   },
   "gpu_initialized": false,

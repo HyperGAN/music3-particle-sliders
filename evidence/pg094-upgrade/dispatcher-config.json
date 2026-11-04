@@ -1,0 +1,22 @@
+{
+  "schema": "particle-slider-train-v1",
+  "profile": "dispatcher-profile.json",
+  "training": {
+    "backend": "music3",
+    "cohort": "music3-pg094-dispatcher-cpu-qualification",
+    "options": {
+      "dummy": true,
+      "width": 32,
+      "steps": 4,
+      "batch": 2,
+      "seed": 7,
+      "ema_decay": 0.9,
+      "checkpointing": true,
+      "pg_source_profile": "release-0.9.4",
+      "penalty_input_domain": "auto"
+    }
+  },
+  "execution": {
+    "runner": "local"
+  }
+}

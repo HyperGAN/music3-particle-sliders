@@ -1,4 +1,4 @@
-"""Owned Music3 numerical response and native-only inference proposal.
+"""Owned Music3 numerical response and native-only inference cohort.
 
 The response registry is separate from images. Old0.6.0 CLI/checkpoint loaders
 retain their original environment and source cohorts. No native model library
@@ -13,7 +13,7 @@ from pathlib import Path, PurePosixPath
 import re
 
 
-MILESTONE = "f6807a91546e43e198645a3f8925d2dc7c9e03b4"
+MILESTONE = "ddb41423bcefc1fe76cd94d0f9b367353b3ea137"
 MODEL_REVISION = "bd348f9c49ea3c1b39f33ace3436f8fad435f24e"
 _OPTIONS = {
     "dummy", "host", "rows", "steps", "batch", "seed", "width", "device",
@@ -102,7 +102,7 @@ def describe(options, *, operation="train", strength=1., references=False):
         time_coordinates="AR continuation history length; no diffusion scheduler",
         student_conditioning="neutral caption/lyrics with shared continuation IDs",
         target="frozen positive final AR state", native_render=False,
-        qualification="source draft; conformance and native sampling qualification pending",
+        qualification="bounded CPU response cohort; native sampling qualification pending",
         shared_milestone=MILESTONE,
     )
 
@@ -118,10 +118,10 @@ def _validate_model(options):
     device = options.get("device", "cpu")
     if not isinstance(device, str) or (device != "cpu" and not re.fullmatch(r"cuda:[0-9]+", device)):
         raise ValueError("device must be cpu or an explicit cuda index")
-    if (options.get("pg_source_profile", "release"), options.get("penalty_input_domain", "auto")) != ("release", "auto"):
-        raise UnsupportedOperation("this proposal uses official PG0.9.1 release/auto; recovered overlay qualification is pending")
+    if (options.get("pg_source_profile", "release-0.9.4"), options.get("penalty_input_domain", "auto")) != ("release-0.9.4", "auto"):
+        raise UnsupportedOperation("Music3 uses official PG0.9.4 release-0.9.4/auto; other source profiles are unqualified")
     if width >= 170 or not dummy:
-        raise UnsupportedOperation("native Music3 width4096 is gated: official PG0.9.1 has no explicit continuous selector; no projection or profile fallback")
+        raise UnsupportedOperation("native Music3 width4096 is gated: official PG0.9.4 release/auto refuses flat vectors of width >=170; no projection or profile fallback")
     if device != "cpu" or options.get("base_precision", "float32") != "float32":
         raise UnsupportedOperation("Music3 random Qwen3 fixture requires CPU float32")
     if any(key in options for key in ("model_dir", "manifest", "manifest_sha256")):
@@ -247,7 +247,7 @@ def _build_native(options, *, checkpointing=False):
 
     dummy = options.get("dummy", False)
     width = options.get("width", 32 if dummy else 4096)
-    domain = dict(pg_source_profile=options.get("pg_source_profile", "release"),
+    domain = dict(pg_source_profile=options.get("pg_source_profile", "release-0.9.4"),
                   penalty_input_domain=options.get("penalty_input_domain", "auto"))
     require_audio_width(width, **domain)  # Exact PG source gate before model allocation.
     device = torch.device(options.get("device", "cpu"))
@@ -384,7 +384,7 @@ def _configuration(options):
     return dict(dummy=dummy, width=options.get("width", 32 if dummy else 4096),
         seed=options.get("seed", 7), max_sequence_length=options.get("max_sequence_length", 256),
         base_precision=options.get("base_precision", "float32" if dummy else "bfloat16"),
-        pg_source_profile=options.get("pg_source_profile", "release"),
+        pg_source_profile=options.get("pg_source_profile", "release-0.9.4"),
         penalty_input_domain=options.get("penalty_input_domain", "auto"))
 
 
@@ -425,7 +425,7 @@ def prepare(options):
                 particles=adapter.particles, response_domain="continuous_vector",
                 preset=options.get("preset", "bispf_optimized"), batch_size=options.get("batch", 2),
                 total_steps=options.get("steps", 4), seed=options.get("seed", 7),
-                pg_source_profile=options.get("pg_source_profile", "release"),
+                pg_source_profile=options.get("pg_source_profile", "release-0.9.4"),
                 penalty_input_domain=options.get("penalty_input_domain", "auto"))
             specification = INFERENCE.specification(adapter, model_identity=adapter.model_identity,
                 protocol="music3-native-final-ar-hidden-v1", configuration=_configuration(options))
@@ -440,18 +440,18 @@ def capabilities(options):
     width = options.get("width", 32 if dummy else 4096)
     operations = ("train", "resume", "evaluate", "export", "response")
     supported = (dummy is True and type(width) is int and 1 <= width < 170
-                 and options.get("pg_source_profile", "release") == "release"
+                 and options.get("pg_source_profile", "release-0.9.4") == "release-0.9.4"
                  and options.get("penalty_input_domain", "auto") == "auto")
     unavailable = (("render", "Music3 acoustic/token sampling is unqualified; numerical hidden responses only"),)
     if not supported:
         reason = "Music3 native/wide AR responses are gated pending explicit continuous-domain source qualification"
         unavailable += tuple((operation, reason) for operation in operations)
     return ResponseCapabilities("routed_particle_gan", "audio_ar_hidden", "native_final_ar_hidden",
-        "continuous_vector", (1, width), "0.9.1",
-        options.get("pg_source_profile", "release"), options.get("penalty_input_domain", "auto"),
+        "continuous_vector", (1, width), "0.9.4",
+        options.get("pg_source_profile", "release-0.9.4"), options.get("penalty_input_domain", "auto"),
         base_precisions=("float32",) if dummy else ("bfloat16",),
         operations=operations if supported else (), unavailable_reasons=unavailable,
-        qualification="Music3 source proposal; tiny response conformance pending, native width and acoustic quality gated")
+        qualification="Music3 PG0.9.4 response cohort; native width and acoustic quality gated")
 
 
 def preflight(options, request, staged):

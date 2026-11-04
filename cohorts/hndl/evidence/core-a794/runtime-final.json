@@ -1,0 +1,99 @@
+{
+  "core_commit": "a794e3b4a8813b012f2c4faa3da82b78d4a90214",
+  "lock_sha256": "9c354ffa98523fa9ed22f3936aea8922a120e530ce171db4ba8c7ed2e2707887",
+  "recursive_source_data_files": 51,
+  "python": "3.12.15 (main, Oct  3 2026, 01:03:07) [Clang 22.1.3 ]",
+  "sys_path": [
+    "/ml2/iris-particle-sliders-task-20261008/python/cpython-3.12.15-linux-x86_64-gnu/lib/python312.zip",
+    "/ml2/iris-particle-sliders-task-20261008/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12",
+    "/ml2/iris-particle-sliders-task-20261008/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/lib-dynload",
+    "/ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/final-pin/venv/lib/python3.12/site-packages",
+    "/tmp/tmpoy61lq1b"
+  ],
+  "checkout_on_import_path": false,
+  "dependency_symlinks": false,
+  "packages": {
+    "particle-sliders-core": {
+      "version": "0.12.0",
+      "direct_url": {
+        "subdirectory": "packages/particle-sliders-core",
+        "url": "https://github.com/HyperGAN/particle-sliders.git",
+        "vcs_info": {
+          "commit_id": "a794e3b4a8813b012f2c4faa3da82b78d4a90214",
+          "requested_revision": "a794e3b4a8813b012f2c4faa3da82b78d4a90214",
+          "vcs": "git"
+        }
+      }
+    },
+    "hypergan": {
+      "version": "2.0.0",
+      "direct_url": {
+        "url": "https://github.com/HyperGAN/HyperGAN.git",
+        "vcs_info": {
+          "commit_id": "5f368a3770cf5bdae0448995c9f76e29af8049f7",
+          "requested_revision": "5f368a3770cf5bdae0448995c9f76e29af8049f7",
+          "vcs": "git"
+        }
+      }
+    },
+    "hndl": {
+      "version": "0.10.0",
+      "direct_url": {}
+    },
+    "particlegan": {
+      "version": "0.9.4",
+      "direct_url": {}
+    },
+    "torch": {
+      "version": "2.6.0+cpu",
+      "direct_url": {
+        "archive_info": {
+          "hash": "sha256=59e78aa0c690f70734e42670036d6b541930b8eabbaa18d94e090abf14cc4d91",
+          "hashes": {
+            "sha256": "59e78aa0c690f70734e42670036d6b541930b8eabbaa18d94e090abf14cc4d91"
+          }
+        },
+        "url": "file:///ml2/codex-storage/future-workspaces/2026-10-31/task-3/evidence/torch26-wheelhouse/torch-2.6.0%2Bcpu-cp312-cp312-linux_x86_64.whl"
+      }
+    },
+    "transformers": {
+      "version": "5.22.1",
+      "direct_url": {}
+    },
+    "music3-particle-sliders-hndl": {
+      "version": "0.1.0",
+      "direct_url": {
+        "archive_info": {
+          "hash": "sha256=600f1d25dde25ee3b4189e91ca2f72728ef583f16bbd4d3d771d1a7b32fd94f1",
+          "hashes": {
+            "sha256": "600f1d25dde25ee3b4189e91ca2f72728ef583f16bbd4d3d771d1a7b32fd94f1"
+          }
+        },
+        "url": "file:///ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/final-pin/dist/music3_particle_sliders_hndl-0.1.0.tar.gz"
+      }
+    }
+  },
+  "product_source_sha256": {
+    "__init__.py": "89904e94f55d7638a1bff9f8032d169dc3b2517f29ab9b813a4462c2951c1001",
+    "critic.hndl": "2719d8f0effe2df30fa2fc498103feb325b1f38f101ea203eea7c461b88dcb4a",
+    "core.lock.json": "9c354ffa98523fa9ed22f3936aea8922a120e530ce171db4ba8c7ed2e2707887",
+    "source.py": "0d4efc6485b42917dcec39062b4e7bd9dc81f5190623c81e26a70652853c9abf",
+    "binding.py": "ec8dc64955b53896799c4c7ef5d79b083d4201ecd8c06544c99695e6ef0c82cc"
+  },
+  "old_preview_refusals": {
+    "checkpoint": {
+      "packet_sha256": "0f95ee94a32fa25951828d0ccfd1bd64e7e0f8d3edfe0e8f3302e2b1148c5be3",
+      "error": "checkpoint objective, recipe, domain, source or conditioning mismatch; resume with the original pinned source/model/data cohort or start a fresh cohort; automatic checkpoint migration is not supported",
+      "state_unchanged": true,
+      "RNG_unchanged": true,
+      "old_packet_unchanged": true
+    },
+    "export": {
+      "packet_sha256": "3b732632603d45da76372d2e6657e835ad0582e432129ed2998741233da1e60b",
+      "error": "adapter export protocol differs",
+      "state_unchanged": true,
+      "RNG_unchanged": true,
+      "old_packet_unchanged": true
+    }
+  }
+}

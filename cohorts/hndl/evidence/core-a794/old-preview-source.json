@@ -1,0 +1,6 @@
+{
+  "product_head": "9ae3eb4988cda66337900c2efe2f7c9c47708155",
+  "core_commit": "4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231",
+  "torch": "2.6.0+cpu",
+  "source": "actual installed old candidate before migration; no metadata rewritten"
+}

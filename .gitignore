@@ -20,3 +20,6 @@ models/
 outputs/
 samples/
 cache/
+build/
+dist/
+*.egg-info/

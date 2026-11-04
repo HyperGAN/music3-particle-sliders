@@ -1,0 +1,47 @@
+{
+  "python": "3.12.15 (main, Oct  3 2026, 01:03:07) [Clang 22.1.3 ]",
+  "packages": {
+    "music3-particle-sliders": "0.2.0",
+    "particle-sliders-core": "0.12.0",
+    "particlegan": "0.9.4",
+    "torch": "2.14.1+cpu",
+    "transformers": "5.15.0",
+    "setuptools": "84.2.1"
+  },
+  "installed_product": "/ml2/particlesliders-working/pg094-upgrades/music3-particle-sliders/.venv-pg094/lib/python3.12/site-packages/music3/__init__.py",
+  "core_commit": "ddb41423bcefc1fe76cd94d0f9b367353b3ea137",
+  "core_wheel_sha256": "a6050e2c1fd7d4f17bfebadaf02bc6d680e49989c136731ac9dec09670d2d93d",
+  "source_entries": 574,
+  "source_lock_sha256": "dd3b1937bf1dd6c8712064a2ad1c42e3f098a026a2d85c7a69cb5013be5f45eb",
+  "direct_session_cli": {
+    "completed_steps": 1,
+    "output_kind": "native response",
+    "output_shape": [
+      1,
+      32
+    ],
+    "output_finite": true,
+    "native_audio_qualified": false
+  },
+  "unified_dispatcher": {
+    "plan": true,
+    "check": "passed",
+    "profile": "music3-pg094-cpu-qualification",
+    "first_status": "checkpointed",
+    "first_steps": 2,
+    "resumed_status": "completed",
+    "resumed_steps": 4,
+    "semantic_identity_preserved": true,
+    "periodic_checkpoint": true,
+    "export_formats": [
+      "v1",
+      "v2"
+    ],
+    "selection": "ema",
+    "reporting": "explicitly disabled",
+    "rendered_images": 0,
+    "native_audio_qualified": false
+  },
+  "gpu_initialized": false,
+  "dependency_origin": "Offline read-only reuse of reviewed local Python3.12 CPU dependencies; fresh isolated product/core/PG wheel installations. Not a clean network dependency-resolution receipt."
+}

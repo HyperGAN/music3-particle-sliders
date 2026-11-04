@@ -1,0 +1,27 @@
+# Owner-machine-only offline receipt replay using unpinned dependency symlinks.
+# This is not portable clean-install evidence. See CLEAN-PUBLIC-CPU.md for that lane.
+# Choose a fresh directory each time; the script refuses reused venvs.
+RUN_DIR="$(mktemp -d /tmp/music3-inventory-cpu.XXXXXX)" bash scripts/reproduce_inventory_cpu.sh
+
+# The script records dependency versions/origins, verifies both exact core wheel
+# SHA256 values, installs the core/PG/HNDL wheels explicitly, builds HyperGAN from
+# clean commit5f368a, builds/installs both products, and tests repository paths
+# with Python -I from /tmp. No copied tests, network, or model files are used.
+# Its provided CPU dependency runtimes and local wheel inputs are configurable
+# through the variables at the start of scripts/reproduce_inventory_cpu.sh.
+
+# Exact completed execution for this review, run from task-11:
+RUN_DIR=/ml2/codex-storage/future-workspaces/2026-10-31/task-11/evidence/review-repro-verified bash music3/scripts/reproduce_inventory_cpu.sh > evidence/review-reproduction-verified.log 2>&1
+
+# Explicit core installs performed by that script (after wheel hash checks):
+"$STABLE_PYTHON" -m pip install --no-index --no-deps "$COORDINATOR_DIR/evidence/wheels/setuptools-84.2.1-py3-none-any.whl" "$COORDINATOR_DIR/evidence/wheels/particlegan-0.9.1-py3-none-any.whl" "$STABLE_CORE_WHEEL"
+"$HNDL_PYTHON" -m pip install --no-index --no-deps "$COORDINATOR_DIR/evidence/wheels/setuptools-84.2.1-py3-none-any.whl" "$COORDINATOR_DIR/evidence/wheels/particlegan-0.9.4-py3-none-any.whl" "$COORDINATOR_DIR/evidence/wheels/hndl-0.10.0-py3-none-any.whl" "$HNDL_CORE_WHEEL"
+
+# Actual repository tests (variables are absolute paths defined in the script):
+cd /tmp
+"$STABLE_PYTHON" -I -m pytest -c /dev/null --import-mode=importlib "$REPO_DIR/tests/test_response_proposal.py" "$REPO_DIR/tests/test_inventory_contracts.py" -q
+"$HNDL_PYTHON" -I -m pytest -c /dev/null --import-mode=importlib "$REPO_DIR/cohorts/hndl/tests" -q
+"$STABLE_PYTHON" -I -m pytest -c /dev/null --import-mode=importlib "$REPO_DIR/tests/test_configs.py" "$REPO_DIR/tests/test_surface.py::test_lock_declares_exact_installed_wheel_and_new_lineage" "$REPO_DIR/tests/test_surface.py::test_product_has_no_loss_optimizer_or_training_loop_copy" -q
+"$STABLE_PYTHON" -I "$REPO_DIR/scripts/check_inventory_artifacts.py" "$RUN_DIR/stable-dist" "$RUN_DIR/hndl-dist" --stable-site "$STABLE_SITE" --hndl-site "$HNDL_SITE"
+"$STABLE_PYTHON" -I -m pip check
+"$HNDL_PYTHON" -I -m pip check

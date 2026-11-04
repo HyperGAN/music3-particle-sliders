@@ -11,6 +11,13 @@ import sys
 import textwrap
 
 import pytest
+from importlib.metadata import version
+
+# Historical core0.6.0/PG0.9.1 CLI tests require their separate locked environment.
+pytestmark = pytest.mark.skipif(
+    version("particle-sliders-core") != "0.6.0",
+    reason="historical core0.6.0 CLI cohort; current PG0.9.4 uses response sessions",
+)
 
 from music3 import shared as shared_loader
 
@@ -174,7 +181,7 @@ def test_lock_declares_exact_installed_wheel_and_new_lineage():
             "particle_sliders/music3_native.py", "particle_sliders/pg09_audio_cli.py"} <= lock["files"].keys()
     assert all(re.fullmatch(r"[0-9a-f]{64}", digest) for digest in lock["files"].values())
     assert lock.get("source_checkout_only") is not True
-    requirements = (ROOT / "requirements.txt").read_text()
+    requirements = (ROOT / "requirements-legacy.txt").read_text()
     assert "particlegan==0.9.1" in requirements
     assert lock["commit"] in requirements
 

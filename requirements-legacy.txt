@@ -1,0 +1,5 @@
+# New source lineage. Install into an isolated interpreter; preserve old cohorts.
+PyYAML>=6
+pytest>=8
+particlegan==0.9.1
+particle-sliders-core[audio] @ git+https://github.com/HyperGAN/particle-sliders.git@9be81c1ccfc8ad87eac3efa93fd5a16d0d508bb5#subdirectory=packages/particle-sliders-core

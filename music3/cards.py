@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from importlib.resources import files
 from pathlib import Path
 
 from music3.defaults import (
@@ -17,7 +18,6 @@ from music3.defaults import (
     RELEASE_SCALES,
     RELEASE_SEED,
     RELEASE_TAG,
-    SAMPLE_CARDS,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -35,10 +35,13 @@ def control_paths(control: dict) -> dict:
 
 
 def load_sample_cards(path: Path | str | None = None) -> dict:
-    file = Path(path) if path else REPO_ROOT / SAMPLE_CARDS
-    if not file.is_absolute():
-        file = REPO_ROOT / file
-    payload = json.loads(file.read_text(encoding="utf-8"))
+    if path is None:
+        payload = json.loads(files("music3").joinpath("data/sample-cards.json").read_text(encoding="utf-8"))
+    else:
+        file = Path(path)
+        if not file.is_absolute():
+            file = REPO_ROOT / file
+        payload = json.loads(file.read_text(encoding="utf-8"))
     controls = payload.get("controls")
     if not isinstance(controls, list) or len(controls) != 16:
         raise ValueError("sample card must list 16 Music 3 controls")

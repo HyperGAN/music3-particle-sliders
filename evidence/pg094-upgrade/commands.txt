@@ -1,0 +1,14 @@
+# In an isolated .venv-pg094 with locally installed canonical core/PG wheels
+# and read-only reused reviewed CPU dependency bytes; CUDA_VISIBLE_DEVICES=''
+# HF_HUB_OFFLINE=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 throughout execution.
+python -m build --no-isolation --outdir ../music3-dist
+python -m pip install --no-index --no-deps ../music3-dist/music3_particle_sliders-0.2.0-py3-none-any.whl
+python -I -m pytest -c /dev/null -p no:cacheprovider --import-mode=importlib tests/test_response_proposal.py tests/test_inventory_contracts.py tests/test_pg094.py tests/test_configs.py -q
+python -I -m pip check
+particle-slider capabilities --interface response --config examples/music3-response.json
+particle-slider train --interface response --config examples/music3-response.json --out ../music3-ddb-session --stop-after 1 --export-format both --selection ema
+particle-slider infer --artifact ../music3-ddb-session/adapter-v2.pt --runtime examples/music3-response-runtime.json --mode response --native examples/music3-response-request.json --strength .5 --out ../music3-ddb-hidden.pt
+particle-slider plan --config evidence/pg094-upgrade/dispatcher-config.json --runtime-python "$PWD/.venv-pg094/bin/python" --no-reporting
+particle-slider train --config evidence/pg094-upgrade/dispatcher-config.json --runtime-python "$PWD/.venv-pg094/bin/python" --no-reporting --check
+particle-slider train --config evidence/pg094-upgrade/dispatcher-config.json --runtime-python "$PWD/.venv-pg094/bin/python" --no-reporting --out ../music3-dispatcher-first --stop-after 2 --export-format both --selection ema
+particle-slider train --config evidence/pg094-upgrade/dispatcher-config.json --runtime-python "$PWD/.venv-pg094/bin/python" --no-reporting --out ../music3-dispatcher-resumed --resume ../music3-dispatcher-first/artifacts/checkpoints/step-000002 --export-format both --selection ema

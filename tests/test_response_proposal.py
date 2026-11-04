@@ -77,7 +77,7 @@ def cleanup_fixture():
 
 
 def test_exact_new_lock_and_separate_registrations():
-    assert CORE_COMMIT == 'f6807a91546e43e198645a3f8925d2dc7c9e03b4'
+    assert CORE_COMMIT == 'ddb41423bcefc1fe76cd94d0f9b367353b3ea137'
     assert hashlib.sha256(LOCK.read_bytes()).hexdigest() == LOCK_SHA256
     assert len(entry_points(group='particle_sliders.response_backends', name='music3')) == 1
     assert len(entry_points(group='particle_sliders.inference_backends', name='music3')) == 1
@@ -167,7 +167,7 @@ def test_real_response_binding_closes_handles_before_native_restore_and_can_retr
     try:
         with pytest.raises(product.CleanupPending) as pending:
             run.close()
-        assert run.closed  # Common session policy is unchanged.
+        assert not run.closed  # Core0.12 retains ownership until cleanup succeeds.
         # Failed block cleanup never reaches broader LoRA/native restoration;
         # a LoRA conflict instead preserves that later owner's exact replacement.
         assert host.forward is (replacement if changed == 'lora_forward' else lora_forward)
@@ -177,7 +177,8 @@ def test_real_response_binding_closes_handles_before_native_restore_and_can_retr
         else:
             vars(block).update(wrapped)
         pending.value.retry_cleanup()
-        run.binding.close()  # Product callback remains idempotent after resolution.
+        run.close()  # Core retries the idempotent product callback after resolution.
+        assert run.closed
         assert ownership(block) == original
         assert 'forward' not in vars(host)
         cleaned = True
@@ -282,6 +283,20 @@ def test_invalid_response_restore_is_transactional():
         before = run.checkpoint()
         broken = deepcopy(before)
         broken['manifest']['config']['cohort'] = 'different-cohort'
+        with pytest.raises(CheckpointError):
+            run.restore(broken)
+        equal(run.checkpoint(), before)
+
+
+@pytest.mark.parametrize('field,value', [('pg_version', '0.9.1'), ('pg_source_profile', 'release')])
+def test_historical_pg_identity_cannot_resume_in_current_cohort(field, value):
+    from particle_sliders.pg09 import _hash
+    with open_response(config()) as run:
+        before = run.checkpoint()
+        broken = deepcopy(before)
+        broken['payload']['game']['config'][field] = value
+        # Keep the outer transport checksum valid so the engine checks identity.
+        broken['sha256'] = _hash({key: value for key, value in broken.items() if key != 'sha256'})
         with pytest.raises(CheckpointError):
             run.restore(broken)
         equal(run.checkpoint(), before)

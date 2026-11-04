@@ -1,0 +1,6 @@
+{
+  "commit": "4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231",
+  "exact_public_git_fetch_passed": true,
+  "verified_builder_source_url": "https://raw.githubusercontent.com/HyperGAN/particle-sliders/4abc0eb03a4e3a84fc3e6d02734c13dc7e8ea231/packages/particle-sliders-core/src/particle_sliders/fibo_hndl.py",
+  "verified_builder_source_sha256": "ff170b5ca321b6eac1db10f6f82b79abc60fd983409f9c8ada7513101de9b6a4"
+}

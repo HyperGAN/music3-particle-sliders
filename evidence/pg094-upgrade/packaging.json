@@ -1,0 +1,12 @@
+{
+  "wheel_sha256": "86bf7eca575bca610af855982e8eddc68eeac55eff07d8ab6d7097819b7c199f",
+  "sdist_sha256": "c3c31a64016ce94917368203dbcf9ff080a9beee14e195d01dfa3f92268b1187",
+  "matching_product_files": 15,
+  "requires_python": ">=3.11",
+  "dependencies": [
+    "particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@ddb41423bcefc1fe76cd94d0f9b367353b3ea137#subdirectory=packages/particle-sliders-core",
+    "transformers==5.15.0; extra == \"response-fixture\"",
+    "pytest>=8; extra == \"test\""
+  ],
+  "source_wheel_sdist_installed_match": true
+}

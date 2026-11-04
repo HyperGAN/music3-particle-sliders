@@ -1,0 +1,33 @@
+{
+  "generator_arm": "routed_particle_gan",
+  "modality": "audio_ar_hidden",
+  "response_kind": "native_final_ar_hidden",
+  "response_domain": "continuous_vector",
+  "response_shape": [
+    1,
+    32
+  ],
+  "pg_version": "0.9.4",
+  "pg_source_profile": "release-0.9.4",
+  "penalty_input_domain": "auto",
+  "strength_min": 0.0,
+  "strength_max": 1.0,
+  "base_precisions": [
+    "float32"
+  ],
+  "operations": [
+    "train",
+    "resume",
+    "evaluate",
+    "export",
+    "response"
+  ],
+  "unavailable_reasons": [
+    [
+      "render",
+      "Music3 acoustic/token sampling is unqualified; numerical hidden responses only"
+    ]
+  ],
+  "qualification": "Music3 PG0.9.4 response cohort; native width and acoustic quality gated",
+  "schema": "particle-sliders-response-capabilities-v1"
+}

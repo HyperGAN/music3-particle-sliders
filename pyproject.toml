@@ -8,10 +8,11 @@ version = "0.2.0"
 description = "Music3 native AR numerical response sessions; PG0.9.4 response cohort"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@ddb41423bcefc1fe76cd94d0f9b367353b3ea137#subdirectory=packages/particle-sliders-core"]
+dependencies = ["particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@5d68473a098801ee1ab3ebbb12463daef51c6346#subdirectory=packages/particle-sliders-core"]
 
 [project.optional-dependencies]
 response-fixture = ["transformers==5.15.0"]
+native-source = ["torch==2.9.1", "transformers==5.15.0", "huggingface-hub==1.27.0", "safetensors==0.8.0", "numpy==2.2.6", "tokenizers==0.22.2", "diffusers @ git+https://github.com/huggingface/diffusers.git@d5baa4fb548294f47dbca49890abd4b291204c60"]
 test = ["pytest>=8"]
 
 [project.entry-points."particle_sliders.response_backends"]
@@ -24,4 +25,4 @@ music3 = "music3.lifecycle:INFERENCE"
 include = ["music3*"]
 
 [tool.setuptools.package-data]
-music3 = ["response-core.lock.json", "data/*.json"]
+music3 = ["response-core.lock.json", "data/*.json", "native-assets.lock.json"]

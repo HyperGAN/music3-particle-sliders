@@ -1,14 +1,17 @@
 # Publication and qualification status
 
 The current root package targets core0.12.0 at
-`ddb41423bcefc1fe76cd94d0f9b367353b3ea137` / official ParticleGAN0.9.4 source
+`5d68473a098801ee1ab3ebbb12463daef51c6346` / official ParticleGAN0.9.4 source
 `330eb94ee748cdcad131b0275d8de75fd5a7f96f` with exact profile `release-0.9.4`.
 Its canonical runtime is the installed numerical-response/inference lifecycle.
 Current validation is recorded in `evidence/pg094-upgrade/README.md`.
 
-The upgrade keeps native width4096, pretrained/GPU training, token sampling and
-acoustic rendering refused. Small random CPU fixtures verify software wiring,
-resume, ownership and source identity; they establish no native audio quality.
+The official default keeps width4096 refused. The separate native source
+candidate explicitly binds PG801 continuous geometry, exact assets/runtime,
+strict BF16 eager numerics and whole-factory RNG ownership. Its CPU readiness
+does not establish pretrained/GPU training, exact native resume, token sampling
+or acoustic quality. Small random CPU fixtures verify software wiring, resume,
+ownership and source identity. Full native GPU/audio qualification is pending.
 It creates no new sliders or published model artifacts. The historical 44
 trained controls and selected published releases retain their original recipes.
 

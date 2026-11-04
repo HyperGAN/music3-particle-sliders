@@ -1,7 +1,7 @@
 # Music 3 particle sliders
 
-The current root package uses shared **core0.12.0 / official ParticleGAN0.9.4**
-at immutable source `ddb41423bcefc1fe76cd94d0f9b367353b3ea137` (Python 3.11+).
+The current root package uses shared **core0.12.0 / ParticleGAN0.9.4**
+at immutable source `5d68473a098801ee1ab3ebbb12463daef51c6346` (Python 3.11+).
 Use the installed numerical-response lifecycle for train/resume/export/inference:
 
 ```sh
@@ -13,9 +13,12 @@ particle-slider train --interface response --config examples/music3-response.jso
 See [current usage and exact source checks](docs/response-session-proposal.md),
 [installation cohorts](INSTALL-COHORTS.md), and
 [publication and qualification status](PUBLICATION-STATUS.md).
-The example is a small random Qwen3 CPU fixture. Genuine Music3 width4096,
-pretrained training, token generation and acoustic rendering remain gated;
-o projection or image-field reshape bypasses the official flat-vector limit.
+The example is a small random Qwen3 CPU fixture on the official release.
+The [separate native source candidate](NATIVE-CONTINUOUS.md) explicitly selects
+the exact continuous-domain PG source and a strict BF16 eager profile for the
+genuine 4096-wide Music3 state. Full native GPU qualification and acoustic
+rendering remain pending. No projection or reshape bypasses the default
+official flat-vector limit; historical source packages remain archived.
 
 The bounded [ordinary LoRA helper](docs/ordinary-lora-distillation.md) remains
 available for explicit CPU approximation. The separately packaged

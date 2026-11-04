@@ -1,5 +1,9 @@
 
 include LEARNING-RATES.md
 include NATIVE-CONTINUOUS.md
+include INSTALL-COHORTS.md PUBLICATION-STATUS.md
+recursive-include docs *.md *.json
 recursive-include cohorts *
 recursive-exclude cohorts __pycache__ *.pyc
+prune cohorts/pg094-response-ddb-20261104/build
+prune cohorts/pg094-response-ddb-20261104/music3_particle_sliders.egg-info

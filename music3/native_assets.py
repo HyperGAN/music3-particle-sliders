@@ -4,6 +4,8 @@ Metadata checks and complete local byte hashing precede any model allocation.
 No download, profile fallback, projection, implicit flag mutation or GPU query.
 """
 from importlib import metadata
+from importlib import import_module as _NATIVE_IMPORT_MODULE
+from builtins import getattr as _NATIVE_GETATTR, dir as _NATIVE_DIR
 import hashlib
 import json
 import os
@@ -73,6 +75,126 @@ def numerical_profile(options,model=None):
             source='transformers.models.qwen3.modeling_qwen3.eager_attention_forward'))
 
 
+def _transformers_aliases(directory, runtime_sources):
+    """Only virtual modules emitted by this exact locked Transformers initializer.
+
+    The three literal aliases and per-model image aliases are source-derived;
+    missing origins are never accepted for arbitrary imported modules.
+    """
+    import builtins, importlib, logging, sys, types
+    directory = Path(directory).resolve()
+    initializer = directory / '__init__.py'
+    expected = runtime_sources.get('transformers:transformers/__init__.py')
+    if expected is None or sha(initializer) != expected:
+        raise ValueError('native Music3 exact alias initializer source differs')
+    aliases = {
+        'transformers.tokenization_utils_fast': '.tokenization_utils_tokenizers',
+        'transformers.tokenization_utils': '.tokenization_utils_sentencepiece',
+        'transformers.image_processing_utils_fast': '.image_processing_backends',
+    }
+    for key in runtime_sources:
+        owner, relative = key.split(':', 1)
+        path = Path(relative)
+        if (owner == 'transformers' and len(path.parts) == 4
+                and path.parts[:2] == ('transformers', 'models')
+                and path.name.startswith('image_processing_') and path.suffix == '.py'):
+            target = '.models.' + path.parent.name + '.' + path.stem
+            aliases['transformers' + target + '_fast'] = target
+    codes = []
+    def collect(code):
+        codes.append(code)
+        for value in code.co_consts:
+            if isinstance(value, types.CodeType):
+                collect(value)
+    collect(compile(initializer.read_bytes(), str(initializer), 'exec', dont_inherit=True))
+    pick = lambda name: [code for code in codes if code.co_qualname == name]
+    lambdas = sorted(pick('_create_module_alias.<locals>.<lambda>'), key=lambda code: code.co_firstlineno)
+    if len(lambdas) != 2:
+        raise ValueError('native Music3 locked alias initializer structure differs')
+    expected_codes = dict(getattr=lambdas[0], dir=lambdas[1],
+        target=pick('_create_module_alias.<locals>._get_target')[0],
+        image_getattr=pick('getattr_factory.<locals>._getattr')[0],
+        alias_factory=pick('_create_module_alias')[0], image_factory=pick('getattr_factory')[0])
+    # Transformers replaces its public module with _LazyModule. The initializer
+    # functions retain the ORIGINAL namespace; anchor and inspect that actual
+    # namespace rather than assuming it is vars(current public module).
+    anchor = vars(sys.modules['transformers.tokenization_utils_fast']).get('__dir__')
+    if type(anchor) is not types.FunctionType:
+        raise ValueError('native Music3 alias initializer namespace anchor differs')
+    namespace = anchor.__globals__
+    if (namespace.get('__name__') != 'transformers'
+            or Path(namespace.get('__file__', '')).resolve() != initializer
+            or namespace.get('__builtins__') is not vars(builtins)
+            or builtins.getattr is not _NATIVE_GETATTR or builtins.dir is not _NATIVE_DIR
+            or any(name in namespace for name in ('getattr', 'dir'))
+            or namespace.get('importlib') is not importlib
+            or importlib.import_module is not _NATIVE_IMPORT_MODULE
+            or namespace.get('logger') is not logging.getLogger('transformers')):
+        raise ValueError('native Music3 alias initializer global delegation differs')
+    for name, key in (('_create_module_alias', 'alias_factory'), ('getattr_factory', 'image_factory')):
+        value = namespace.get(name)
+        if (type(value) is not types.FunctionType or value.__globals__ is not namespace
+                or value.__builtins__ is not vars(builtins)
+                or value.__code__ != expected_codes[key]
+                or Path(value.__code__.co_filename).resolve() != initializer):
+            raise ValueError('native Music3 alias initializer factory globals differ')
+    return aliases, expected_codes, namespace
+
+
+def _verify_transformers_alias(name, module, directory, runtime_sources, permitted):
+    """Inspect code, closure, target bytes and actual module without invoking it."""
+    import builtins
+    import importlib
+    import sys
+    import types
+    aliases, codes, namespace = permitted
+    target = aliases.get(name)
+    if target is None:
+        raise ValueError('native Music3 unknown originless imported module: ' + name)
+    if (type(module) is not types.ModuleType or sys.modules.get(name) is not module
+            or vars(sys.modules['transformers']).get(name.rsplit('.', 1)[-1]) is not module):
+        raise ValueError('native Music3 exact registered alias module differs: ' + name)
+    values = vars(module)
+    expected_keys = {'__name__', '__doc__', '__package__', '__loader__', '__spec__',
+                     '__file__', '__getattr__', '__dir__'}
+    if (type(module) is not types.ModuleType or set(values) != expected_keys
+            or values['__name__'] != name or values['__file__'] is not None
+            or any(values[key] is not None for key in ('__package__', '__loader__', '__spec__'))
+            or values['__doc__'] != f'Alias module for backward compatibility with `{target}`.'):
+        raise ValueError('native Music3 exact virtual alias module identity differs: ' + name)
+    initializer = str(Path(directory).resolve() / '__init__.py')
+    def function(value, code, closed):
+        return (type(value) is types.FunctionType and value.__code__ == code
+            and str(Path(value.__code__.co_filename).resolve()) == initializer
+            and value.__defaults__ is None and value.__kwdefaults__ is None
+            and value.__globals__ is namespace
+            and value.__builtins__ is vars(builtins)
+            and len(value.__closure__ or ()) == len(closed)
+            and all(type(cell.cell_contents) is type(expected) and cell.cell_contents == expected
+                    for cell, expected in zip(value.__closure__ or (), closed)))
+    getter, directory_fn = values['__getattr__'], values['__dir__']
+    cells = tuple(cell.cell_contents for cell in directory_fn.__closure__ or ()) if type(directory_fn) is types.FunctionType else ()
+    get_target = cells[0] if len(cells) == 1 else None
+    if (not function(get_target, codes['target'], (target,))
+            or not function(directory_fn, codes['dir'], (get_target,))
+            or not function(getter, codes['image_getattr'] if name.endswith('_fast') and target.startswith('.models.') else codes['getattr'],
+                            (target,) if target.startswith('.models.') else (get_target,))):
+        raise ValueError('native Music3 exact virtual alias delegation differs: ' + name)
+    relative = 'transformers/' + target.lstrip('.').replace('.', '/') + '.py'
+    digest = runtime_sources.get('transformers:' + relative)
+    source = Path(directory).parent / relative
+    if digest is None or not source.is_file() or sha(source) != digest:
+        raise ValueError('native Music3 exact virtual alias target source differs: ' + name)
+    canonical = sys.modules.get('transformers' + target)
+    if canonical is not None:
+        origin = vars(canonical).get('__file__')
+        spec = vars(canonical).get('__spec__')
+        if (not isinstance(origin, str) or Path(origin).resolve() != source.resolve()
+                or spec is None or spec.origin is None or Path(spec.origin).resolve() != source.resolve()):
+            raise ValueError('native Music3 imported canonical alias target origin differs: ' + name)
+    return target
+
+
 def verify_native(options):
     if (options.get('pg_source_profile'),options.get('penalty_input_domain'))!=(PG_PROFILE,'continuous'):
         raise ValueError('native Music3 requires the explicit current continuous source/domain pair')
@@ -113,9 +235,16 @@ def verify_native(options):
         spec=importlib.util.find_spec(package)
         if spec is None or spec.origin is None or Path(spec.origin).resolve()!=directory/'__init__.py':
             raise ValueError('native Music3 package import origin differs: '+package)
+        permitted = (_transformers_aliases(directory, lock['runtime_sources_sha256'])
+            if package == 'transformers' and package in sys.modules else None)
         for name,module in tuple(sys.modules.items()):
             if name.split('.')[0]==package:
-                origin=getattr(module,'__file__',None)
+                origin=vars(module).get('__file__')
+                if origin is None and package == 'transformers':
+                    if permitted is None:
+                        raise ValueError('native Music3 originless submodule without actual package initializer: ' + name)
+                    _verify_transformers_alias(name, module, directory, lock['runtime_sources_sha256'], permitted)
+                    continue
                 if origin is None or not Path(origin).resolve().is_relative_to(directory):
                     raise ValueError('native Music3 already-imported package origin differs: '+name)
         owned[package]=dict(package=str(directory))

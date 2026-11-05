@@ -113,7 +113,8 @@
     "final_zero_updates_selected128_packet_unchanged": true,
     "all_students_finite": true,
     "teacher_only_fixed_membership": true,
-    "independent_saved_field_FP64_exact": true
+    "independent_saved_field_FP64_exact": true,
+    "independent_saved_packet_checksums_and_RAW_network_tensors_exact": true
   },
   "known_optimizer_calls": {
     "physical": 449,
@@ -135,8 +136,11 @@
     "selection64": "17e1679a88877f3c0acced82857d4fa818b1ecd9f826a38561c817298c6306d4",
     "selection128": "e2d0802946a184c51f833d8d185bdc11c02b952c6588ea314708b2b30eeefa0f",
     "final": "42c52100bda6253abff396109ef790ffd22993b661e005ae37b8ec15f0756ac2",
-    "independent_audit": "6f700a0cff2056ae01923ff17da6ac76418661b393a99ca06f4dbb79dd372ea0"
+    "independent_audit": "6f700a0cff2056ae01923ff17da6ac76418661b393a99ca06f4dbb79dd372ea0",
+    "saved_packet_RAW_checksum_audit": "57f32f955f03fef7e85a7d7aca3e6229551ff85ad5aae47a4ebffcbfdc608ef0",
+    "audit_provenance_adoption": "97dc129e0c8c3a52046d33435d289c6350ffac18f4b12db615a169fb401a8e4e"
   },
   "final_selected_packet_SHA256": "cd0cfd30808e9c3891d3472bcd47f8ed015ea31a2d73d97768f1d5f3439b1c79",
-  "sanitization": "No private paths, model weights, corpus text, tokens or tensor payloads are distributed."
+  "sanitization": "No private paths, model weights, corpus text, tokens or tensor payloads are distributed.",
+  "native_forward_equality_provenance": "Source-qualified actual native worker; independent CPU audits cover saved metric fields, packet payload checksums and network tensors without rerunning native forwards."
 }

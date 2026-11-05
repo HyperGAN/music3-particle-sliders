@@ -19,8 +19,11 @@ See [current usage and exact source checks](docs/response-session-proposal.md),
 The example is a small random Qwen3 CPU fixture on the official release.
 The [separate native source candidate](NATIVE-CONTINUOUS.md) explicitly selects
 published PG0.9.5 with the explicit continuous input domain and a strict BF16 eager profile for the
-genuine 4096-wide Music3 state. Full native GPU qualification and acoustic
-rendering remain pending. No projection or reshape bypasses the default
+genuine 4096-wide Music3 state. Native updates, exact continuation and public RAW
+response replay completed on the pinned PG0.9.5 source. The [measured LR combination](LEARNING-RATES.md#measured-native-pg095-combination)
+uses G=1e-6 at fixed D/P and horizon 128; its unused final RAW relative SSE was 0.89289.
+This is best tested at a declared lower bound, unbracketed. Acoustic rendering
+remains unqualified. No projection or reshape bypasses the default
 official flat-vector limit; historical source packages remain archived.
 
 The bounded [ordinary LoRA helper](docs/ordinary-lora-distillation.md) remains

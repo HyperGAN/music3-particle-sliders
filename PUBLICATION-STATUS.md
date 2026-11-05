@@ -6,7 +6,9 @@ new strict numerical identity. CPU software admission does not qualify a
 pretrained GPU update or transfer any historical learning-rate result.
 The previous publication and qualification records below remain historical.
 
-# Publication and qualification status
+The source-qualified 2026-11-05 native PG0.9.5 hidden-response cohort now has actual pretrained updates, exact resume and public RAW replay, a 128-update nominee, and an independent unused-final tensor audit. Its [scoped rate](LEARNING-RATES.md#measured-native-pg095-combination) is best tested at the declared lower G bound 1e-6 with fixed D/P, unbracketed; unused-final RAW=0.8928904545147202 versus OFF=1. This publishes prose, a rate preset and sanitized numerical evidence; it distributes no model weights or corpus and makes no acoustic quality claim.
+
+# Historical publication and qualification status
 
 The current root package targets core0.12.0 at
 `5d68473a098801ee1ab3ebbb12463daef51c6346` / official ParticleGAN0.9.4 source

@@ -1,0 +1,47 @@
+{
+  "schema": "music3-native-pg095-h128-rate-preset-v1",
+  "status": "NATIVE_CONFIRMED_SCOPED_BEST_TESTED_LOWER_BOUND",
+  "source_scope": {
+    "product_commit": "8d4e5d1e9fee333256afc52beaececef0217198e",
+    "core_commit": "3dd672a7f9b8c169daef90fd63e4bb42b9ddc423",
+    "particlegan": "0.9.5",
+    "profile": "release-0.9.5",
+    "penalty_input_domain": "continuous",
+    "native_numerical_profile": "music3-bf16-eager-strict-pg095-v1"
+  },
+  "session_option_overrides": {
+    "lr": 1e-06,
+    "d_lr_mult": 18000.000000000004,
+    "prior_lr_mult": 29999.999999999996,
+    "steps": 128,
+    "batch": 2,
+    "seed": 7,
+    "ema_decay": null,
+    "preset": "bispf_optimized",
+    "checkpointing": true,
+    "max_sequence_length": 256
+  },
+  "actual_learning_rates": {
+    "generator": 1e-06,
+    "critic": 0.018000000000000002,
+    "particle_bank": 0.029999999999999995
+  },
+  "actual_learning_rate_hex": {
+    "generator": "0x1.0c6f7a0b5ed8dp-20",
+    "critic": "0x1.26e978d4fdf3cp-6",
+    "particle_bank": "0x1.eb851eb851eb7p-6"
+  },
+  "selection": "raw",
+  "tested_geometry": {
+    "native_hidden_width": 4096,
+    "base_precision": "bfloat16",
+    "particle_bank": [
+      128,
+      4
+    ],
+    "train_pairs": 2,
+    "development_pairs": 2
+  },
+  "scope": "Best tested at declared lower G bound1e-6, unbracketed, at fixedD/P; not a joint/global optimum. Merge options into a separately qualified native SessionConfig with local model manifest and paired training rows. This JSON is a rate preset, not a standalone training configuration.",
+  "evidence": "../evidence/pg095-native-lr/summary.json"
+}

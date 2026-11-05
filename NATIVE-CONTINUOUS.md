@@ -1,5 +1,13 @@
 # Native continuous Music3 — published PG0.9.5
 
+## Completed native response measurement
+
+The source-qualified 2026-11-05 cohort completed two uninterrupted native updates versus independent one-plus-one continuation, exact full-state continuation, RAW export/public response/OFF replay, and a 128-update LR nominee on actual pretrained 4,096-wide BF16 geometry. Its [measured combination and exact preset](LEARNING-RATES.md#measured-native-pg095-combination) are G=1e-6, D=0.018000000000000002, P=0.029999999999999995. The unused two-example final RAW score was 0.8928904545147202; development at 128 was 1.0382026088532337. The result is best tested at the declared lower G bound, unbracketed, with fixed D/P. Defaults are unchanged. No audio generation or listening qualification is claimed.
+
+The [sanitized receipt](evidence/pg095-native-lr/summary.json) supersedes the earlier pending-native status below for this exact source/profile. Earlier CPU and failed-admission observations remain historical evidence.
+
+## Native setup and earlier readiness evidence
+
 The default narrow CPU fixture uses `release-0.9.5/auto`. Native4096-wide
 responses require `pg_source_profile="release-0.9.5"`,
 `penalty_input_domain="continuous"`,
@@ -54,4 +62,4 @@ Model geometry, dtype, numerical flags and inherited rate defaults are unchanged
 This is a new source cohort: no old full-state or portable packet is rebound.
 Earlier source801 import/weight/probe observations remain historical, as
 recorded in [the preserved native guide](docs/native-pg801.md). They do not
-qualify PG0.9.5 native training or learning rates; fresh native proof is pending.
+qualify PG0.9.5 native training or learning rates; the fresh PG0.9.5 evidence is linked above.

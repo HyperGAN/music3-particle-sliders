@@ -7,8 +7,11 @@ Use the installed numerical-response lifecycle for train/resume/export/inference
 ```sh
 python -m pip install '.[response-fixture,test]'
 particle-slider train --interface response --config examples/music3-response.json \
-  --out new-response-run --export-format both --selection ema
+  --out new-response-run --export-format both --selection raw
 ```
+
+Set `ema_decay` to `null` in JSON (`None` in Python). Train, evaluate, export
+and infer with raw current weights; do not add EMA or checkpoint averaging.
 
 See [current usage and exact source checks](docs/response-session-proposal.md),
 [installation cohorts](INSTALL-COHORTS.md), and

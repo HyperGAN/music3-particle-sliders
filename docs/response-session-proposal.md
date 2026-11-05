@@ -22,7 +22,7 @@ python3.11 -m venv .venv
 .venv/bin/python -m pip install '.[response-fixture,test]'
 .venv/bin/particle-slider capabilities --interface response --config examples/music3-response.json
 .venv/bin/particle-slider train --interface response --config examples/music3-response.json \
-  --out new-response-run --export-format both --selection ema
+  --out new-response-run --export-format both --selection raw
 .venv/bin/particle-slider infer --artifact new-response-run/adapter-v2.pt \
   --runtime examples/music3-response-runtime.json --mode response \
   --native examples/music3-response-request.json --strength .5 --out new-hidden.pt
@@ -34,7 +34,12 @@ Music3's actual routed particle bank, frozen paired teachers and native hidden
 response geometry. The core owns all GAN losses, updates, optimizer/prior
 ownership, RNG, resume and exports. No GAN formula is copied into this product.
 
-Response sessions support exact same-cohort resume, raw/EMA export, numerical
+Set `ema_decay=null` in JSON (`None` in Python) and use raw current weights for
+training, evaluation, selection, confirmation, export and inference. Do not
+maintain model-weight EMA or compare averaged checkpoints. Historical EMA
+conformance evidence and optional compatibility APIs retain their original scope.
+
+Response sessions support exact same-cohort resume, raw export, numerical
 responses, frozen-base observation and ordinary-LoRA approximation. Native-only
 inference builds only the base and adapter; it creates no teacher, critic, game
 or optimizer. On cleanup conflicts core0.12 leaves the session open: resolve the

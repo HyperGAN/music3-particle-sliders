@@ -1,5 +1,9 @@
 # Numerical response sessions: source proposal
 
+Historical API proposal: its EMA examples describe retained compatibility work.
+For current PG0.9.5 runs, use `ema_decay=None` and raw weights throughout; see
+the [current Music3 guide](../response-session-proposal.md).
+
 This additive contract is **source-only and unqualified** until the parent
 admits serial CPU validation. Reviewed core0.8.1/PG0.9.1 (`32f6830`) and
 core0.9.0/PG0.9.3 (`da4bae3`) remain unchanged. This proposal is a new source

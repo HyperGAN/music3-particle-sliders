@@ -1,30 +1,22 @@
 # Installation cohorts
 
-The root package is the current **core0.12.0 / official ParticleGAN0.9.4**
-numerical-response cohort. Its immutable shared source is
-`5d68473a098801ee1ab3ebbb12463daef51c6346`; use Python 3.11+ and
-`python -m pip install '.[response-fixture,test]'` in a new isolated environment.
-`requirements.txt` delegates to this same package pin. Current training and
-inference use `particle-slider --interface response` as documented in
-[the current response guide](docs/response-session-proposal.md).
+The root0.3.0 package selects core0.13.0 at
+`3dd672a7f9b8c169daef90fd63e4bb42b9ddc423` and published PG0.9.5.
+Use a fresh isolated environment and `python -m pip install '.[response-fixture,test]'`.
+The common response lifecycle and native-only reader retain their API.
 
-| Cohort | Entry point / lock | Status |
+| Cohort | Route | Scope |
 |---|---|---|
-| Current core0.12.0 / official PG0.9.4 | Installed response/inference registry; `music3/response-core.lock.json` | Narrow CPU fixtures; default wide vectors refused |
-| Explicit native core5d / PG801 continuous source | Same registry with explicit profile/domain/strict BF16 eager settings; `NATIVE-CONTINUOUS.md` | CPU source/assets ready; full native GPU/resume/audio qualification pending |
-| Previous coreddb / official PG0.9.4 | Independently buildable `cohorts/pg094-response-ddb-20261104/` | Exact old package bytes and SHA manifest preserved |
-| Historical core0.8.2 / PG0.9.1 | Product source `ed1c667` before this upgrade; archived lock and guide in `cohorts/legacy-response/` | Reproduce in a separate checkout and environment |
-| Historical core0.6.0 / PG0.9.1 | `scripts/train_*.py`, `scripts/infer_music3.py`, `core.lock.json`, `requirements-legacy.txt` | Original locked CLI only; tests skip in other core environments |
-| Independent HNDL/core0.12 candidate | `cohorts/hndl/pyproject.toml` and its own source lock | Separate environment; unchanged by this upgrade |
+| Current core0.13 / PG0.9.5 | Root package, release-0.9.5/auto | Narrow random CPU fixtures |
+| Current native continuous PG0.9.5 | Explicit release-0.9.5/continuous plus strict BF16 eager policy | CPU software/source admission; fresh native GPU proof pending |
+| Historical core5d / PG094 and PG801 | Original source/environment; preserved response/native guides | Earlier packets and measured facts only |
+| Previous coreddb PG094 | cohorts/pg094-response-ddb-20261104 | Independently buildable archive, unchanged |
+| Historical core0.8.2/core0.6 PG091 | cohorts/legacy-response and original CLI locks | Separate original environments |
+| HNDL/core0.12 candidate | cohorts/hndl | Separate pin, unchanged |
 
-Never combine these environments or rewrite old checkpoint/source identity.
-The root's historical CLI scripts retain their original implementation and
-core0.6.0 lock; they are not the current training command. The archived response
-lock retains the exact core0.8.2 bytes. Published ordinary native LoRAs and
-ComfyUI recordings preserve their original model identities and load path.
-No existing weights are retrained, converted or republished by this change.
-
-The direct VCS dependency is intentional for immutable source installation;
-these wheels must not be uploaded to PyPI. A successful package installation
-is not native audio qualification. Official width>=170 flat AR response and
-media rendering gates remain enforced.
+No old checkpoint/source identity is rewritten. Existing ordinary LoRA controls,
+ComfyUI assets and historical CLI scripts keep their recipes and load paths.
+Read [current usage](docs/response-session-proposal.md),
+[native settings](NATIVE-CONTINUOUS.md), and the preserved
+[PG094 guide](docs/response-session-pg094.md). The immutable Git dependency is
+intentional; these direct-VCS wheels are not PyPI uploads.

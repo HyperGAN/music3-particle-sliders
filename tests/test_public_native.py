@@ -7,7 +7,7 @@ from importlib.metadata import version
 # Historical core0.6.0/PG0.9.1 CLI tests require their separate locked environment.
 pytestmark = pytest.mark.skipif(
     version("particle-sliders-core") != "0.6.0",
-    reason="historical core0.6.0 CLI cohort; current PG0.9.4 uses response sessions",
+    reason="historical core0.6.0 CLI cohort; current PG0.9.5 uses response sessions",
 )
 from safetensors import safe_open
 from safetensors.torch import load_file, save_file

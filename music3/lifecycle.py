@@ -13,7 +13,7 @@ from pathlib import Path, PurePosixPath
 import re
 
 
-MILESTONE = "5d68473a098801ee1ab3ebbb12463daef51c6346"
+MILESTONE = "3dd672a7f9b8c169daef90fd63e4bb42b9ddc423"
 MODEL_REVISION = "bd348f9c49ea3c1b39f33ace3436f8fad435f24e"
 _OPTIONS = {
     "dummy", "host", "rows", "steps", "batch", "seed", "width", "device",
@@ -121,19 +121,19 @@ def _validate_model(options):
     device = options.get("device", "cpu")
     if not isinstance(device, str) or (device != "cpu" and not re.fullmatch(r"cuda:[0-9]+", device)):
         raise ValueError("device must be cpu or an explicit cuda index")
-    pair=(options.get("pg_source_profile", "release-0.9.4"),options.get("penalty_input_domain", "auto"))
+    pair=(options.get("pg_source_profile", "release-0.9.5"),options.get("penalty_input_domain", "auto"))
     if dummy:
-        if pair!=("release-0.9.4","auto"):
-            raise UnsupportedOperation("Music3 fixture uses official PG0.9.4 release-0.9.4/auto; other source profiles are unqualified")
+        if pair!=("release-0.9.5","auto"):
+            raise UnsupportedOperation("Music3 fixture uses official PG0.9.5 release-0.9.5/auto; other source profiles are unqualified")
         if width>=170:
-            raise UnsupportedOperation("native Music3 width4096 is gated: official PG0.9.4 release/auto refuses flat vectors of width >=170; no projection or profile fallback")
+            raise UnsupportedOperation("native Music3 width4096 is gated: official PG0.9.5 release/auto refuses flat vectors of width >=170; no projection or profile fallback")
         if device!="cpu" or options.get("base_precision","float32")!="float32":
             raise UnsupportedOperation("Music3 random Qwen3 fixture requires CPU float32")
         if any(key in options for key in ("model_dir","manifest","manifest_sha256","native_numerical_profile")):
             raise ValueError("random fixture cannot use native model identity or numerical policy")
         return
-    if pair!=("source-801ae1e-continuous-v1","continuous"):
-        raise UnsupportedOperation("native Music3 width4096 is gated unless the explicit source-801ae1e-continuous-v1/continuous pair is selected; official release/auto remains refused")
+    if pair!=("release-0.9.5","continuous"):
+        raise UnsupportedOperation("native Music3 width4096 is gated unless the explicit release-0.9.5/continuous pair is selected; official release/auto remains refused")
     if width!=4096:
         raise UnsupportedOperation("native Music3 requires the genuine 4096-wide Qwen3 state; no projection")
     if not device.startswith("cuda:") or options.get("base_precision")!="bfloat16":
@@ -264,7 +264,7 @@ def _build_native(options, *, checkpointing=False):
 
     dummy = options.get("dummy", False)
     width = options.get("width", 32 if dummy else 4096)
-    domain = dict(pg_source_profile=options.get("pg_source_profile", "release-0.9.4"),
+    domain = dict(pg_source_profile=options.get("pg_source_profile", "release-0.9.5"),
                   penalty_input_domain=options.get("penalty_input_domain", "auto"))
     require_audio_width(width, **domain)  # Exact PG source gate before model allocation.
     device = torch.device(options.get("device", "cpu"))
@@ -427,7 +427,7 @@ def _configuration(options):
     return dict(dummy=dummy, width=options.get("width", 32 if dummy else 4096),
         seed=options.get("seed", 7), max_sequence_length=options.get("max_sequence_length", 256),
         base_precision=options.get("base_precision", "float32" if dummy else "bfloat16"),
-        pg_source_profile=options.get("pg_source_profile", "release-0.9.4"),
+        pg_source_profile=options.get("pg_source_profile", "release-0.9.5"),
         penalty_input_domain=options.get("penalty_input_domain", "auto"),
         **({"native_numerical_profile":options["native_numerical_profile"]} if not dummy else {}))
 
@@ -459,7 +459,7 @@ def _prepare(options):
     from .learning_rates import recipe_overrides
     rates = recipe_overrides(**{key: options.get(key) for key in ("lr", "d_lr_mult", "prior_lr_mult")})
     import torch
-    from particle_sliders import ConditionalPG09
+    from particle_sliders.pg095 import ConditionalPG095 as ConditionalPG09
     from particle_sliders.lifecycle import Binding
     from particle_sliders.pg09_audio import AudioResponseCritic, AudioRow
     from particle_sliders.music3_native import assemble_text, tokenize_text, assert_audio_start
@@ -492,10 +492,10 @@ def _prepare(options):
                 particles=adapter.particles, response_domain="continuous_vector",
                 preset=options.get("preset", "bispf_optimized"), batch_size=options.get("batch", 2),
                 total_steps=options.get("steps", 4), seed=options.get("seed", 7),
-                pg_source_profile=options.get("pg_source_profile", "release-0.9.4"),
+                pg_source_profile=options.get("pg_source_profile", "release-0.9.5"),
                 penalty_input_domain=options.get("penalty_input_domain", "auto"), recipe_overrides=rates)
             specification = INFERENCE.specification(adapter, model_identity=adapter.model_identity,
-                protocol="music3-native-final-ar-hidden-v1", configuration=_configuration(options))
+                protocol="music3-native-final-ar-hidden-v2-pg095", configuration=_configuration(options))
         return Binding(game, close, inference=specification, observation=lambda: observe_native(adapter.model, adapter.network, None if options.get("dummy") else options))
     except BaseException:
         close()
@@ -507,18 +507,18 @@ def capabilities(options):
     width = options.get("width", 32 if dummy else 4096)
     operations = ("train", "resume", "evaluate", "export", "response")
     supported = (dummy is True and type(width) is int and 1 <= width < 170
-                 and options.get("pg_source_profile", "release-0.9.4") == "release-0.9.4"
+                 and options.get("pg_source_profile", "release-0.9.5") == "release-0.9.5"
                  and options.get("penalty_input_domain", "auto") == "auto") or (dummy is False and width==4096
-                 and options.get("pg_source_profile")=="source-801ae1e-continuous-v1"
+                 and options.get("pg_source_profile")=="release-0.9.5"
                  and options.get("penalty_input_domain")=="continuous"
-                 and options.get("native_numerical_profile")=="music3-bf16-eager-strict-v1")
+                 and options.get("native_numerical_profile")=="music3-bf16-eager-strict-pg095-v1")
     unavailable = (("render", "Music3 acoustic/token sampling is unqualified; numerical hidden responses only"),)
     if not supported:
         reason = "Music3 native/wide AR responses are gated pending explicit continuous-domain source qualification"
         unavailable += tuple((operation, reason) for operation in operations)
     return ResponseCapabilities("routed_particle_gan", "audio_ar_hidden", "native_final_ar_hidden",
-        "continuous_vector", (1, width), "0.9.4",
-        options.get("pg_source_profile", "release-0.9.4"), options.get("penalty_input_domain", "auto"),
+        "continuous_vector", (1, width), "0.9.5",
+        options.get("pg_source_profile", "release-0.9.5"), options.get("penalty_input_domain", "auto"),
         base_precisions=("float32",) if dummy else ("bfloat16",),
         operations=operations if supported else (), unavailable_reasons=unavailable,
         qualification="Music3 narrow official fixture / separate explicit native continuous source candidate; acoustic quality gated")
@@ -581,7 +581,7 @@ def _prepare_inference(options, spec):
     adapter, _, close = _build_native(merged)
     try:
         identity = native_identity(adapter, model_identity=adapter.model_identity,
-                                   protocol="music3-native-final-ar-hidden-v1")
+                                   protocol="music3-native-final-ar-hidden-v2-pg095")
         def response(*, strength=1., seed=0, **native):
             del seed  # Common inference scope owns deterministic observation RNG.
             return adapter._response(_probe_ids(merged, native), scale=strength).detach().clone()

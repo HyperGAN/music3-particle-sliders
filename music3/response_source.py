@@ -1,4 +1,4 @@
-"""Verify the current PG0.9.4 response cohort; historical locks stay separate."""
+"""Verify the current PG0.9.5 response cohort; historical locks stay separate."""
 import hashlib
 from importlib import metadata
 from importlib import util
@@ -6,11 +6,11 @@ import json
 from pathlib import Path
 import sys
 
-CORE_COMMIT = "5d68473a098801ee1ab3ebbb12463daef51c6346"
-CORE_VERSION = "0.12.0"
-PG_VERSION = "0.9.4"
+CORE_COMMIT = "3dd672a7f9b8c169daef90fd63e4bb42b9ddc423"
+CORE_VERSION = "0.13.0"
+PG_VERSION = "0.9.5"
 LOCK = Path(__file__).with_name("response-core.lock.json")
-LOCK_SHA256 = "f5b84e368053916381f727cd7c53c79dbdc38938229469b6073810fc615455b2"
+LOCK_SHA256 = "1e833c784e86c4bc79fc18dcc79aa11560af2988ccce100e3eca270e0465425f"
 
 
 def verify_response_core():
@@ -21,14 +21,14 @@ def verify_response_core():
     """
     contents = LOCK.read_bytes()
     if hashlib.sha256(contents).hexdigest() != LOCK_SHA256:
-        raise RuntimeError("Music3 PG0.9.4 requires its exact canonical source lock bytes")
+        raise RuntimeError("Music3 PG0.9.5 requires its exact canonical source lock bytes")
     lock = json.loads(contents)
     if (lock["core"]["commit"] != CORE_COMMIT or lock["core"]["version"] != CORE_VERSION
             or lock["particlegan"]["version"] != PG_VERSION):
-        raise RuntimeError("Music3 response proposal requires its canonical core0.12.0/PG0.9.4 lock")
+        raise RuntimeError("Music3 response proposal requires its canonical core0.13.0/PG0.9.5 lock")
     dist = metadata.distribution("particle-sliders-core")
     if dist.version != CORE_VERSION or metadata.version("particlegan") != PG_VERSION:
-        raise RuntimeError("use the exact reviewed core0.12.0/PG0.9.4 response environment; old CLI has its own lock")
+        raise RuntimeError("use the exact reviewed core0.13.0/PG0.9.5 response environment; old CLI has its own lock")
     registered = {str(path) for path in dist.files or ()}
     expected = lock["source_sha256"]
     root = Path(dist.locate_file("")).resolve()

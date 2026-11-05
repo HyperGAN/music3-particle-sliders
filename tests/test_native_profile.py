@@ -190,14 +190,15 @@ def test_old_default_package_archive_bytes_and_core_pin_remain_exact():
     assert assets.native_sources()['lifecycle.py']==hashlib.sha256((root/'music3/lifecycle.py').read_bytes()).hexdigest()
 
 
-@pytest.mark.parametrize('profile',['release-0.9.4','source-801ae1e-continuous-v1'])
-def test_fresh_process_actual_fixture_state_and_2_vs_1_plus_1(profile):
+@pytest.mark.parametrize('domain',['auto','continuous'])
+def test_fresh_process_actual_fixture_state_and_2_vs_1_plus_1(domain):
     """Actual small Qwen3/provider/critic/prior/streams; native weights stay absent.
 
     The native whole-factory route wraps the existing narrow CPU fixture at the
     pretrained/tokenizer boundary. Candidate-only geometry does not claim4096
     or acoustic qualification. Different caller seeds/PYTHONHASHSEED must agree.
     """
+    profile='release-0.9.5'
     from particle_sliders.pg09 import _released_sources
     try:_released_sources(profile)
     except RuntimeError:pytest.skip('separate exact '+profile+' environment required')
@@ -210,7 +211,7 @@ validate=product.validate
 build=product._build_native
 prepare=product._prepare
 profile=os.environ['MUSIC3_TEST_PROFILE']
-domain='auto' if profile=='release-0.9.4' else 'continuous'
+domain=os.environ['MUSIC3_TEST_DOMAIN']
 # Only the source gate/pretrained-tokenizer boundary is replaced; the actual
 # shared CPU adapter/provider/critic/prior/game and update/resume math execute.
 product._validate_model=lambda options:None
@@ -233,7 +234,7 @@ print(json.dumps(dict(initial=hashes,first=first,second=second,final=final,exact
     outputs=[]
     for caller,hashseed in [('1234','19'),('98765','403')]:
         env=dict(os.environ,CUDA_VISIBLE_DEVICES='',PYTHONHASHSEED=hashseed,CALLER_SEED=caller,
-            MUSIC3_TEST_PROFILE=profile,OMP_NUM_THREADS='2',MKL_NUM_THREADS='2')
+            MUSIC3_TEST_PROFILE=profile,MUSIC3_TEST_DOMAIN=domain,OMP_NUM_THREADS='2',MKL_NUM_THREADS='2')
         result=subprocess.run([sys.executable,'-c',code],env=env,capture_output=True,text=True,timeout=90)
         assert result.returncode==0,result.stdout+result.stderr
         outputs.append(json.loads(result.stdout.strip().splitlines()[-1]))

@@ -11,8 +11,8 @@ import json
 import os
 from pathlib import Path
 
-PROFILE='music3-bf16-eager-strict-v1'
-PG_PROFILE='source-801ae1e-continuous-v1'
+PROFILE='music3-bf16-eager-strict-pg095-v1'
+PG_PROFILE='release-0.9.5'
 MODEL_REVISION='bd348f9c49ea3c1b39f33ace3436f8fad435f24e'
 DIFFUSERS_COMMIT='d5baa4fb548294f47dbca49890abd4b291204c60'
 LOCK=Path(__file__).with_name('native-assets.lock.json')

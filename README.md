@@ -1,7 +1,7 @@
 # Music 3 particle sliders
 
-The current root package uses shared **core0.12.0 / ParticleGAN0.9.4**
-at immutable source `5d68473a098801ee1ab3ebbb12463daef51c6346` (Python 3.11+).
+The current root package uses shared **core0.13.0 / ParticleGAN0.9.5**
+at immutable source `3dd672a7f9b8c169daef90fd63e4bb42b9ddc423` (Python 3.11+).
 Use the installed numerical-response lifecycle for train/resume/export/inference:
 
 ```sh
@@ -15,7 +15,7 @@ See [current usage and exact source checks](docs/response-session-proposal.md),
 [publication and qualification status](PUBLICATION-STATUS.md).
 The example is a small random Qwen3 CPU fixture on the official release.
 The [separate native source candidate](NATIVE-CONTINUOUS.md) explicitly selects
-the exact continuous-domain PG source and a strict BF16 eager profile for the
+published PG0.9.5 with the explicit continuous input domain and a strict BF16 eager profile for the
 genuine 4096-wide Music3 state. Full native GPU qualification and acoustic
 rendering remain pending. No projection or reshape bypasses the default
 official flat-vector limit; historical source packages remain archived.

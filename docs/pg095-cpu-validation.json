@@ -1,0 +1,34 @@
+{
+  "schema": "music3-pg095-cpu-validation-v1",
+  "product_version": "0.3.0",
+  "core": {
+    "version": "0.13.0",
+    "commit": "3dd672a7f9b8c169daef90fd63e4bb42b9ddc423",
+    "install": "pip-built exact public Git VCS"
+  },
+  "particlegan": {
+    "version": "0.9.5",
+    "wheel_sha256": "c1c0de7a635ac1b1634ba158eed050b6f6aed993e01f9b463435430c77d846ae"
+  },
+  "source_closure_files": 577,
+  "checks": [
+    {
+      "scope": "full source CPU suite",
+      "passed": 130,
+      "skipped": 75,
+      "seconds": 47.91
+    },
+    {
+      "scope": "installed wheel response/native-policy/rates/4096-geometry/resume/raw/EMA, isolated copied tests",
+      "passed": 86,
+      "deselected": 2,
+      "seconds": 23.43,
+      "deselected_scope": "repository historical-archive byte checks, covered in full source suite"
+    }
+  ],
+  "torch": "2.9.1+cu128",
+  "cuda_initialized": false,
+  "full_pretrained_model_loaded": false,
+  "pretrained_native_qualification": false,
+  "historical_locks_and_artifacts": "unchanged; original pins required"
+}

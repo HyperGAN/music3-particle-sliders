@@ -1,6 +1,6 @@
 {
   "backend": "music3",
-  "cohort": "music3-pg095-raw-new-cpu-run",
+  "cohort": "music3-product-owned-core014-raw-cpu-run",
   "options": {
     "dummy": true,
     "width": 32,

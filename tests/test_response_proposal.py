@@ -41,7 +41,7 @@ def equal(actual, expected):
 
 def config(**overrides):
     options = dict(dummy=True, width=32, steps=2, batch=2, seed=7,
-                   checkpointing=True, ema_decay=.9)
+                   checkpointing=True, ema_decay=None)
     options.update(overrides)
     return SessionConfig('music3', 'music3-ownership-new-test-cohort', **options)
 
@@ -77,7 +77,7 @@ def cleanup_fixture():
 
 
 def test_exact_new_lock_and_separate_registrations():
-    assert CORE_COMMIT == '3dd672a7f9b8c169daef90fd63e4bb42b9ddc423'
+    assert CORE_COMMIT == '1ccf67ed041d2ba1646e51b3048651cfb83018b2'
     assert hashlib.sha256(LOCK.read_bytes()).hexdigest() == LOCK_SHA256
     assert len(entry_points(group='particle_sliders.response_backends', name='music3')) == 1
     assert len(entry_points(group='particle_sliders.inference_backends', name='music3')) == 1
@@ -209,7 +209,7 @@ def test_exact_full_split_response_resume_and_observation(preset, tmp_path):
         assert torch.equal(torch.get_rng_state(), rng)
 
 
-@pytest.mark.parametrize('selection', ['raw', 'ema'])
+@pytest.mark.parametrize('selection', ['raw'])
 def test_native_only_response_is_separate_from_training_and_matches_selection(monkeypatch, selection, tmp_path):
     cfg = config()
     ids = [61, 67, 71]
@@ -219,8 +219,6 @@ def test_native_only_response_is_separate_from_training_and_matches_selection(mo
         run.export(tmp_path / 'adapter-v1.pt', selection=selection)
         assert 'rows' not in packet['specification']['configuration']
         with run._observation(11):
-            if selection == 'ema':
-                run.game.network.load_state_dict(run.ema.values)
             expected = run.game.backend._response(tuple(ids), scale=.5).detach().clone()
     with open_response(cfg, artifact=tmp_path / 'adapter-v1.pt', operation='response') as legacy_matching:
         assert legacy_matching.inference_only

@@ -1,7 +1,10 @@
 music3-particle-sliders
 Copyright (c) 2026 HyperGAN
 
-This product trains MiniMax Music 3 sliders. The shared game is
-particle-sliders-core (winning_formulation), pinned in requirements.txt.
+This product owns MiniMax Music 3 model adapters and native bindings. Its
+Conditional ParticleGAN game and optimizer integration come from the pinned
+model-independent particle-sliders-core dependency in pyproject.toml.
+The native adapter relocation is recorded in music3/native-provenance.json;
+no GAN implementation or model weights are copied into this product.
 Formulation toys stay in HyperGAN/conceptmod. Base-model weights are
 MiniMaxAI/MiniMax-Music-3 and are not included here.

@@ -1,15 +1,16 @@
 # Current Music3 response sessions — ParticleGAN 0.9.5
 
-The root package registers the Music3 numerical-response backend and independent
-native-only inference backend. It pins shared core **0.13.0**, commit
-`3dd672a7f9b8c169daef90fd63e4bb42b9ddc423`, with official **ParticleGAN 0.9.5**
+The root 0.4 package owns `music3.native` and `music3.response_adapter` and
+registers the Music3 numerical-response backend and independent
+native-only inference backend. It pins model-independent shared core **0.14.0**, commit
+`1ccf67ed041d2ba1646e51b3048651cfb83018b2`, with official **ParticleGAN 0.9.5**
 (source `1b8355b184b21bb7d81104ee590813c262f6df0a`). Python 3.11+ is required.
 The default source profile is `release-0.9.5` with penalty input domain `auto`.
 Aliases such as `release` and recovered continuous overlays are refused. A
 [separate exact native source candidate](../NATIVE-CONTINUOUS.md) requires the
 explicit current continuous source/domain pair and strict numerical profile.
 
-`music3/response-core.lock.json` binds all 577 packaged core source/data files,
+`music3/response-core.lock.json` binds the complete packaged generic core source/data inventory,
 the exact core wheel, and the upstream release manifest. Registration checks
 distribution ownership, file bytes, versions, import origins and available
 installation provenance. Editable/source-checkout fallbacks are refused.

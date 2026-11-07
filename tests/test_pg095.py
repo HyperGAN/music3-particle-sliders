@@ -15,8 +15,8 @@ from particle_sliders.response import open_response
 def test_installed_product_and_runtime_select_one_official_release():
     lock = verify_response_core()
     assert metadata.version("particlegan") == pg09.PG_VERSION == "0.9.5"
-    assert metadata.version("particle-sliders-core") == lock["core"]["version"] == "0.13.0"
-    assert lock["core"]["commit"] == product.MILESTONE == "3dd672a7f9b8c169daef90fd63e4bb42b9ddc423"
+    assert metadata.version("particle-sliders-core") == lock["core"]["version"] == "0.14.0"
+    assert lock["core"]["commit"] == product.MILESTONE == "1ccf67ed041d2ba1646e51b3048651cfb83018b2"
     assert lock["particlegan"]["release_commit"] == "1b8355b184b21bb7d81104ee590813c262f6df0a"
     assert metadata.metadata("music3-particle-sliders")["Requires-Python"] == ">=3.11"
     requirements = metadata.requires("music3-particle-sliders")
@@ -56,3 +56,30 @@ def test_historical_cli_and_response_locks_remain_separate():
     assert old_cli["version"] == "0.6.0" and old_cli["particlegan_version"] == "0.9.1"
     assert old_response["core"]["version"] == "0.8.2"
     assert old_response["particlegan"]["version"] == "0.9.1"
+
+
+def test_current_core_contains_no_owned_music3_implementation():
+    from importlib.util import find_spec
+    from particle_sliders import pg09_audio
+    from music3.response_adapter import Music3ARResponseAdapter
+    assert find_spec('particle_sliders.music3_native') is None
+    assert not hasattr(pg09_audio, 'Music3ARResponseAdapter')
+    assert issubclass(Music3ARResponseAdapter, pg09_audio.ARLastHiddenResponseAdapter)
+    assert Music3ARResponseAdapter.__module__ == 'music3.response_adapter'
+
+
+@pytest.mark.parametrize('decay', [0., .9, True])
+def test_product_refuses_weight_ema_before_native_admission(monkeypatch, decay):
+    monkeypatch.setattr(product, '_validate_model', lambda *a: pytest.fail('native admission before RAW policy'))
+    with pytest.raises(ValueError, match='Weight EMA is disabled'):
+        product.validate(dict(dummy=True, width=32, ema_decay=decay))
+
+
+def test_previous_pg095_response_lock_keeps_its_original_hash():
+    import hashlib
+    root = Path(__file__).resolve().parents[1] / 'cohorts/pg095-response-3dd-20261105'
+    receipt = json.loads((root / 'source.json').read_text())
+    contents = (root / 'response-core.lock.json').read_bytes()
+    assert hashlib.sha256(contents).hexdigest() == receipt['files']['music3/response-core.lock.json']
+    assert json.loads(contents)['core']['commit'] == '3dd672a7f9b8c169daef90fd63e4bb42b9ddc423'
+    assert receipt['product_commit'] == 'a5791a5373fdd3043c6a692601c9a915119c88a0'

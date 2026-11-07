@@ -32,6 +32,11 @@ def test_release_catalog_is_available_without_source_checkout():
 def test_native_adapter_gradient_ownership_and_exact_zero(checkpointing):
     with open_response(config(checkpointing=checkpointing)) as run:
         adapter = run.game.backend
+        assert type(adapter).__module__ == 'music3.response_adapter'
+        assert type(adapter.slider).__module__ == 'music3.native'
+        sources = run.checkpoint()['payload']['game']['config']['implementation_sources']
+        assert {'music3.native', 'music3.response_adapter'} <= sources.keys()
+        assert 'particle_sliders.music3_native' not in sources
         base = deepcopy(adapter.model.state_dict())
         original_particles = adapter.particles.detach().clone()
         run.train()

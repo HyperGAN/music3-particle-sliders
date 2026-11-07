@@ -36,15 +36,18 @@ def candidate_fixture(monkeypatch,strict_math):
     def boundary(options,**kwargs):
         return build(dict(options,dummy=True,device='cpu',base_precision='float32'),**kwargs)
     monkeypatch.setattr(product,'_build_native',boundary)
-    from particle_sliders import music3_native
+    from music3 import native as music3_native
     def fixture_tokens(tokenizer,text,device):
         token=29 if 'crisp' in text else 11
         ids=torch.tensor([[token,13,17]],device=device)
         return ids,torch.ones_like(ids)
     monkeypatch.setattr(music3_native,'tokenize_text',fixture_tokens)
+    # Native caption packing belongs to the same replaced tokenizer boundary;
+    # these synthetic IDs do not exercise or qualify the Diffusers text packer.
+    monkeypatch.setattr(music3_native,'assemble_text',lambda prompt, lyrics: prompt + '\n' + lyrics)
     monkeypatch.setattr(music3_native,'assert_audio_start',lambda *args,**kwargs:None)
     return SessionConfig('music3','music3-4096-random-CPU-geometry-only',device='cpu',
-        base_precision='float32',width=4096,steps=2,batch=2,seed=7,ema_decay=.9,
+        base_precision='float32',width=4096,steps=2,batch=2,seed=7,ema_decay=None,
         pg_source_profile='release-0.9.5',penalty_input_domain='continuous',
         native_numerical_profile=strict_math['native_numerical_profile'],
         rows=[dict(neutral='soft piano',positive='crisp piano',lyrics=''),
@@ -65,14 +68,13 @@ def test_actual_4096_geometry_exact_fresh_common_resume(candidate_fixture,tmp_pa
     assert torch.equal(before,torch.get_rng_state()) and not torch.cuda.is_initialized()
 
 
-@pytest.mark.parametrize('selection',['raw','ema'])
+@pytest.mark.parametrize('selection',['raw'])
 def test_actual_4096_public_v1_v2_numeric_responses_without_training_constructors(candidate_fixture,monkeypatch,selection,tmp_path):
     from particle_sliders import pg09,pg09_audio
     with open_response(candidate_fixture) as run:
         run.train();packet=run.export_inference(selection=selection)
         legacy=run.export(tmp_path/'legacy-v1.pt',selection=selection)
         with run._observation(23):
-            if selection=='ema':run.game.network.load_state_dict(run.ema.values)
             expected={strength:run.game.backend._response((11,13,17),scale=strength).detach().clone() for strength in (0.,.5,1.)}
     with open_response(candidate_fixture,artifact=tmp_path/'legacy-v1.pt',operation='response') as v1:
         assert v1.inference_only

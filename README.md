@@ -1,7 +1,9 @@
 # Music 3 particle sliders
 
-The current root package uses shared **core0.13.0 / ParticleGAN0.9.5**
-at immutable source `3dd672a7f9b8c169daef90fd63e4bb42b9ddc423` (Python 3.11+).
+The root 0.4 package owns native Music3 adapters and consumes model-independent
+**core0.14.0 / ParticleGAN0.9.5**
+at immutable source `1ccf67ed041d2ba1646e51b3048651cfb83018b2` (Python 3.11+).
+See the [product/core ownership boundary](docs/product-owned-native.md).
 Use the installed numerical-response lifecycle for train/resume/export/inference:
 
 ```sh
@@ -17,9 +19,10 @@ See [current usage and exact source checks](docs/response-session-proposal.md),
 [installation cohorts](INSTALL-COHORTS.md), and
 [publication and qualification status](PUBLICATION-STATUS.md).
 The example is a small random Qwen3 CPU fixture on the official release.
-The [separate native source candidate](NATIVE-CONTINUOUS.md) explicitly selects
+This new source cohort is CPU-qualified only; native/pretrained qualification
+does not transfer from the previous source. The [retained native guide](NATIVE-CONTINUOUS.md) describes the original 0.3 cohort, which explicitly selects
 published PG0.9.5 with the explicit continuous input domain and a strict BF16 eager profile for the
-genuine 4096-wide Music3 state. Native updates, exact continuation and public RAW
+genuine 4096-wide Music3 state. In that original cohort, native updates, exact continuation and public RAW
 response replay completed on the pinned PG0.9.5 source. The [measured LR combination](LEARNING-RATES.md#measured-native-pg095-combination)
 uses G=1e-6 at fixed D/P and horizon 128; its unused final RAW relative SSE was 0.89289.
 This is best tested at a declared lower bound, unbracketed. Acoustic rendering

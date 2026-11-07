@@ -187,7 +187,7 @@ def test_old_default_package_archive_bytes_and_core_pin_remain_exact():
     assert len(manifest['files'])==20
     for name,digest in manifest['files'].items():assert hashlib.sha256((old/name).read_bytes()).hexdigest()==digest
     assert 'ddb41423bcefc1fe76cd94d0f9b367353b3ea137' in (old/'pyproject.toml').read_text()
-    assert assets.native_sources()['lifecycle.py']==hashlib.sha256((root/'music3/lifecycle.py').read_bytes()).hexdigest()
+    assert assets.native_sources()['lifecycle.py']==hashlib.sha256(Path(product.__file__).read_bytes()).hexdigest()
 
 
 @pytest.mark.parametrize('domain',['auto','continuous'])

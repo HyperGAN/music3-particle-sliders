@@ -15,6 +15,7 @@ from torch import nn
 
 from particle_sliders.native_lora import LoRAModule, LoRANetwork, lora_target_plan
 from particle_sliders.adapter_attachment import atomic_attachment
+from particle_sliders.adapter_activation import push_activation, restore_activation
 from particle_sliders.reference import RoutedMLP
 from particle_sliders.weight_policy import raw_checkpoint_admission, require_raw_provenance
 
@@ -252,12 +253,13 @@ class ParticleNetwork(nn.Module):
 
     @contextmanager
     def scaled(self, scale: float):
-        previous = float(self.network.lora_scale)
-        self.set_scale(scale)
+        push_activation(self.network, (self.network, *self.network.unet_loras),
+                        ('lora_scale', 'multiplier'))
         try:
+            self.set_scale(scale)
             yield
         finally:
-            self.set_scale(previous)
+            restore_activation(self.network)
 
     def save(self, path, metadata, *, state=None):
         from safetensors.torch import save_file

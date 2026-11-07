@@ -1,0 +1,59 @@
+{
+  "schema": "music3-a08-merged-core-adoption-cpu-v1",
+  "product_runtime_source_commit": "23146d195a9f3a2f978edefcce8b59519cd03ac5",
+  "tested_source_commit": "23146d195a9f3a2f978edefcce8b59519cd03ac5",
+  "product_wheel_sha256": "1117ba0a80a54985694260ee90c1a4f4ed493f6bc2475e45dcf45d6996a1a17c",
+  "product_wheel_source_data_bytes_match_tested_source": true,
+  "core": {
+    "version": "0.14.0",
+    "commit": "8a696eb33c1a9d34472afad3a3199bd4776a797f",
+    "tree": "581895c9726313cdf5ddedcfb8c2c422a679747c",
+    "wheel_sha256": "6bac714ed7bcbea73dc414c0b0953a06e8d0433fe8db839ee6dae9c421cee464",
+    "source_closure_files": 63,
+    "source_lock_sha256": "6baa3d1104d803ef821f44409a00ae64170b55688f838b7f27c56e512104b102",
+    "all_wheel_source_data_verified_against_merged_git": true
+  },
+  "particlegan": {
+    "version": "0.9.5",
+    "official_release_commit": "1b8355b184b21bb7d81104ee590813c262f6df0a"
+  },
+  "checks": [
+    {
+      "scope": "complete source suite including4 exact heterogeneous-scale CPU cases",
+      "passed": 127,
+      "skipped": 97,
+      "seconds": 28.6
+    },
+    {
+      "scope": "complete outside-checkout installed product/core suite; actual archive/config fixtures only; no live product source or deselections",
+      "passed": 127,
+      "skipped": 97,
+      "seconds": 28.8,
+      "installed_module_paths_and_native_bytes_asserted": true
+    }
+  ],
+  "skip_reasons": {
+    "exact native Transformers5.15 environment required": 21,
+    "separate exact native Torch/CUDA-build CPU-only environment required": 1,
+    "historical core0.6.0 CLI cohort; current PG0.9.5 uses response sessions": 8,
+    "historical core0.6.0 CLI cohort; current PG0.9.4 uses response sessions": 65,
+    "explicit separately staged continuous profile required": 2
+  },
+  "runtime": {
+    "device": "cpu",
+    "cuda_visible_devices": "",
+    "cuda_initialized": false
+  },
+  "preserved_previous_cohort": "cohorts/product-owned-native-core9e9dcea-20261107",
+  "preserved_receipts": [
+    "verification.json",
+    "final-core-refresh.json"
+  ],
+  "pretrained_native_qualified": false,
+  "models_or_audio_downloaded": false,
+  "limitations": "Tiny synthetic hosts/random Qwen3 and one-layer4096-vector geometry only. No pretrained Music3, native/GPU/audio or measured-rate qualification. Historical source identities/checkpoints/optimizer statistics remain unchanged.",
+  "parent_extraction_commit": "da7a77f432fcb2b98a647a05d0edbb8da2ee5523",
+  "original_A08_commit": "4bf25963a52c7de4ec4773ca1562b0cac1794670",
+  "A08_native_provenance_test_bytes_preserved": true,
+  "native_packaged_sha256": "b0ba8d68ee47971a9f157510d026828b7756b2d01468761f09f93344d2c83046"
+}

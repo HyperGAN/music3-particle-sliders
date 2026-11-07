@@ -1,6 +1,14 @@
-# Current source: PG0.9.5
+# Product-owned native source cohort
 
-The active0.3.0 package pins core0.13.0/3dd672a and the published PG0.9.5 release.
+The root 0.4 package owns native Music3 adapters and binds model-independent
+core 0.14 with official ParticleGAN 0.9.5. This is a new source cohort with CPU
+wiring/ownership/resume checks. Existing pretrained captures and measured rates
+below retain their original 0.3/core-0.13 identities; no new GPU or acoustic
+qualification is claimed. See [the ownership boundary](docs/product-owned-native.md).
+
+# Retained 0.3 source: PG0.9.5
+
+The retained0.3.0 package pins core0.13.0/3dd672a and the published PG0.9.5 release.
 Native continuous response requires the explicit released profile/domain and
 new strict numerical identity. CPU software admission does not qualify a
 pretrained GPU update or transfer any historical learning-rate result.

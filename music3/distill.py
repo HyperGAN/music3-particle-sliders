@@ -22,9 +22,10 @@ def distill_lora(adapter, calibration_ids, *, max_rows=128, ridge_fraction=.01):
     verify_response_core()
     import torch
     from particle_sliders.distillation import fit_routed_down
-    from particle_sliders.music3_native import ParticleNetwork
+    from .native import ParticleNetwork
     from particle_sliders.pg09 import _hash
-    from particle_sliders.pg09_audio import Music3ARResponseAdapter, require_audio_width
+    from .response_adapter import Music3ARResponseAdapter
+    from particle_sliders.pg09_audio import require_audio_width
     from .lifecycle import _ids, observe_native
 
     if not isinstance(adapter, Music3ARResponseAdapter) or type(adapter.slider) is not ParticleNetwork:

@@ -1,0 +1,16 @@
+{
+  "schema": "music3-retained-cohort-v1",
+  "repository": "https://github.com/HyperGAN/music3-particle-sliders",
+  "product_commit": "a5791a5373fdd3043c6a692601c9a915119c88a0",
+  "core_commit": "3dd672a7f9b8c169daef90fd63e4bb42b9ddc423",
+  "files": {
+    "pyproject.toml": "36d98656694d4b17cfe695b84ff789cb9d1c5c0520c451a166f49c23c06958b8",
+    "music3/lifecycle.py": "e7f9f8bee97a9c9b0a6893e774ee27701819f1c2ffdbe9a889f41cfddf41541d",
+    "music3/response_source.py": "466e704aac6b273c277edddb03ffb66719c20a850e27277189e401c4846ea1a6",
+    "music3/native_assets.py": "e66f3c334f75907a99d7dd48c6790bc1b8af8321142739a8b896d8918de08284",
+    "music3/native-assets.lock.json": "02d927d1fb7611e74273da8006f8fe5ccb288508958b84e9e94ba7a3564152ff",
+    "music3/response-core.lock.json": "1e833c784e86c4bc79fc18dcc79aa11560af2988ccce100e3eca270e0465425f",
+    "music3/learning_rates.py": "7f6ad71e970fc4e9cf9bdce078be3268c6af4ff8e818073e21b8279489c2b307",
+    "docs/pg095-cpu-validation.json": "1f9d67f4c796f66267c3e9630230090a552ba48edfccbe86c4b4a4f189aeedfb"
+  }
+}

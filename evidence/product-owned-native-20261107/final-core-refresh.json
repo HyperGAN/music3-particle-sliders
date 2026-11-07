@@ -1,0 +1,37 @@
+{
+  "schema": "music3-product-owned-native-cpu-v1",
+  "runtime_source_commit": "7dfe1258c51b6b1c2ca4b9975db51d567e47764f",
+  "core": {
+    "version": "0.14.0",
+    "commit": "9e9dcea567b38a550bd50e2fea5c2fc3e669706c",
+    "wheel_sha256": "4f6068021a0f7e0b40715777f30d6f44a0d5615bac95b782a296009315fb713a",
+    "source_closure_files": 53,
+    "source_lock_sha256": "2a535e742c9007b65ca04d45afe643b755105189b6dd8b5a647de31c0752ddef",
+    "runtime_source_map_unchanged_from": "1ccf67ed041d2ba1646e51b3048651cfb83018b2"
+  },
+  "product_wheel_sha256": "ac8b8007ebabd13f99700cb909105422a57d900149f819dfd8c81aa3d2a0469c",
+  "checks": [
+    {
+      "scope": "complete source suite with installed product registry and generic core",
+      "passed": 123,
+      "skipped": 97,
+      "seconds": 30.05
+    },
+    {
+      "scope": "isolated installed-wheel suite; installed source paths asserted",
+      "passed": 115,
+      "deselected": 3,
+      "seconds": 28.82,
+      "deselected_scope": "repository-only archive tests passed in source suite"
+    },
+    {
+      "scope": "core-pin admission and native CPU regression tests",
+      "passed": 25
+    }
+  ],
+  "device": "cpu",
+  "cuda_visible_devices": "",
+  "pretrained_native_qualified": false,
+  "models_or_audio_downloaded": false,
+  "preserved_prior_verification": "verification.json"
+}

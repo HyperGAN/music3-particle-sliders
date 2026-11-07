@@ -1,3 +1,8 @@
+> Retained 0.3/core-0.13 source evidence: the measurements and pins below belong
+> to the original product/core cohort. The root 0.4 product-owned adapter and
+> core-0.14 integration require a fresh source/environment cohort and native
+> qualification. See [ownership and migration](docs/product-owned-native.md).
+
 # Native continuous Music3 — published PG0.9.5
 
 ## Completed native response measurement

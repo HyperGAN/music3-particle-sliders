@@ -1,0 +1,24 @@
+{
+  "schema": "music3-native-source-relocation-v1",
+  "source": {
+    "repository": "https://github.com/HyperGAN/particle-sliders",
+    "commit": "285180ed9813f12e912bb6bce6bada00496fd19a",
+    "path": "packages/particle-sliders-core/src/particle_sliders/music3_native.py",
+    "sha256": "b95a6063a504b5096d42c8de6f5c6d3268e7525b5b441dc96b51a993f0221c48",
+    "upstream_record": {
+      "origin": "/ml2/codex-storage/future-workspaces/2026-10-21/task-2/shared/packages/particle-sliders-core/src/particle_sliders/music3_native.py",
+      "original_sha256": "bbdd408259475b6d2a16158eaa283d302f22f6d8e7a64c44aad35d8a1e943819",
+      "packaged_sha256": "b95a6063a504b5096d42c8de6f5c6d3268e7525b5b441dc96b51a993f0221c48"
+    }
+  },
+  "product": {
+    "module": "music3.native",
+    "packaged_sha256": "c1debc3cf3782ab07c992a9c19b57033af9c6839d6dec6be6cd2e5f6ca9b7b6b",
+    "changes": [
+      "Generic core helper imports replace relative core imports.",
+      "Known averaged input provenance and alternate weight exports are refused.",
+      "No model, routing, loss or optimizer formula changes."
+    ]
+  },
+  "qualification": "new product-owned source cohort; native pretrained execution and historical results are not promoted"
+}

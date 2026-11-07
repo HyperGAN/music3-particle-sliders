@@ -13,7 +13,7 @@ from pathlib import Path, PurePosixPath
 import re
 
 
-MILESTONE = "3dd672a7f9b8c169daef90fd63e4bb42b9ddc423"
+MILESTONE = "8a696eb33c1a9d34472afad3a3199bd4776a797f"
 MODEL_REVISION = "bd348f9c49ea3c1b39f33ace3436f8fad435f24e"
 _OPTIONS = {
     "dummy", "host", "rows", "steps", "batch", "seed", "width", "device",
@@ -59,9 +59,8 @@ def validate(options):
     maximum = _integer(options, "max_sequence_length", 256, 1, 8192)
     if options.get("preset", "bispf_optimized") not in ("bispf", "bispf_optimized"):
         raise ValueError("unsupported PG preset")
-    decay = options.get("ema_decay")
-    if decay is not None and (type(decay) not in (int, float) or not math.isfinite(decay) or not 0 <= decay < 1):
-        raise ValueError("EMA decay must be finite in [0,1)")
+    from particle_sliders.weight_policy import require_no_weight_ema
+    require_no_weight_ema(options.get("ema_decay"))
     _validate_model(options)
     rows = options.get("rows", deepcopy(_FIXTURE_ROWS) if dummy else None)
     if not isinstance(rows, (list, tuple)) or not 2 <= len(rows) <= 128:
@@ -203,7 +202,7 @@ def _restore_host(model):
     """
     from particle_sliders.lifecycle import native_cleanup
     from particle_sliders.native_lora import lora_target_plan
-    from particle_sliders.music3_native import TARGET_REPLACE
+    from .native import TARGET_REPLACE
     restore_native = native_cleanup(model)
     targets = lora_target_plan(model, TARGET_REPLACE, prefix="lora_te", delimiter="-", train_method="full")
     saved = [(module, "forward" in vars(module), vars(module).get("forward")) for _, module in targets]
@@ -259,8 +258,9 @@ def _build_native(options, *, checkpointing=False):
     """Build base and adapter only, independently of all training data/state."""
     _validate_model(options)
     import torch
-    from particle_sliders.music3_native import ParticleNetwork
-    from particle_sliders.pg09_audio import Music3ARResponseAdapter, require_audio_width
+    from .native import ParticleNetwork
+    from .response_adapter import Music3ARResponseAdapter
+    from particle_sliders.pg09_audio import require_audio_width
 
     dummy = options.get("dummy", False)
     width = options.get("width", 32 if dummy else 4096)
@@ -462,7 +462,7 @@ def _prepare(options):
     from particle_sliders.pg095 import ConditionalPG095 as ConditionalPG09
     from particle_sliders.lifecycle import Binding
     from particle_sliders.pg09_audio import AudioResponseCritic, AudioRow
-    from particle_sliders.music3_native import assemble_text, tokenize_text, assert_audio_start
+    from .native import assemble_text, tokenize_text, assert_audio_start
     adapter, tokenizer, close = _build_native(options, checkpointing=options.get("checkpointing", False))
     try:
         rows = []

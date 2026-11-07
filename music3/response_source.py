@@ -6,11 +6,11 @@ import json
 from pathlib import Path
 import sys
 
-CORE_COMMIT = "3dd672a7f9b8c169daef90fd63e4bb42b9ddc423"
-CORE_VERSION = "0.13.0"
+CORE_COMMIT = "8a696eb33c1a9d34472afad3a3199bd4776a797f"
+CORE_VERSION = "0.14.0"
 PG_VERSION = "0.9.5"
 LOCK = Path(__file__).with_name("response-core.lock.json")
-LOCK_SHA256 = "1e833c784e86c4bc79fc18dcc79aa11560af2988ccce100e3eca270e0465425f"
+LOCK_SHA256 = "6baa3d1104d803ef821f44409a00ae64170b55688f838b7f27c56e512104b102"
 
 
 def verify_response_core():
@@ -25,10 +25,10 @@ def verify_response_core():
     lock = json.loads(contents)
     if (lock["core"]["commit"] != CORE_COMMIT or lock["core"]["version"] != CORE_VERSION
             or lock["particlegan"]["version"] != PG_VERSION):
-        raise RuntimeError("Music3 response proposal requires its canonical core0.13.0/PG0.9.5 lock")
+        raise RuntimeError("Music3 response proposal requires its canonical core0.14.0/PG0.9.5 lock")
     dist = metadata.distribution("particle-sliders-core")
     if dist.version != CORE_VERSION or metadata.version("particlegan") != PG_VERSION:
-        raise RuntimeError("use the exact reviewed core0.13.0/PG0.9.5 response environment; old CLI has its own lock")
+        raise RuntimeError("use the exact reviewed core0.14.0/PG0.9.5 response environment; old CLI has its own lock")
     registered = {str(path) for path in dist.files or ()}
     expected = lock["source_sha256"]
     root = Path(dist.locate_file("")).resolve()

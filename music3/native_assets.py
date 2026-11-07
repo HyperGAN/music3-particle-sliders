@@ -39,7 +39,7 @@ def source_files(root):
 def native_sources():
     root=Path(__file__).parent
     return {name:sha(root/name) for name in ('lifecycle.py','response_source.py','native_assets.py',
-        'native-assets.lock.json','response-core.lock.json','learning_rates.py')}
+        'native-assets.lock.json','response-core.lock.json','learning_rates.py','native.py','response_adapter.py','native-provenance.json')}
 
 
 def numerical_profile(options,model=None):

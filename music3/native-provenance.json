@@ -13,7 +13,7 @@
   },
   "product": {
     "module": "music3.native",
-    "packaged_sha256": "c1debc3cf3782ab07c992a9c19b57033af9c6839d6dec6be6cd2e5f6ca9b7b6b",
+    "packaged_sha256": "b0ba8d68ee47971a9f157510d026828b7756b2d01468761f09f93344d2c83046",
     "changes": [
       "Generic core helper imports replace relative core imports.",
       "Known averaged input provenance and alternate weight exports are refused.",

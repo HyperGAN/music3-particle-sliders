@@ -1,7 +1,7 @@
 # Installation cohorts
 
 The root0.4.0 package owns native Music3 code and selects model-independent core0.14.0 at
-`1ccf67ed041d2ba1646e51b3048651cfb83018b2` and published PG0.9.5.
+`9e9dcea567b38a550bd50e2fea5c2fc3e669706c` and published PG0.9.5.
 Use a fresh isolated environment and `python -m pip install '.[response-fixture,test]'`.
 The common response lifecycle and native-only reader retain their API.
 

@@ -13,7 +13,7 @@ from pathlib import Path, PurePosixPath
 import re
 
 
-MILESTONE = "1ccf67ed041d2ba1646e51b3048651cfb83018b2"
+MILESTONE = "9e9dcea567b38a550bd50e2fea5c2fc3e669706c"
 MODEL_REVISION = "bd348f9c49ea3c1b39f33ace3436f8fad435f24e"
 _OPTIONS = {
     "dummy", "host", "rows", "steps", "batch", "seed", "width", "device",

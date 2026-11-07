@@ -5,10 +5,10 @@
     "distribution": "particle-sliders-core",
     "version": "0.14.0",
     "repository": "https://github.com/HyperGAN/particle-sliders",
-    "commit": "1ccf67ed041d2ba1646e51b3048651cfb83018b2",
+    "commit": "9e9dcea567b38a550bd50e2fea5c2fc3e669706c",
     "subdirectory": "packages/particle-sliders-core",
     "wheel": "particle_sliders_core-0.14.0-py3-none-any.whl",
-    "wheel_sha256": "b054f717e9f038f834bae675f2fc6f4b4c9cfbb50d392a10138987e91cedb8b8"
+    "wheel_sha256": "4f6068021a0f7e0b40715777f30d6f44a0d5615bac95b782a296009315fb713a"
   },
   "particlegan": {
     "version": "0.9.5",

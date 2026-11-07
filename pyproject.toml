@@ -8,7 +8,7 @@ version = "0.4.0"
 description = "Product-owned Music3 native adapters over model-independent ParticleGAN core"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@1ccf67ed041d2ba1646e51b3048651cfb83018b2#subdirectory=packages/particle-sliders-core"]
+dependencies = ["particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@9e9dcea567b38a550bd50e2fea5c2fc3e669706c#subdirectory=packages/particle-sliders-core"]
 
 [project.optional-dependencies]
 response-fixture = ["transformers==5.15.0"]

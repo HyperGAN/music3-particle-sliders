@@ -1,0 +1,48 @@
+{
+  "schema": "music3-product-owned-native-cpu-v1",
+  "runtime_source_commit": "70ff2dcfb486dd2aedf98899d562077dc2451325",
+  "product_version": "0.4.0",
+  "product_wheel_sha256": "84f5a718f2ad4f652f5c37cd63c08002fb0e429a96bfe08819c1e9fe9717bdce",
+  "core": {
+    "version": "0.14.0",
+    "commit": "1ccf67ed041d2ba1646e51b3048651cfb83018b2",
+    "wheel_sha256": "b054f717e9f038f834bae675f2fc6f4b4c9cfbb50d392a10138987e91cedb8b8",
+    "source_closure_files": 53,
+    "source_lock_sha256": "3035987c1400878501d44b14e54b809920793c0503e09752818d21411acd356e"
+  },
+  "particlegan": {
+    "version": "0.9.5",
+    "official_release_commit": "1b8355b184b21bb7d81104ee590813c262f6df0a"
+  },
+  "checks": [
+    {
+      "scope": "complete source suite with installed product registry and generic core",
+      "passed": 123,
+      "skipped": 97,
+      "seconds": 30.03
+    },
+    {
+      "scope": "isolated installed-wheel response/native ownership/raw/geometry/resume/learning-rate tests; paths asserted",
+      "passed": 115,
+      "deselected": 3,
+      "seconds": 29.81,
+      "deselected_scope": "repository-only historical archive tests, passed in source suite"
+    },
+    {
+      "scope": "native relocation source comparison against core285180e",
+      "unchanged_function_method_asts": 21,
+      "response_subclass_ast_unchanged": true,
+      "changes": "generic helper imports plus RAW checkpoint/export admission"
+    }
+  ],
+  "runtime": {
+    "torch": "2.14.1+cu130",
+    "transformers": "4.57.6",
+    "device": "cpu",
+    "cuda_visible_devices": "",
+    "cuda_initialized": false
+  },
+  "pretrained_native_qualified": false,
+  "models_or_audio_downloaded": false,
+  "limitations": "Synthetic tiny hosts and random Qwen3, including one-layer4096-vector geometry. No pretrained native/GPU/audio qualification; no historical result or measured rate promoted. Old cohort source, locks, captures and optimizer histories preserved."
+}

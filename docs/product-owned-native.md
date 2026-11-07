@@ -31,3 +31,11 @@ continuation and public response replay. They do not qualify pretrained Music3
 updates, device memory, acoustic rendering or old measured learning rates for
 this new source cohort. Historical native measurements remain facts about the
 original 0.3 cohort.
+
+The current cohort adopts the merged shared `develop` source, including the
+generic adapter repairs, execution/cache/checkpoint helpers and RAW-only shared
+parameter-search API. Its complete 63-file core source/data map and exact wheel
+are locked; product-native ownership remains here. The pre-integration 0.4
+core 9e9dcea CPU cohort is retained under
+[`cohorts/product-owned-native-core9e9dcea-20261107`](../cohorts/product-owned-native-core9e9dcea-20261107/README.md),
+with its original source hashes and unchanged verification receipts.

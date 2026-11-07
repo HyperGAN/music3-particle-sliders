@@ -6,11 +6,11 @@ import json
 from pathlib import Path
 import sys
 
-CORE_COMMIT = "9e9dcea567b38a550bd50e2fea5c2fc3e669706c"
+CORE_COMMIT = "8a696eb33c1a9d34472afad3a3199bd4776a797f"
 CORE_VERSION = "0.14.0"
 PG_VERSION = "0.9.5"
 LOCK = Path(__file__).with_name("response-core.lock.json")
-LOCK_SHA256 = "2a535e742c9007b65ca04d45afe643b755105189b6dd8b5a647de31c0752ddef"
+LOCK_SHA256 = "6baa3d1104d803ef821f44409a00ae64170b55688f838b7f27c56e512104b102"
 
 
 def verify_response_core():

@@ -1,0 +1,22 @@
+{
+  "schema": "music3-retained-cohort-v1",
+  "repository": "https://github.com/HyperGAN/music3-particle-sliders",
+  "product_commit": "abb871b0a8fdfb986cff66b891398ed44652fad3",
+  "core_commit": "9e9dcea567b38a550bd50e2fea5c2fc3e669706c",
+  "files": {
+    "pyproject.toml": "10119b44de00f33e7519a14f19050a3912adbc926e216b03a51b311f2d59da2e",
+    "music3/lifecycle.py": "fabcbb59109f574183f88193f5db9854348ec1ec5806beeaa2dfc7f119fcc19e",
+    "music3/response_source.py": "63b5c385285e39a5287ab13a2cc2410b470281d28a1fa4264eb68db406a33a86",
+    "music3/native.py": "c1debc3cf3782ab07c992a9c19b57033af9c6839d6dec6be6cd2e5f6ca9b7b6b",
+    "music3/response_adapter.py": "72377167732af682e62d2c7f333dffd243b0403fed847af2a527d8b2bc772a36",
+    "music3/native-provenance.json": "d95e5eee6128b2c46e8b4c28365cdf60f2a5b5c2b53cfae5570531f0da36b4d1",
+    "music3/response-core.lock.json": "2a535e742c9007b65ca04d45afe643b755105189b6dd8b5a647de31c0752ddef",
+    "music3/native_assets.py": "b0aaa69684c7208336a776c07ea64bb3d035c75b75f5fa38873715ba4c90652b",
+    "music3/native-assets.lock.json": "02d927d1fb7611e74273da8006f8fe5ccb288508958b84e9e94ba7a3564152ff"
+  },
+  "qualification": "CPU synthetic source cohort only; no native/GPU/audio result promoted",
+  "receipts": [
+    "evidence/product-owned-native-20261107/verification.json",
+    "evidence/product-owned-native-20261107/final-core-refresh.json"
+  ]
+}

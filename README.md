@@ -2,7 +2,7 @@
 
 The root 0.4 package owns native Music3 adapters and consumes model-independent
 **core0.14.0 / ParticleGAN0.9.5**
-at immutable source `9e9dcea567b38a550bd50e2fea5c2fc3e669706c` (Python 3.11+).
+at immutable source `8a696eb33c1a9d34472afad3a3199bd4776a797f` (Python 3.11+).
 See the [product/core ownership boundary](docs/product-owned-native.md).
 Use the installed numerical-response lifecycle for train/resume/export/inference:
 

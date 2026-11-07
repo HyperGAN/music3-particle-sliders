@@ -3,7 +3,7 @@
 The root 0.4 package owns `music3.native` and `music3.response_adapter` and
 registers the Music3 numerical-response backend and independent
 native-only inference backend. It pins model-independent shared core **0.14.0**, commit
-`9e9dcea567b38a550bd50e2fea5c2fc3e669706c`, with official **ParticleGAN 0.9.5**
+`8a696eb33c1a9d34472afad3a3199bd4776a797f`, with official **ParticleGAN 0.9.5**
 (source `1b8355b184b21bb7d81104ee590813c262f6df0a`). Python 3.11+ is required.
 The default source profile is `release-0.9.5` with penalty input domain `auto`.
 Aliases such as `release` and recovered continuous overlays are refused. A

@@ -20,11 +20,17 @@ The example is a small random Qwen3 CPU fixture on the official release.
 The [separate native source candidate](NATIVE-CONTINUOUS.md) explicitly selects
 published PG0.9.5 with the explicit continuous input domain and a strict BF16 eager profile for the
 genuine 4096-wide Music3 state. Native updates, exact continuation and public RAW
-response replay completed on the pinned PG0.9.5 source. The [measured LR combination](LEARNING-RATES.md#measured-native-pg095-combination)
-uses G=1e-6 at fixed D/P and horizon 128; its unused final RAW relative SSE was 0.89289.
-This is best tested at a declared lower bound, unbracketed. Acoustic rendering
-remains unqualified. No projection or reshape bypasses the default
-official flat-vector limit; historical source packages remain archived.
+response replay completed on the pinned PG0.9.5 source. The completed
+finished-audio comparison selects existing **cell6 G1e-6 RAW32** at fixed
+D0.018000000000000002 / bank0.029999999999999995 and horizon128, with equal-case
+estimated-piano attack-rise ON−OFF mean **+0.08936980775216061** across four cases.
+[Exact options, all outcomes and scope](LEARNING-RATES.md). This frozen
+piano-stem proxy can contain separation leakage/artifacts; it is not human or
+general acoustic-quality validation. Reuse the saved search, RAW, audio and
+scores; no extra confirmation, rerating or new training is required. The older
+RAW128 teacher-SSE result0.89289 remains diagnostic history. The response API
+retains its own hidden-state contract; no generic waveform API is implied.
+No projection or reshape bypasses source/domain requirements.
 
 The bounded [ordinary LoRA helper](docs/ordinary-lora-distillation.md) remains
 available for explicit CPU approximation. The separately packaged

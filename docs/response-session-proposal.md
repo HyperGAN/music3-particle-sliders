@@ -51,9 +51,11 @@ ledger, and successful sibling cleanups are not repeated.
 The default `release-0.9.5/auto` path refuses flat AR vectors of width >=170.
 Music3's genuine width4096 requires the explicit `release-0.9.5/continuous`
 pair and strict native policy. No projection or geometry conversion is used.
-This new source cohort has CPU software checks; pretrained GPU updates and
-exact native continuation remain unqualified. Token and waveform generation
-are not response-session operations. Transformer/encoder hosts, signed
+The original native update/exact-resume/public RAW proofs are recorded in
+[the native guide](../NATIVE-CONTINUOUS.md). The separate saved finished-audio
+[LR decision](../LEARNING-RATES.md) uses a four-case piano-stem ON−OFF proxy;
+CPU fixtures alone establish neither that result nor acoustic quality. Token
+and waveform generation are not response-session operations. Transformer/encoder hosts, signed
 or extrapolated strengths, image references and media outputs remain refused.
 Accepted response strengths are finite values in [0,1].
 

@@ -1,0 +1,107 @@
+{
+  "schema": "documented-finished-output-LR-decision-v1",
+  "product_id": "music3-particle-sliders",
+  "as_of": "2026-11-09",
+  "selection_metric": "Equal-case mean intended-effect intensity ON minus matched OFF in finished outputs",
+  "teacher_SSE_used_for_selection": false,
+  "preservation_beauty_confidence_or_completion_tiebreak": false,
+  "prospective_ema_decay": null,
+  "source_rate_pack_SHA256": "d06a3585ef9b3aaccfffe6352beb419b289c860c49c96a8df30c9459dda4a573",
+  "status": "best_tested_selected_from_existing_intended_effect_scores",
+  "rate_overrides": {
+    "lr": 1e-06,
+    "d_lr_mult": 18000.000000000004,
+    "prior_lr_mult": 29999.999999999996,
+    "ema_decay": null
+  },
+  "actual_rates": {
+    "G": 1e-06,
+    "D": 0.018000000000000002,
+    "bank": 0.029999999999999995
+  },
+  "comparison_updates": 32,
+  "comparison_cases": 4,
+  "comparison_arms": 8,
+  "horizon": 128,
+  "batch": 2,
+  "best_tested_control_id": "cell6",
+  "mean_effect_gain": 0.08936980775216061,
+  "per_case_gains": {
+    "dev0-seed27101": 0.27936507936507937,
+    "dev0-seed27103": 0.06586634653861534,
+    "dev1-seed27101": -0.017876039304610902,
+    "dev1-seed27103": 0.03012384440955862
+  },
+  "all_candidate_means": [
+    {
+      "control_id": "cell0",
+      "G": 0.0001,
+      "mean_gain": -0.12284747232226226
+    },
+    {
+      "control_id": "cell1",
+      "G": 0.001,
+      "mean_gain": -0.179655862344938
+    },
+    {
+      "control_id": "cell2",
+      "G": 0.012,
+      "mean_gain": -0.25590189409096975
+    },
+    {
+      "control_id": "cell3",
+      "G": 0.036,
+      "mean_gain": -0.25610836927363545
+    },
+    {
+      "control_id": "cell4",
+      "G": 1.0000000000000003e-05,
+      "mean_gain": -0.09915132719754574
+    },
+    {
+      "control_id": "cell5",
+      "G": 3e-05,
+      "mean_gain": 0.05346394113200825
+    },
+    {
+      "control_id": "cell6",
+      "G": 1e-06,
+      "mean_gain": 0.08936980775216061
+    },
+    {
+      "control_id": "cell7",
+      "G": 3e-06,
+      "mean_gain": -0.4009937308256637
+    }
+  ],
+  "scope": "Best tested within the existing Music3 RAW32/h128 four-case saved bank and fixed D/bank only. Full original audio, frozen estimated-piano attack-rise scalar. No global/joint optimum, human/acoustic-quality validation or default change.",
+  "measurement_kind": "FROZEN_PIANO_ESTIMATE_ATTACK_RISE_PROXY_NOT_HUMAN",
+  "separator_leakage_caveat": "The experimental estimated piano stem can contain leakage/artifacts. Two reference anchors validate direction only, not independent piano attribution in mixtures.",
+  "historical_training_ema_decay": null,
+  "completed_search_reused": true,
+  "additional_fresh_confirmation_required": false,
+  "next_step": "Use existing Music3 cell6 G1e-06 RAW32, best in the completed four-case proxy comparison. No repeated search or extra confirmation is required.",
+  "evidence": {
+    "result": {
+      "artifact_id": "result.json",
+      "bytes": 53167,
+      "sha256": "1bf9f1388481d320f8f0a4199fe77686a78763886401b8abd89b4edea3e8a645"
+    },
+    "decision": {
+      "artifact_id": "root-existing-fourcase-audio-LR-selection-v1.json",
+      "bytes": 4074,
+      "sha256": "861badfd5957c8dea39cab5a593825747e721bc9c918a7c77a9eec19519ac8f2"
+    },
+    "Root_terminal": {
+      "artifact_id": "root-actual-terminal-reap-resource0-v1.json",
+      "bytes": 23391,
+      "sha256": "aacaaf4bf4194eac5c5f874e96ae0657df13337f7d866a0d879db689f0fa2982"
+    },
+    "RAW": {
+      "artifact_id": "raw-v2.pt",
+      "bytes": 36750390,
+      "sha256": "c5dfba5b751a3047c9dac8156408c6df5d41e353889eea40d108738f377da00e"
+    }
+  },
+  "usage": "Documentation metadata and exact option literals only; not a complete training configuration, artifact loader, changed package default, or instruction to replay completed training."
+}

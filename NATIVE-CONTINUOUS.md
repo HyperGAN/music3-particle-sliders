@@ -2,7 +2,13 @@
 
 ## Completed native response measurement
 
-The source-qualified 2026-11-05 cohort completed two uninterrupted native updates versus independent one-plus-one continuation, exact full-state continuation, RAW export/public response/OFF replay, and a 128-update LR nominee on actual pretrained 4,096-wide BF16 geometry. Its [measured combination and exact preset](LEARNING-RATES.md#measured-native-pg095-combination) are G=1e-6, D=0.018000000000000002, P=0.029999999999999995. The unused two-example final RAW score was 0.8928904545147202; development at 128 was 1.0382026088532337. The result is best tested at the declared lower G bound, unbracketed, with fixed D/P. Defaults are unchanged. No audio generation or listening qualification is claimed.
+The source-qualified native update/resume/public RAW proof remains retained.
+The current finished-audio decision reuses the existing cell6 G1e-6 **RAW32**,
+fixed D/bank and horizon128: four-case equal-mean piano-stem attack-rise ON−OFF
+is+0.08936980775216061. [Current exact options, proxy limits and evidence](LEARNING-RATES.md).
+The older128-update response-SSE nominee and final0.8928904545147202 remain
+historical numerical diagnostics; they are not the current audio-effect selector.
+No new search, render, rating or confirmation is required.
 
 The [sanitized receipt](evidence/pg095-native-lr/summary.json) supersedes the earlier pending-native status below for this exact source/profile. Earlier CPU and failed-admission observations remain historical evidence.
 
@@ -49,13 +55,13 @@ portable response, or acoustic quality. Any new native attempt requires a fresh
 source/environment/capture cohort and explicit resource admission.
 
 
-LR screening and confirmation use one ranking criterion: RAW held-out
-teacher/student relative SSE, pooling positions within each example and then
-taking the equal-example mean. Preservation drift, late/weak breakdowns,
-acoustic rendering, listening and other diagnostics do not gate selection.
-Correct source/asset identity, native updates, exact resume and portable response
-remain correctness prerequisites. No acoustic baseline or listening task is
-required before the native hidden-response LR screen.
+Current LR selection uses only the equal-case intended-effect ON−OFF mean in
+finished audio, with the frozen piano-stem attack-rise proxy and its stated
+leakage limitations. Relative SSE, preservation, beauty, confidence and completion
+are not selectors or tiebreaks. Reuse existing completed searches, RAWs, audio
+and first scores; do not add fresh confirmation or replay completed work.
+Source/asset identity, exact continuation and native response protocols remain
+unchanged. A response binding alone is not a waveform renderer.
 
 The PG0.9.5 protocol is `music3-native-final-ar-hidden-v2-pg095`.
 Model geometry, dtype, numerical flags and inherited rate defaults are unchanged.

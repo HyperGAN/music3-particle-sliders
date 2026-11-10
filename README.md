@@ -163,3 +163,8 @@ recipe information. Earlier PG 0.9.0 qualification evidence is retained as
 history and cannot be reused as a PG 0.9.1 test receipt.
 
 Learning-rate controls and preserved defaults: [LEARNING-RATES.md](LEARNING-RATES.md).
+
+
+## Optional explicit fresh initialization
+
+See [the separate completed-cache fresh95 API](FRESH95.md) for explicit new-cohort initialization, strict FULL restore and RAW hidden-response inference. Its four installed synthetic software cases are separate from native-audio and LR evidence. Existing defaults and entrypoints are unchanged.

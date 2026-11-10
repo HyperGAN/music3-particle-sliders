@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=84.2.1", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "music3-explicit-fresh95"
+version = "0.1.0"
+description = "Explicit completed-cache fresh095 owner for original Music3 AR response"
+requires-python = ">=3.12,<3.13"
+dependencies = ["music3-particle-sliders==0.3.0", "particlegan==0.9.5", "torch>=2.6,<3"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["music3_fresh95*"]

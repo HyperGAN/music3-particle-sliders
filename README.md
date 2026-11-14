@@ -1,5 +1,7 @@
 # Music 3 particle sliders
 
+**Calculated memory:** Native BF16 LM response training: **32 GiB GPU / 32 GiB host** for batch 2,256 tokens; hidden-response inference **22 GiB GPU**. Finished audio is a separate, unqualified path. [Full memory ledger and limits](MEMORY.md). These are planning estimates, not measured peaks.
+
 The current root package uses shared **core0.13.0 / ParticleGAN0.9.5**
 at immutable source `3dd672a7f9b8c169daef90fd63e4bb42b9ddc423` (Python 3.11+).
 Use the installed numerical-response lifecycle for train/resume/export/inference:

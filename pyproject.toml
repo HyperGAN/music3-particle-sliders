@@ -8,7 +8,7 @@ version = "0.3.0"
 description = "Music3 native AR numerical response sessions; PG0.9.5 response cohort"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@3dd672a7f9b8c169daef90fd63e4bb42b9ddc423#subdirectory=packages/particle-sliders-core"]
+dependencies = ["particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@119d7e0559bacdc49847961c1b243ac08daa013c#subdirectory=packages/particle-sliders-core"]
 
 [project.optional-dependencies]
 response-fixture = ["transformers==5.15.0"]

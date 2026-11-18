@@ -1,6 +1,6 @@
-# Current source: PG0.9.5
+# Current source: PG0.10.1
 
-The active0.3.0 package pins core0.13.0/3dd672a and the published PG0.9.5 release.
+The active0.3.0 package pins core0.14.2/119d7e0 and the published PG0.10.1 release.
 Native continuous response requires the explicit released profile/domain and
 new strict numerical identity. CPU software admission does not qualify a
 pretrained GPU update or transfer any historical learning-rate result.

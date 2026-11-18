@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "music3-particle-sliders"
 version = "0.3.0"
-description = "Music3 native AR numerical response sessions; PG0.9.5 response cohort"
+description = "Music3 native AR numerical response sessions; PG0.10.1 response cohort"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@119d7e0559bacdc49847961c1b243ac08daa013c#subdirectory=packages/particle-sliders-core"]

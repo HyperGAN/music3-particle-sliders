@@ -1,13 +1,13 @@
 # Installation cohorts
 
-The root0.3.0 package selects core0.13.0 at
-`3dd672a7f9b8c169daef90fd63e4bb42b9ddc423` and published PG0.9.5.
+The root0.3.0 package selects core0.14.2 at
+`119d7e0559bacdc49847961c1b243ac08daa013c` and published PG0.10.1.
 Use a fresh isolated environment and `python -m pip install '.[response-fixture,test]'`.
 The common response lifecycle and native-only reader retain their API.
 
 | Cohort | Route | Scope |
 |---|---|---|
-| Current core0.13 / PG0.9.5 | Root package, release-0.9.5/auto | Narrow random CPU fixtures |
+| Current core0.14.2 / PG0.10.1 | Root package (PG0.10.1 generation); qualified source profiles unchanged | Narrow random CPU fixtures |
 | Current native continuous PG0.9.5 | Explicit release-0.9.5/continuous plus strict BF16 eager policy | CPU software/source admission; fresh native GPU proof pending |
 | Historical core5d / PG094 and PG801 | Original source/environment; preserved response/native guides | Earlier packets and measured facts only |
 | Previous coreddb PG094 | cohorts/pg094-response-ddb-20261104 | Independently buildable archive, unchanged |

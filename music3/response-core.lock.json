@@ -9,12 +9,12 @@
     "wheel_sha256": null
   },
   "particlegan": {
-    "native_continuous_profile": "release-0.9.5",
+    "native_continuous_profile": "release-0.11.0",
     "native_penalty_input_domain": "continuous",
-    "qualified_release_sources_sha256": "d452f7c3277be32ab40cf4b45478dcf8cfb62b994e693184e278e8e2f4c5fc26",
-    "qualified_source_profile": "release-0.9.5",
-    "release_commit": "1b8355b184b21bb7d81104ee590813c262f6df0a",
-    "release_wheel_sha256": "c1c0de7a635ac1b1634ba158eed050b6f6aed993e01f9b463435430c77d846ae",
+    "qualified_release_sources_sha256": "c5e3c7754c0869bb9af4ce70d922a618b3f3bc31284bc69541f9385332713c40",
+    "qualified_source_profile": "release-0.11.0",
+    "release_commit": "b86f0379b4d887f4cde88d686aedc04661a2b61b",
+    "release_wheel_sha256": "218ac69efd42e092367b4c7a5c4abb4685dc63a73ccc23223a8bb4dd1543e327",
     "source_commit": "b86f0379b4d887f4cde88d686aedc04661a2b61b",
     "version": "0.11.0",
     "wheel_sha256": "218ac69efd42e092367b4c7a5c4abb4685dc63a73ccc23223a8bb4dd1543e327"
@@ -82,5 +82,5 @@
     "particle_sliders/teachers.py": "9a35fcff05a15d00f6aa67b5cb9e53cf55526d7e06631ef8cfeb0169519818d2",
     "particle_sliders/weight_policy.py": "a254493817f7b9b259d1c1defcb7eb967a2bcf9ca776e68a92e09a24dffac29a"
   },
-  "status": "PublishedPG0.9.5; explicit continuous native source admission; fresh native qualification pending"
+  "status": "Current ParticleGAN 0.11.0 response source; explicit continuous admission."
 }

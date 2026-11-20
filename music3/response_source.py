@@ -10,7 +10,7 @@ CORE_COMMIT = "c13890f8e2a1ecf1dc8eb9f2a37f9187cb9fea78"
 CORE_VERSION = "0.15.1"
 PG_VERSION = "0.11.0"
 LOCK = Path(__file__).with_name("response-core.lock.json")
-LOCK_SHA256 = "e602c07060a34b836751dd11ecb2154cfadd1df5cd00b90ed4af1ced03c370b8"
+LOCK_SHA256 = "b460fa0ada9e0f644ec936c24a23494916cfc704934c3831bdc16146b49b86e1"
 
 
 def verify_response_core():

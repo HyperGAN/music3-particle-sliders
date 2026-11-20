@@ -17,7 +17,7 @@ def test_installed_product_and_runtime_select_one_official_release():
     assert metadata.version("particlegan") == engine.PG_VERSION == "0.11.0"
     assert metadata.version("particle-sliders-core") == lock["core"]["version"] == "0.15.1"
     assert lock["core"]["commit"] == product.MILESTONE == "c13890f8e2a1ecf1dc8eb9f2a37f9187cb9fea78"
-    assert lock["particlegan"]["release_commit"] == "1b8355b184b21bb7d81104ee590813c262f6df0a"
+    assert lock["particlegan"]["release_commit"] == engine.PG_SOURCE_COMMIT
     assert metadata.metadata("music3-particle-sliders")["Requires-Python"] == ">=3.11"
     requirements = metadata.requires("music3-particle-sliders")
     assert any(product.MILESTONE in requirement for requirement in requirements)
@@ -31,7 +31,7 @@ def test_unqualified_profile_pairs_fail_before_factory(monkeypatch, profile, dom
     def forbidden(*args, **kwargs):
         raise AssertionError("unqualified profile allocated the native factory")
     monkeypatch.setattr(product, "_build_native", forbidden)
-    config = SessionConfig("music3", "pg095-profile-rejection", dummy=True, width=32,
+    config = SessionConfig("music3", "current-profile-rejection", dummy=True, width=32,
                            pg_source_profile=profile, penalty_input_domain=domain)
     with pytest.raises((ValueError, UnsupportedOperation)):
         open_response(config)

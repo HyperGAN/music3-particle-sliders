@@ -40,11 +40,11 @@ def test_verified_installed_modules_and_environment():
     shared = shared_loader.bootstrap()
     assert dict(os.environ) == environment
     assert sys.path == search_path
-    assert shared.core.ConditionalPG09.__module__ == "particle_sliders.pg09"
-    assert shared.audio.Music3ARResponseAdapter.__module__ == "particle_sliders.pg09_audio"
-    assert shared.audio.AudioResponseCritic.__module__ == "particle_sliders.pg09_audio"
-    assert shared.native.ParticleNetwork.__module__ == "particle_sliders.music3_native"
-    assert shared.cli.__name__ == "particle_sliders.pg09_audio_cli"
+    assert shared.core.ConditionalParticleGAN.__module__ == "particle_sliders.pg09"
+    assert shared.audio.Music3ARResponseAdapter.__module__ == "particle_sliders.audio"
+    assert shared.audio.AudioResponseCritic.__module__ == "particle_sliders.audio"
+    assert shared.native.ParticleNetwork.__module__ == "music3.native_binding"
+    assert shared.cli.__name__ == "particle_sliders.audio_cli"
     lock = shared.lock
     installed = distribution(lock["distribution"])
     assert installed.version == lock["version"] == "0.6.0"
@@ -53,8 +53,8 @@ def test_verified_installed_modules_and_environment():
     assert shared.receipt["core_commit"] == lock["commit"]
     assert shared.receipt["particlegan_version"] == "0.9.1"
     imported = shared.receipt["imported_modules"]
-    assert {"particle_sliders.pg09", "particle_sliders.pg09_audio",
-            "particle_sliders.music3_native", "particle_sliders.pg09_audio_cli"} <= imported.keys()
+    assert {"particle_sliders.pg09", "particle_sliders.audio",
+            "music3.native_binding", "particle_sliders.audio_cli"} <= imported.keys()
     paths = {Path(installed.locate_file(relative)).resolve(): (relative, digest)
              for relative, digest in lock["files"].items()}
     for name, record in imported.items():
@@ -81,7 +81,7 @@ def test_tampered_installed_source_lock_rejected_without_path_or_environment_mut
     assert sys.path == search_path
 
 
-@pytest.mark.parametrize("name", ["particle_sliders", "particle_sliders.pg09_audio"])
+@pytest.mark.parametrize("name", ["particle_sliders", "particle_sliders.audio"])
 def test_foreign_cached_module_rejected_in_fresh_process(name, tmp_path):
     result = _isolated("""
         import sys
@@ -140,7 +140,7 @@ def test_shared_apis_import_source_free_in_isolated_process(tmp_path):
             assert path in expected, (name, path)
             assert hashlib.sha256(path.read_bytes()).hexdigest() == record['sha256'] == expected[path]
             assert not path.is_relative_to(Path(sys.argv[1]).resolve())
-        assert shared.cli.__name__ == 'particle_sliders.pg09_audio_cli'
+        assert shared.cli.__name__ == 'particle_sliders.audio_cli'
         assert not any(name.split('.')[0] in forbidden for name in sys.modules)
         import torch
         assert not torch.cuda.is_initialized()
@@ -149,7 +149,7 @@ def test_shared_apis_import_source_free_in_isolated_process(tmp_path):
 
 
 def test_product_has_no_loss_optimizer_or_training_loop_copy():
-    forbidden_classes = {"RoutedMLP", "ConditionalPG09", "AudioResponseCritic", "ParticleNetwork"}
+    forbidden_classes = {"RoutedMLP", "ConditionalParticleGAN", "AudioResponseCritic", "ParticleNetwork"}
     for path in (ROOT / "music3").glob("*.py"):
         tree = ast.parse(path.read_text())
         for node in ast.walk(tree):
@@ -189,7 +189,7 @@ def test_lock_declares_exact_installed_wheel_and_new_lineage():
 def test_public_surface_default_and_legacy_path_rejection():
     from music3.surface import load_game_class
     shared = shared_loader.bootstrap()
-    assert load_game_class() is shared.core.ConditionalPG09
+    assert load_game_class() is shared.core.ConditionalParticleGAN
     with pytest.raises(ValueError, match="source-checkout"):
         load_game_class(shared_checkout="/tmp/old-source")
 

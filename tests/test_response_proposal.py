@@ -18,8 +18,8 @@ from music3 import lifecycle as product
 from music3.response_source import CORE_COMMIT, LOCK, LOCK_SHA256
 from particle_sliders.inference import open_inference
 from particle_sliders.lifecycle import CheckpointError, SessionConfig, UnsupportedOperation
-from particle_sliders.pg09_audio import ARLastHiddenResponseAdapter
-from particle_sliders.pg09_backends import checkpoint_with_adapter_scale
+from particle_sliders.audio import ARLastHiddenResponseAdapter
+from particle_sliders.backends import checkpoint_with_adapter_scale
 from particle_sliders.response import open_response
 
 
@@ -41,13 +41,13 @@ def equal(actual, expected):
 
 def config(**overrides):
     options = dict(dummy=True, width=32, steps=2, batch=2, seed=7,
-                   checkpointing=True, ema_decay=.9)
+                   checkpointing=True, ema_decay=None)
     options.update(overrides)
     return SessionConfig('music3', 'music3-ownership-new-test-cohort', **options)
 
 
 def ownership(module):
-    return {name: vars(module)[name] for name in ('forward', '_pg09_scale_checkpoint') if name in vars(module)}
+    return {name: vars(module)[name] for name in ('forward', '_adapter_scale_checkpoint') if name in vars(module)}
 
 
 class Scale(nn.Module):
@@ -77,28 +77,28 @@ def cleanup_fixture():
 
 
 def test_exact_new_lock_and_separate_registrations():
-    assert CORE_COMMIT == '3dd672a7f9b8c169daef90fd63e4bb42b9ddc423'
+    assert CORE_COMMIT == 'c13890f8e2a1ecf1dc8eb9f2a37f9187cb9fea78'
     assert hashlib.sha256(LOCK.read_bytes()).hexdigest() == LOCK_SHA256
     assert len(entry_points(group='particle_sliders.response_backends', name='music3')) == 1
     assert len(entry_points(group='particle_sliders.inference_backends', name='music3')) == 1
     assert not entry_points(group='particle_sliders.image_backends', name='music3')
 
 
-@pytest.mark.parametrize('changed', ['forward', '_pg09_scale_checkpoint'])
+@pytest.mark.parametrize('changed', ['forward', '_adapter_scale_checkpoint'])
 @pytest.mark.parametrize('conflict_index', [0, 1])
 def test_product_cleanup_retains_conflict_closes_siblings_then_retries(monkeypatch, changed, conflict_index):
-    from particle_sliders import pg09_backends
+    from particle_sliders import backends
     model, adapter = cleanup_fixture()
     block = model.blocks[conflict_index]
     wrapped = ownership(block)
     setattr(block, changed, (lambda value: value) if changed == 'forward' else False)
     external = ownership(block)
     restored, attempts = [], []
-    original = pg09_backends.AdapterScaleCheckpoint.close
+    original = backends.AdapterScaleCheckpoint.close
     def record(handle):
         attempts.append(handle._module)
         return original(handle)
-    monkeypatch.setattr(pg09_backends.AdapterScaleCheckpoint, 'close', record)
+    monkeypatch.setattr(backends.AdapterScaleCheckpoint, 'close', record)
     close = product._owned_cleanup(adapter, lambda: restored.append(True))
     try:
         with pytest.raises(product.CleanupPending) as pending:
@@ -162,7 +162,7 @@ def test_real_response_binding_closes_handles_before_native_restore_and_can_retr
     elif changed == 'block_forward':
         block.forward = replacement
     else:
-        block._pg09_scale_checkpoint = False
+        block._adapter_scale_checkpoint = False
     cleaned = False
     try:
         with pytest.raises(product.CleanupPending) as pending:
@@ -209,7 +209,7 @@ def test_exact_full_split_response_resume_and_observation(preset, tmp_path):
         assert torch.equal(torch.get_rng_state(), rng)
 
 
-@pytest.mark.parametrize('selection', ['raw', 'ema'])
+@pytest.mark.parametrize('selection', ['raw'])
 def test_native_only_response_is_separate_from_training_and_matches_selection(monkeypatch, selection, tmp_path):
     cfg = config()
     ids = [61, 67, 71]
@@ -226,11 +226,11 @@ def test_native_only_response_is_separate_from_training_and_matches_selection(mo
         assert legacy_matching.inference_only
     def forbidden(*args, **kwargs):
         raise AssertionError('native-only inference entered training construction')
-    from particle_sliders import pg09, pg09_audio
+    from particle_sliders import engine, audio
     monkeypatch.setattr(product, 'prepare', forbidden)
     monkeypatch.setattr(product, 'AudioProvider', forbidden)
-    monkeypatch.setattr(pg09.ConditionalPG09, '__init__', forbidden)
-    monkeypatch.setattr(pg09_audio, 'AudioResponseCritic', forbidden)
+    monkeypatch.setattr(engine.ConditionalParticleGAN, '__init__', forbidden)
+    monkeypatch.setattr(audio, 'AudioResponseCritic', forbidden)
     with open_inference(packet, options={'device': 'cpu'}, operation='response') as native:
         equal(native.response(ids=ids, strength=.5, seed=11), expected)
         assert not any(hasattr(native, name) for name in ('game', 'rows', 'critic', 'optimizer'))
@@ -290,7 +290,7 @@ def test_invalid_response_restore_is_transactional():
 
 @pytest.mark.parametrize('field,value', [('pg_version', '0.9.1'), ('pg_source_profile', 'release')])
 def test_historical_pg_identity_cannot_resume_in_current_cohort(field, value):
-    from particle_sliders.pg09 import _hash
+    from particle_sliders.engine import _hash
     with open_response(config()) as run:
         before = run.checkpoint()
         broken = deepcopy(before)

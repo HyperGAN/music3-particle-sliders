@@ -3,12 +3,12 @@ from contextlib import contextmanager
 from copy import deepcopy
 from pathlib import Path
 import hashlib,torch
-from particle_sliders.pg095 import ConditionalPG095
+from particle_sliders.engine import ConditionalParticleGAN
 from . import PROFILE,ownership,policy
 from .cache import load_cache,to_device,teacher_identity
 from .util import canonical,equal,new_directory,read_packet,save_packet,write_json
-FULL_SCHEMA='Music3-explicit-cached-fresh95-FULL-v1'
-RAW_SCHEMA='Music3-explicit-cached-fresh95-RAW-v1'
+FULL_SCHEMA='Music3-explicit-cached-scoped-FULL-v1'
+RAW_SCHEMA='Music3-explicit-cached-scoped-RAW-v1'
 CONSTRUCTOR='new-owner-original-ParticleNetwork-seed-and-critic-seed-plus1-v1'
 
 def original_options(config):
@@ -46,7 +46,7 @@ def model_identity(model,config):
     if type(model)is not Qwen3ForCausalLM:raise ValueError('exact original Qwen3ForCausalLM bare component required')
     if any('forward'in vars(m)or m._forward_hooks or m._forward_pre_hooks for m in model.modules()):raise ValueError('original pristine unwrapped native host required')
     if config['lane']=='cpu-fixture':
-        from particle_sliders.pg09 import _hash
+        from particle_sliders.engine import _hash
         architecture=dict(hidden_size=32,intermediate_size=64,num_hidden_layers=1,num_attention_heads=2,num_key_value_heads=1,head_dim=16,vocab_size=256,max_position_embeddings=config['max_sequence_length'])
         if any(getattr(model.config,k,None)!=v for k,v in architecture.items())or getattr(model.config,'_attn_implementation',None)!='eager':raise ValueError('exact original random Qwen3 fixture geometry required')
         if any(p.device.type!='cpu'or p.dtype!=torch.float32 for p in model.parameters()):raise ValueError('original fixture CPU FP32 required')
@@ -101,13 +101,13 @@ class Training(NativeOwner):
         try:
             self._components(request,component_factory)
             from music3.lifecycle import native_initialization_rng
-            from particle_sliders.pg09_audio import AudioResponseCritic
+            from particle_sliders.audio import AudioResponseCritic
             options=original_options(self.config);options['seed']+=1
             with native_initialization_rng(options):self.critic=AudioResponseCritic(self.config['width'],conditions.shape[1]).to(self.config['device'])
             self.initialization=policy.initialize(self.slider,self.critic,self.construction,self.options,self.sources)if mode=='fresh'else deepcopy(packet['initialization'])
             new_directory(self.directory);write_json(self.directory/'initialization.json',self.initialization)
             self.backend=ReceiptBackend(self.adapter,self.initialization,self.sources,self.cache_identity)
-            self.game=ConditionalPG095(self.backend,to_device(prepared,self.config['device']),self.critic,conditions=conditions.to(self.config['device']),particles=self.slider.particles,
+            self.game=ConditionalParticleGAN(self.backend,to_device(prepared,self.config['device']),self.critic,conditions=conditions.to(self.config['device']),particles=self.slider.particles,
                 response_domain='continuous_vector',response_scale=1.0,preset=self.config['preset'],total_steps=self.config['steps'],batch_size=self.config['batch'],seed=self.config['seed'],
                 pg_source_profile=self.config['pg_source_profile'],penalty_input_domain=self.config['penalty_input_domain'],recipe_overrides={k:self.config[k]for k in('lr','d_lr_mult','prior_lr_mult')})
             if packet is not None:

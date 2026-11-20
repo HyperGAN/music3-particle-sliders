@@ -198,15 +198,15 @@ def test_fresh_process_actual_fixture_state_and_2_vs_1_plus_1(domain):
     pretrained/tokenizer boundary. Candidate-only geometry does not claim4096
     or acoustic qualification. Different caller seeds/PYTHONHASHSEED must agree.
     """
-    profile='release-0.9.5'
-    from particle_sliders.pg09 import _released_sources
+    profile='release-0.11.0'
+    from particle_sliders.engine import _released_sources
     try:_released_sources(profile)
     except RuntimeError:pytest.skip('separate exact '+profile+' environment required')
     code=r'''
 from copy import deepcopy
 import json,os,torch
 from music3 import lifecycle as product
-from particle_sliders.pg09 import _hash
+from particle_sliders.engine import _hash
 validate=product.validate
 build=product._build_native
 prepare=product._prepare

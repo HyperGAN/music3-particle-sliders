@@ -13,7 +13,7 @@ from pathlib import Path, PurePosixPath
 import re
 
 
-MILESTONE = "3dd672a7f9b8c169daef90fd63e4bb42b9ddc423"
+MILESTONE = "c13890f8e2a1ecf1dc8eb9f2a37f9187cb9fea78"
 MODEL_REVISION = "bd348f9c49ea3c1b39f33ace3436f8fad435f24e"
 _OPTIONS = {
     "dummy", "host", "rows", "steps", "batch", "seed", "width", "device",
@@ -121,24 +121,24 @@ def _validate_model(options):
     device = options.get("device", "cpu")
     if not isinstance(device, str) or (device != "cpu" and not re.fullmatch(r"cuda:[0-9]+", device)):
         raise ValueError("device must be cpu or an explicit cuda index")
-    pair=(options.get("pg_source_profile", "release-0.9.5"),options.get("penalty_input_domain", "auto"))
+    pair=(options.get("pg_source_profile", "release-0.11.0"),options.get("penalty_input_domain", "auto"))
     if dummy:
-        if pair!=("release-0.9.5","auto"):
-            raise UnsupportedOperation("Music3 fixture uses official PG0.9.5 release-0.9.5/auto; other source profiles are unqualified")
+        if pair!=("release-0.11.0","auto"):
+            raise UnsupportedOperation("Music3 fixture uses official PG0.11.0 release-0.11.0/auto; other source profiles are unqualified")
         if width>=170:
-            raise UnsupportedOperation("native Music3 width4096 is gated: official PG0.9.5 release/auto refuses flat vectors of width >=170; no projection or profile fallback")
+            raise UnsupportedOperation("native Music3 width4096 is gated: official PG0.11.0 release/auto refuses flat vectors of width >=170; no projection or profile fallback")
         if device!="cpu" or options.get("base_precision","float32")!="float32":
             raise UnsupportedOperation("Music3 random Qwen3 fixture requires CPU float32")
         if any(key in options for key in ("model_dir","manifest","manifest_sha256","native_numerical_profile")):
             raise ValueError("random fixture cannot use native model identity or numerical policy")
         return
-    if pair!=("release-0.9.5","continuous"):
-        raise UnsupportedOperation("native Music3 width4096 is gated unless the explicit release-0.9.5/continuous pair is selected; official release/auto remains refused")
+    if pair!=("release-0.11.0","continuous"):
+        raise UnsupportedOperation("native Music3 width4096 is gated unless the explicit release-0.11.0/continuous pair is selected; official release/auto remains refused")
     if width!=4096:
         raise UnsupportedOperation("native Music3 requires the genuine 4096-wide Qwen3 state; no projection")
     if not device.startswith("cuda:") or options.get("base_precision")!="bfloat16":
         raise UnsupportedOperation("native Music3 requires explicit CUDA device and bfloat16 base precision")
-    from particle_sliders.pg09_audio import require_audio_width
+    from particle_sliders.audio import require_audio_width
     require_audio_width(width,pg_source_profile=pair[0],penalty_input_domain=pair[1])
     from .native_assets import verify_native
     verify_native(options)
@@ -203,7 +203,7 @@ def _restore_host(model):
     """
     from particle_sliders.lifecycle import native_cleanup
     from particle_sliders.native_lora import lora_target_plan
-    from particle_sliders.music3_native import TARGET_REPLACE
+    from music3.native_binding import TARGET_REPLACE
     restore_native = native_cleanup(model)
     targets = lora_target_plan(model, TARGET_REPLACE, prefix="lora_te", delimiter="-", train_method="full")
     saved = [(module, "forward" in vars(module), vars(module).get("forward")) for _, module in targets]
@@ -259,12 +259,13 @@ def _build_native(options, *, checkpointing=False):
     """Build base and adapter only, independently of all training data/state."""
     _validate_model(options)
     import torch
-    from particle_sliders.music3_native import ParticleNetwork
-    from particle_sliders.pg09_audio import Music3ARResponseAdapter, require_audio_width
+    from music3.native_binding import ParticleNetwork
+    from particle_sliders.audio import require_audio_width
+    from music3.response_binding import Music3ARResponseAdapter
 
     dummy = options.get("dummy", False)
     width = options.get("width", 32 if dummy else 4096)
-    domain = dict(pg_source_profile=options.get("pg_source_profile", "release-0.9.5"),
+    domain = dict(pg_source_profile=options.get("pg_source_profile", "release-0.11.0"),
                   penalty_input_domain=options.get("penalty_input_domain", "auto"))
     require_audio_width(width, **domain)  # Exact PG source gate before model allocation.
     device = torch.device(options.get("device", "cpu"))
@@ -304,7 +305,7 @@ def _build_native(options, *, checkpointing=False):
             identity = dict(manifest_sha256=options["manifest_sha256"], revision=MODEL_REVISION, files=files)
         model = model.to(device)
         if dummy:
-            from particle_sliders.pg09 import _hash
+            from particle_sliders.engine import _hash
             identity["frozen_base_sha256"] = _hash(model.state_dict())
         if not dummy:
             from .native_assets import verify_loaded_model,verify_native,numerical_profile
@@ -401,7 +402,7 @@ def observe_native(model, network=None, native_options=None):
 class AudioProvider:
     """Owned frozen paired teachers with immutable identity and cloned fetches."""
     def __init__(self, adapter, rows):
-        from particle_sliders.pg09_audio import audio_conditions
+        from particle_sliders.audio import audio_conditions
         self._rows = tuple(deepcopy(rows))
         self.response_shape = (1, int(adapter.model.config.hidden_size))
         self._conditions = audio_conditions(self._rows).detach().clone()
@@ -427,7 +428,7 @@ def _configuration(options):
     return dict(dummy=dummy, width=options.get("width", 32 if dummy else 4096),
         seed=options.get("seed", 7), max_sequence_length=options.get("max_sequence_length", 256),
         base_precision=options.get("base_precision", "float32" if dummy else "bfloat16"),
-        pg_source_profile=options.get("pg_source_profile", "release-0.9.5"),
+        pg_source_profile=options.get("pg_source_profile", "release-0.11.0"),
         penalty_input_domain=options.get("penalty_input_domain", "auto"),
         **({"native_numerical_profile":options["native_numerical_profile"]} if not dummy else {}))
 
@@ -459,10 +460,10 @@ def _prepare(options):
     from .learning_rates import recipe_overrides
     rates = recipe_overrides(**{key: options.get(key) for key in ("lr", "d_lr_mult", "prior_lr_mult")})
     import torch
-    from particle_sliders.pg095 import ConditionalPG095 as ConditionalPG09
+    from particle_sliders.engine import ConditionalParticleGAN
     from particle_sliders.lifecycle import Binding
-    from particle_sliders.pg09_audio import AudioResponseCritic, AudioRow
-    from particle_sliders.music3_native import assemble_text, tokenize_text, assert_audio_start
+    from particle_sliders.audio import AudioResponseCritic, AudioRow
+    from music3.native_binding import assemble_text, tokenize_text, assert_audio_start
     adapter, tokenizer, close = _build_native(options, checkpointing=options.get("checkpointing", False))
     try:
         rows = []
@@ -488,14 +489,14 @@ def _prepare(options):
             provider = AudioProvider(adapter, rows)
             # Existing definition retained until matched-weight HNDL mapping/parity.
             critic = AudioResponseCritic(provider.response_shape[1], provider._conditions.shape[1]).to(adapter.model.device)
-            game = ConditionalPG09(adapter, provider, critic,
+            game = ConditionalParticleGAN(adapter, provider, critic,
                 particles=adapter.particles, response_domain="continuous_vector",
                 preset=options.get("preset", "bispf_optimized"), batch_size=options.get("batch", 2),
                 total_steps=options.get("steps", 4), seed=options.get("seed", 7),
-                pg_source_profile=options.get("pg_source_profile", "release-0.9.5"),
+                pg_source_profile=options.get("pg_source_profile", "release-0.11.0"),
                 penalty_input_domain=options.get("penalty_input_domain", "auto"), recipe_overrides=rates)
             specification = INFERENCE.specification(adapter, model_identity=adapter.model_identity,
-                protocol="music3-native-final-ar-hidden-v2-pg095", configuration=_configuration(options))
+                protocol="music3-native-final-ar-hidden-v2-engine", configuration=_configuration(options))
         return Binding(game, close, inference=specification, observation=lambda: observe_native(adapter.model, adapter.network, None if options.get("dummy") else options))
     except BaseException:
         close()
@@ -507,18 +508,18 @@ def capabilities(options):
     width = options.get("width", 32 if dummy else 4096)
     operations = ("train", "resume", "evaluate", "export", "response")
     supported = (dummy is True and type(width) is int and 1 <= width < 170
-                 and options.get("pg_source_profile", "release-0.9.5") == "release-0.9.5"
+                 and options.get("pg_source_profile", "release-0.11.0") == "release-0.11.0"
                  and options.get("penalty_input_domain", "auto") == "auto") or (dummy is False and width==4096
-                 and options.get("pg_source_profile")=="release-0.9.5"
+                 and options.get("pg_source_profile")=="release-0.11.0"
                  and options.get("penalty_input_domain")=="continuous"
-                 and options.get("native_numerical_profile")=="music3-bf16-eager-strict-pg095-v1")
+                 and options.get("native_numerical_profile")=="music3-bf16-eager-strict-engine-v1")
     unavailable = (("render", "Music3 acoustic/token sampling is unqualified; numerical hidden responses only"),)
     if not supported:
         reason = "Music3 native/wide AR responses are gated pending explicit continuous-domain source qualification"
         unavailable += tuple((operation, reason) for operation in operations)
     return ResponseCapabilities("routed_particle_gan", "audio_ar_hidden", "native_final_ar_hidden",
-        "continuous_vector", (1, width), "0.9.5",
-        options.get("pg_source_profile", "release-0.9.5"), options.get("penalty_input_domain", "auto"),
+        "continuous_vector", (1, width), "0.11.0",
+        options.get("pg_source_profile", "release-0.11.0"), options.get("penalty_input_domain", "auto"),
         base_precisions=("float32",) if dummy else ("bfloat16",),
         operations=operations if supported else (), unavailable_reasons=unavailable,
         qualification="Music3 narrow official fixture / separate explicit native continuous source candidate; acoustic quality gated")
@@ -543,7 +544,7 @@ def _inference_options(options, spec):
 def validate_inference(options, spec):
     merged = _inference_options(options, spec)
     _validate_model(merged)
-    from particle_sliders.pg09_audio import require_audio_width
+    from particle_sliders.audio import require_audio_width
     require_audio_width(merged["width"], pg_source_profile=merged["pg_source_profile"],
                         penalty_input_domain=merged["penalty_input_domain"])
 
@@ -581,7 +582,7 @@ def _prepare_inference(options, spec):
     adapter, _, close = _build_native(merged)
     try:
         identity = native_identity(adapter, model_identity=adapter.model_identity,
-                                   protocol="music3-native-final-ar-hidden-v2-pg095")
+                                   protocol="music3-native-final-ar-hidden-v2-engine")
         def response(*, strength=1., seed=0, **native):
             del seed  # Common inference scope owns deterministic observation RNG.
             return adapter._response(_probe_ids(merged, native), scale=strength).detach().clone()

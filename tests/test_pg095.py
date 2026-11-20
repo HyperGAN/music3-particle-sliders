@@ -7,16 +7,16 @@ import pytest
 
 from music3 import lifecycle as product
 from music3.response_source import verify_response_core
-from particle_sliders import pg09
+from particle_sliders import engine
 from particle_sliders.lifecycle import SessionConfig, UnsupportedOperation
 from particle_sliders.response import open_response
 
 
 def test_installed_product_and_runtime_select_one_official_release():
     lock = verify_response_core()
-    assert metadata.version("particlegan") == pg09.PG_VERSION == "0.9.5"
-    assert metadata.version("particle-sliders-core") == lock["core"]["version"] == "0.13.0"
-    assert lock["core"]["commit"] == product.MILESTONE == "3dd672a7f9b8c169daef90fd63e4bb42b9ddc423"
+    assert metadata.version("particlegan") == engine.PG_VERSION == "0.11.0"
+    assert metadata.version("particle-sliders-core") == lock["core"]["version"] == "0.15.1"
+    assert lock["core"]["commit"] == product.MILESTONE == "c13890f8e2a1ecf1dc8eb9f2a37f9187cb9fea78"
     assert lock["particlegan"]["release_commit"] == "1b8355b184b21bb7d81104ee590813c262f6df0a"
     assert metadata.metadata("music3-particle-sliders")["Requires-Python"] == ">=3.11"
     requirements = metadata.requires("music3-particle-sliders")
@@ -25,7 +25,7 @@ def test_installed_product_and_runtime_select_one_official_release():
 
 @pytest.mark.parametrize("profile,domain", [
     ("release", "auto"), ("release-0.9.3", "auto"),
-    ("alz-continuous-v1", "continuous"), ("release-0.9.5", "continuous"),
+    ("alz-continuous-v1", "continuous"), ("release-0.11.0", "continuous"),
 ])
 def test_unqualified_profile_pairs_fail_before_factory(monkeypatch, profile, domain):
     def forbidden(*args, **kwargs):
@@ -40,8 +40,8 @@ def test_unqualified_profile_pairs_fail_before_factory(monkeypatch, profile, dom
 @pytest.mark.parametrize("width", [170, 4096])
 def test_official_release_and_product_both_reject_wide_native_vectors(monkeypatch, width):
     with pytest.raises(ValueError, match="width >=170"):
-        pg09.validate_pg09_domain((1, width), response_domain="continuous_vector",
-                                 pg_source_profile="release-0.9.5", penalty_input_domain="auto")
+        engine.validate_engine_domain((1, width), response_domain="continuous_vector",
+                                 pg_source_profile="release-0.11.0", penalty_input_domain="auto")
     def forbidden(*args, **kwargs):
         raise AssertionError("native width gate allocated a model")
     monkeypatch.setattr(product, "_build_native", forbidden)

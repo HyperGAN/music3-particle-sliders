@@ -1,13 +1,13 @@
-# Explicit cached fresh95 initialization
+# Explicit cached scoped initialization
 
-`music3_fresh95` is a separate opt-in library for Music3's original final-AR-hidden response lane. It keeps the original `music3` package, registrations, CLI and measured LR cohorts unchanged. It returns hidden responses; it does not render PCM or establish native audio availability. The existing [finished-output LR results](LEARNING-RATES.md) retain their original scope and values; they are not new measurements of this initialization profile.
+`music3_scoped` is a separate opt-in library for Music3's original final-AR-hidden response lane. It keeps the original `music3` package, registrations, CLI and measured LR cohorts unchanged. It returns hidden responses; it does not render PCM or establish native audio availability. The existing [finished-output LR results](LEARNING-RATES.md) retain their original scope and values; they are not new measurements of this initialization profile.
 
 ## Installation and prerequisites
 
-Use Python 3.12 and an environment already satisfying the original `music3-particle-sliders==0.3.0` guards: the exact core0.13.0 Git/wheel provenance and canonical Source closure, published ParticleGAN0.9.5, and the declared response/runtime dependencies. Install the addon as a genuine separate wheel from the repository root:
+Use Python 3.12 and an environment already satisfying the original `music3-particle-sliders==0.3.0` guards: the exact core0.15.1 Git/wheel provenance and canonical Source closure, published ParticleGAN0.11.0, and the declared response/runtime dependencies. Install the addon as a genuine separate wheel from the repository root:
 
 ```sh
-python -m pip install --no-deps ./fresh95
+python -m pip install --no-deps ./scoped
 ```
 
 `--no-deps` preserves the prepared environment; it does not provide missing dependencies. The original native4096 lane additionally requires its exact original assets, BF16 eager runtime, numerical policy and whole loaded-checkpoint verification. Do not substitute an editable Source overlay, fabricated RECORD, newer core or different native runtime. This profile provides no standalone GPU-admitting CLI or model weights.
@@ -19,7 +19,7 @@ The application supplies `config`, already completed original `PreparedAudioResp
 The factory receives a request containing the explicit operation/configuration and must return the original bare model. It must not attach an adapter or collect teachers. A WAV is not a prepared response cache. No teacher collector, tokenizer, acoustic decoder or token sampler is called by this API.
 
 ```python
-from music3_fresh95 import open_training, open_inference, save_prepared_cache
+from music3_scoped import open_training, open_inference, save_prepared_cache
 
 # Owner-supplied: config, original_prepared_rows, teacher_origins,
 # component_factory, authenticate_and_admit, complete_unpadded_ids.
@@ -56,7 +56,7 @@ This is an API pattern requiring authentic owner inputs, not a self-contained mo
 
 ## Fresh, FULL and RAW
 
-Declare `fresh` or `resume` before component allocation. Fresh mode is a new cohort, not a way to reinitialize an old checkpoint. Public PG0.9.5 QR initializes the same original bias-free down Parameters at the original `kaiming_uniform_(a=1)` host variance `1/fan_in`; the same 128×4 bank receives R2Normal(0,1). Zero-UP, router/bridge and the original Linear critic constructor values are kept. The explicit new constructor stream uses the slider seed and critic seed+1. A durable policy receipt precedes optimizer creation; it makes no claim of equality to an old whole-factory RNG stream.
+Declare `fresh` or `resume` before component allocation. Fresh mode is a new cohort, not a way to reinitialize an old checkpoint. Public PG0.11.0 QR initializes the same original bias-free down Parameters at the original `kaiming_uniform_(a=1)` host variance `1/fan_in`; the same 128×4 bank receives R2Normal(0,1). Zero-UP, router/bridge and the original Linear critic constructor values are kept. The explicit new constructor stream uses the slider seed and critic seed+1. A durable policy receipt precedes optimizer creation; it makes no claim of equality to an old whole-factory RNG stream.
 
 FULL restore accepts only this new profile's exact source/configuration/cohort/cache and restores the whole typed network, bank, critic, optimizers, cursors and CPU/CUDA RNG state. It skips fresh initialization and old updates. RAW inference restores only the added network and skips cache, critic/game/optimizer construction and fresh initialization. Old Music3 FULL/RAW cohorts are not migrated. Set `ema_decay=None`; all inference and exports use current raw weights, with upstream scalar optimizer statistics unchanged.
 

@@ -1,4 +1,4 @@
-"""Verify the current PG0.9.5 response cohort; historical locks stay separate."""
+"""Verify the current PG0.11.0 response cohort; historical locks stay separate."""
 import hashlib
 from importlib import metadata
 from importlib import util
@@ -6,11 +6,11 @@ import json
 from pathlib import Path
 import sys
 
-CORE_COMMIT = "3dd672a7f9b8c169daef90fd63e4bb42b9ddc423"
-CORE_VERSION = "0.13.0"
-PG_VERSION = "0.9.5"
+CORE_COMMIT = "c13890f8e2a1ecf1dc8eb9f2a37f9187cb9fea78"
+CORE_VERSION = "0.15.1"
+PG_VERSION = "0.11.0"
 LOCK = Path(__file__).with_name("response-core.lock.json")
-LOCK_SHA256 = "1e833c784e86c4bc79fc18dcc79aa11560af2988ccce100e3eca270e0465425f"
+LOCK_SHA256 = "e602c07060a34b836751dd11ecb2154cfadd1df5cd00b90ed4af1ced03c370b8"
 
 
 def verify_response_core():
@@ -21,14 +21,14 @@ def verify_response_core():
     """
     contents = LOCK.read_bytes()
     if hashlib.sha256(contents).hexdigest() != LOCK_SHA256:
-        raise RuntimeError("Music3 PG0.9.5 requires its exact canonical source lock bytes")
+        raise RuntimeError("Music3 PG0.11.0 requires its exact canonical source lock bytes")
     lock = json.loads(contents)
     if (lock["core"]["commit"] != CORE_COMMIT or lock["core"]["version"] != CORE_VERSION
             or lock["particlegan"]["version"] != PG_VERSION):
-        raise RuntimeError("Music3 response proposal requires its canonical core0.13.0/PG0.9.5 lock")
+        raise RuntimeError("Music3 response proposal requires its canonical core0.15.1/PG0.11.0 lock")
     dist = metadata.distribution("particle-sliders-core")
     if dist.version != CORE_VERSION or metadata.version("particlegan") != PG_VERSION:
-        raise RuntimeError("use the exact reviewed core0.13.0/PG0.9.5 response environment; old CLI has its own lock")
+        raise RuntimeError("use the exact reviewed core0.15.1/PG0.11.0 response environment; old CLI has its own lock")
     registered = {str(path) for path in dist.files or ()}
     expected = lock["source_sha256"]
     root = Path(dist.locate_file("")).resolve()
@@ -45,6 +45,8 @@ def verify_response_core():
                 and "__pycache__" not in Path(name).parts and name not in expected):
             raise RuntimeError("unexpected source in the reviewed core distribution: " + name)
     direct = dist.read_text("direct_url.json")
+    if not direct:
+        raise RuntimeError("current Music3 core requires exact Git provenance")
     if direct:
         provenance = json.loads(direct)
         if "dir_info" in provenance:
@@ -60,7 +62,7 @@ def verify_response_core():
             archive = provenance["archive_info"]
             hashes = archive.get("hashes", {})
             digest = hashes.get("sha256", archive.get("hash", "").removeprefix("sha256="))
-            if digest != lock["core"]["wheel_sha256"]:
+            if not lock["core"].get("wheel_sha256") or digest != lock["core"]["wheel_sha256"]:
                 raise RuntimeError("core wheel archive differs from the response proposal")
         else:
             raise RuntimeError("unrecognized response core installation provenance")

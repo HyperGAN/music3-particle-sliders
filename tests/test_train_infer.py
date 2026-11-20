@@ -92,7 +92,7 @@ def test_installed_both_presets_fresh_process_resume_and_actual_export_probe(pre
     assert packet["config"]["pg_version"] == "0.9.1"
     assert packet["config"]["pg_release_wheel_sha256"] == "b01b7957169cb3de45887e22b4d525fd54071577e1de58089707cf05fe6992ec"
     sources = packet["config"]["implementation_sources"]
-    assert "particle_sliders.pg09_audio" in sources
+    assert "particle_sliders.audio" in sources
     assert not any(name.startswith("conceptmod.") for name in sources)
     for metric in a["metrics"]:
         assert metric["g_loss"] == pytest.approx(metric["g_adv"] + metric["prior_regularization"])
@@ -118,7 +118,7 @@ def test_public_game_neutral_condition_bank_and_gan_only(monkeypatch):
     shared = bootstrap()
     runtime = shared.cli.make_audio_game("music3", checkpointing=True)
     adapter, model, fixed, game = runtime.adapter, runtime.model, runtime.rows, runtime.game
-    assert type(game) is shared.core.ConditionalPG09
+    assert type(game) is shared.core.ConditionalParticleGAN
     assert model.__class__.__name__ == "Qwen3ForCausalLM"
     assert adapter.particles is adapter.slider.particles
     assert sum(p is adapter.particles for group in game.opt_g.param_groups for p in group["params"]) == 1

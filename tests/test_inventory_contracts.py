@@ -13,7 +13,7 @@ from music3 import response_source
 from particle_sliders.lifecycle import SessionConfig
 from particle_sliders.response import open_response
 from particle_sliders.native_lora import LoRANetwork
-from particle_sliders.pg09 import _hash
+from particle_sliders.engine import _hash
 
 
 def config(**options):

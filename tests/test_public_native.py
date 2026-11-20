@@ -7,7 +7,7 @@ from importlib.metadata import version
 # Historical core0.6.0/PG0.9.1 CLI tests require their separate locked environment.
 pytestmark = pytest.mark.skipif(
     version("particle-sliders-core") != "0.6.0",
-    reason="historical core0.6.0 CLI cohort; current PG0.9.5 uses response sessions",
+    reason="historical core0.6.0 CLI cohort; current PG0.11.0 uses response sessions",
 )
 from safetensors import safe_open
 from safetensors.torch import load_file, save_file
@@ -101,7 +101,7 @@ def test_public_probe_rebuilds_genuine_fixture_without_rng_changes_and_export_ca
     config = packet["game"]["config"]
     assert config["pg_version"] == "0.9.1"
     assert config["pg_release_wheel_sha256"] == "b01b7957169cb3de45887e22b4d525fd54071577e1de58089707cf05fe6992ec"
-    assert "particle_sliders.pg09_audio" in config["implementation_sources"]
+    assert "particle_sliders.audio" in config["implementation_sources"]
     assert not any(name.startswith("conceptmod.") for name in config["implementation_sources"])
 
     rng = torch.get_rng_state().clone()

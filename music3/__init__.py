@@ -1,7 +1,7 @@
 """MiniMax Music 3 particle sliders.
 
 Importing this package does not download Hub weights. Current response sessions
-use the installed ``particle_sliders.ConditionalPG09`` game; this package owns
+use the installed ``particle_sliders.ConditionalParticleGAN`` game; this package owns
 Music 3 hosts, prompt cards, and native train/infer wiring.
 """
 

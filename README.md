@@ -2,8 +2,8 @@
 
 **Calculated memory:** Native BF16 LM response training: **32 GiB GPU / 32 GiB host** for batch 2,256 tokens; hidden-response inference **22 GiB GPU**. Finished audio is a separate, unqualified path. [Full memory ledger and limits](MEMORY.md). These are planning estimates, not measured peaks.
 
-The current root package uses shared **core0.13.0 / ParticleGAN0.9.5**
-at immutable source `3dd672a7f9b8c169daef90fd63e4bb42b9ddc423` (Python 3.11+).
+The current root package uses shared **core0.15.1 / ParticleGAN0.11.0**
+at immutable source `c13890f8e2a1ecf1dc8eb9f2a37f9187cb9fea78` (Python 3.11+).
 Use the installed numerical-response lifecycle for train/resume/export/inference:
 
 ```sh
@@ -20,7 +20,7 @@ See [current usage and exact source checks](docs/response-session-proposal.md),
 [publication and qualification status](PUBLICATION-STATUS.md).
 The example is a small random Qwen3 CPU fixture on the official release.
 The [separate native source candidate](NATIVE-CONTINUOUS.md) explicitly selects
-published PG0.9.5 with the explicit continuous input domain and a strict BF16 eager profile for the
+published PG0.11.0 with the explicit continuous input domain and a strict BF16 eager profile for the
 genuine 4096-wide Music3 state. Native updates, exact continuation and public RAW
 response replay completed on the pinned PG0.9.5 source. The completed
 finished-audio comparison selects existing **cell6 G1e-6 RAW32** at fixed
@@ -169,4 +169,4 @@ Learning-rate controls and preserved defaults: [LEARNING-RATES.md](LEARNING-RATE
 
 ## Optional explicit fresh initialization
 
-See [the separate completed-cache fresh95 API](FRESH95.md) for explicit new-cohort initialization, strict FULL restore and RAW hidden-response inference. Its four installed synthetic software cases are separate from native-audio and LR evidence. Existing defaults and entrypoints are unchanged.
+See [the separate completed-cache scoped API](SCOPED.md) for explicit new-cohort initialization, strict FULL restore and RAW hidden-response inference. Its four installed synthetic software cases are separate from native-audio and LR evidence. Existing defaults and entrypoints are unchanged.

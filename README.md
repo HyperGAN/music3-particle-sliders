@@ -3,7 +3,7 @@
 **Calculated memory:** Native BF16 LM response training: **32 GiB GPU / 32 GiB host** for batch 2,256 tokens; hidden-response inference **22 GiB GPU**. Finished audio is a separate, unqualified path. [Full memory ledger and limits](MEMORY.md). These are planning estimates, not measured peaks.
 
 The current root package uses shared **core0.14.2 / ParticleGAN0.10.1**
-at immutable source `119d7e0559bacdc49847961c1b243ac08daa013c` (Python 3.11+).
+at immutable source `9134152cfc65aba14ff734ea803f83f3dca3818b` (Python 3.11+).
 Use the installed numerical-response lifecycle for train/resume/export/inference:
 
 ```sh

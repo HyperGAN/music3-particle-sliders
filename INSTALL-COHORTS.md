@@ -1,7 +1,7 @@
 # Installation cohorts
 
 The root0.3.0 package selects core0.14.2 at
-`119d7e0559bacdc49847961c1b243ac08daa013c` and published PG0.10.1.
+`9134152cfc65aba14ff734ea803f83f3dca3818b` and published PG0.10.1.
 Use a fresh isolated environment and `python -m pip install '.[response-fixture,test]'`.
 The common response lifecycle and native-only reader retain their API.
 

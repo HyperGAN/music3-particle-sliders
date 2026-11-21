@@ -42,3 +42,14 @@ retrained or migrated by the current dependency upgrade.
 
 [Earlier CLI and reproduction instructions](https://github.com/HyperGAN/music3-particle-sliders/blob/f23889b4fafd6a63efaff2ceeb7fc4c312f9f5d6/README.md#historical-core060-cli-contract)
 require the original product source and dependency environment.
+
+## Scheduled native semantic strength
+
+With the original semantic pipeline and its attached RAW slider, call
+`music3.scheduled_semantic.generate(pipe, scale_adapter=slider.scaled,
+audio_duration=seconds, step_gains=gains, **inputs)`. Pass one prefill
+gain followed by one for each possible native audio frame. The batched
+conditional and unconditional branches share each gain. Effective strengths
+must lie in `[0,1]`. The call returns the semantic stage result and the
+strengths used through native termination. Feed the frame hiddens into the
+original acoustic decoder. Pretrained scheduled audio effects are pending.

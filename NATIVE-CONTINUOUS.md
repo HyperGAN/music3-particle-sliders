@@ -32,7 +32,7 @@ The entire native prepare, including provider, critic, prior, streams and optimi
 
 CPU checks cover strict-policy refusals, three-visible-device RNG mocks, actual small Qwen3/provider/critic/prior state equality across fresh processes and caller seeds, and exact two-update versus one-plus-one continuation. These checks and full-class META/asset hashing are source/readiness evidence only: the full pretrained model has not yet completed a GPU update, exact native resume, memory measurement, audio generation, preservation evaluation, or listening review. The BF16 language-model weight floor alone is 15.9898 GiB; a future GPU proof needs separately admitted headroom.
 
-The [prior candidate source and manifests](https://github.com/HyperGAN/music3-particle-sliders/tree/f23889b4fafd6a63efaff2ceeb7fc4c312f9f5d6/cohorts) document the original
+The [factory integration draft](https://github.com/HyperGAN/music3-particle-sliders/blob/2b75e115867ce599b3705102963906def8252590/docs/lifecycle-integration.md) and [earlier scale ownership proposal](https://github.com/HyperGAN/music3-particle-sliders/blob/2b75e115867ce599b3705102963906def8252590/docs/shared-response/CHECKPOINT-OWNERSHIP.md) describe the old source boundaries. The [prior candidate source and manifests](https://github.com/HyperGAN/music3-particle-sliders/tree/f23889b4fafd6a63efaff2ceeb7fc4c312f9f5d6/cohorts) document the original
 CLI, response, and HNDL environments.
 
 

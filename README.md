@@ -53,3 +53,66 @@ conditional and unconditional branches share each gain. Effective strengths
 must lie in `[0,1]`. The call returns the semantic stage result and the
 strengths used through native termination. Feed the frame hiddens into the
 original acoustic decoder. Pretrained scheduled audio effects are pending.
+
+### Activation-dependent native semantic strength
+
+Use `generate_gated` to apply the shared CFP, CLABS, or matched-random rule to
+the same saved RAW adapter. Each decision is made from the conditional row of
+the live, pre-edit frame-feedback embedding before the cached Qwen3 forward.
+That embedding already combines the previous frame's sampled semantic code
+and RVQ residual codes in the original Music3 loop. Both classifier-free
+guidance rows use the same strength for that forward. Prefill is OFF and
+predicts only the warm-up code, so it does not advance the gate. There is one
+decision per subsequent frame prediction, including a prediction that ends
+generation at EOS. RVQ substeps and the acoustic decoder use their original
+paths. The semantic result can be passed to that decoder unchanged.
+
+Build the local core wheel as a source artifact. Music3 checks the standalone
+steering module's bytes against the exact core revision before loading it.
+The existing Music3 runtime keeps its original installed response core and
+checkpoint identity.
+
+```sh
+python -m pip wheel --no-deps --wheel-dir wheels \
+  'particle-sliders-core @ git+https://github.com/HyperGAN/particle-sliders.git@b1f780decc516808cfd3019d5e5b674457161f86#subdirectory=packages/particle-sliders-core'
+```
+
+```python
+from music3.activation_gate import SemanticGatePlan
+from music3.scheduled_semantic import generate_gated
+
+plan = SemanticGatePlan(
+    core_wheel=steering_wheel,
+    method=calibration["method"],
+    parameter=calibration["parameter"],
+    calibration_sha256=calibration_record_sha256,
+    direction=calibration.get("direction"),
+    seed=calibration.get("seed"),
+    clabs=calibration.get("clabs"),
+)
+semantic, receipt = generate_gated(
+    pipe, scale_adapter=slider.scaled, audio_duration=seconds,
+    strength=calibration["strength"], gate_plan=plan, **inputs,
+)
+```
+
+The caller supplies the fitted unit direction and the active-rollout
+threshold or bias. CLABS also takes the measured projection statistics,
+explicit controller settings, and an independent seed. The matched-random
+control uses the target rate and an independent seed. The receipt records
+the calibration digest, resolved settings, projections, decisions, effective
+strengths including the OFF prefill, and the realized firing rate and total
+strength over cached predictions. Replay a fixed control with the same
+prefill strength and retain the native sampler and EOS semantics.
+
+For qualification, bind Music3's model, RAW adapter, tokenizer, CFG, frame
+and acoustic settings, and the probe inputs to the calibration record.
+Fit contrasts on matched neutral and target frame feedback, calibrate with
+steering active on disjoint cases, and evaluate finished audio on further
+held-out cases at the matched budget. Keep the intended-effect ON-minus-OFF
+score and catastrophic-output verdicts separate. The archived RAW32
+comparison and RAW64 fixed controls preserve their original evidence. The
+RAW64 semantic receipts record frame hiddens for acoustic synthesis, with
+no live feedback directions or adaptive budget calibration. Adaptive
+Music3 gain remains unmeasured.
+[Shared equations and calibration protocol](https://github.com/HyperGAN/particle-sliders/blob/b1f780decc516808cfd3019d5e5b674457161f86/docs/strength-schedules.md#activation-dependent-steering)

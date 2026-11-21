@@ -30,11 +30,11 @@ def guard():
     from .policy import INIT_SHA
     record_guard(distribution('music3-particle-sliders','0.3.0'),'music3',Path(music3.__file__).absolute().parent,ORIGINAL)
     lock=verify_response_core()  # Original canonical577 + actual distribution/import-origin guards unchanged.
-    if metadata.version('particlegan')!='0.11.0'or source_record(pg_init.__file__)['sha256']!=INIT_SHA:raise RuntimeError('exact public ParticleGAN 0.11.0 initializer required')
+    if metadata.version('particlegan')!='0.11.1'or source_record(pg_init.__file__)['sha256']!=INIT_SHA:raise RuntimeError('exact public ParticleGAN 0.11.1 initializer required')
     own=Path(__file__).absolute().parent
     record_guard(distribution('music3-explicit-scoped','0.1.0'),'music3_scoped',own,
         {p.name:source_record(p)for p in sorted(own.glob('*.py'))})
-    return dict(core=lock['core'],PG='0.11.0',original_guard_unchanged=True,genuine_original_and_addon_RECORD=True)
+    return dict(core=lock['core'],PG='0.11.1',original_guard_unchanged=True,genuine_original_and_addon_RECORD=True)
 
 def sources():
     import music3

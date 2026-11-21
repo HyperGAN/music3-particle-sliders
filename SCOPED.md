@@ -4,7 +4,7 @@
 
 ## Installation and prerequisites
 
-Use Python 3.12 and an environment already satisfying the original `music3-particle-sliders==0.3.0` guards: the exact core0.15.1 Git/wheel provenance and canonical Source closure, published ParticleGAN0.11.0, and the declared response/runtime dependencies. Install the addon as a genuine separate wheel from the repository root:
+Use Python 3.12 and an environment already satisfying the original `music3-particle-sliders==0.3.0` guards: the exact core0.15.2 Git/wheel provenance and canonical Source closure, published ParticleGAN0.11.1, and the declared response/runtime dependencies. Install the addon as a genuine separate wheel from the repository root:
 
 ```sh
 python -m pip install --no-deps ./scoped
@@ -56,7 +56,7 @@ This is an API pattern requiring authentic owner inputs, not a self-contained mo
 
 ## Fresh, FULL and RAW
 
-Declare `fresh` or `resume` before component allocation. Fresh mode is a new cohort, not a way to reinitialize an old checkpoint. Public PG0.11.0 QR initializes the same original bias-free down Parameters at the original `kaiming_uniform_(a=1)` host variance `1/fan_in`; the same 128×4 bank receives R2Normal(0,1). Zero-UP, router/bridge and the original Linear critic constructor values are kept. The explicit new constructor stream uses the slider seed and critic seed+1. A durable policy receipt precedes optimizer creation; it makes no claim of equality to an old whole-factory RNG stream.
+Declare `fresh` or `resume` before component allocation. Fresh mode is a new cohort, not a way to reinitialize an old checkpoint. Public PG0.11.1 QR initializes the same original bias-free down Parameters at the original `kaiming_uniform_(a=1)` host variance `1/fan_in`; the same 128×4 bank receives R2Normal(0,1). Zero-UP, router/bridge and the original Linear critic constructor values are kept. The explicit new constructor stream uses the slider seed and critic seed+1. A durable policy receipt precedes optimizer creation; it makes no claim of equality to an old whole-factory RNG stream.
 
 FULL restore accepts only this new profile's exact source/configuration/cohort/cache and restores the whole typed network, bank, critic, optimizers, cursors and CPU/CUDA RNG state. It skips fresh initialization and old updates. RAW inference restores only the added network and skips cache, critic/game/optimizer construction and fresh initialization. Old Music3 FULL/RAW cohorts are not migrated. Set `ema_decay=None`; all inference and exports use current raw weights, with upstream scalar optimizer statistics unchanged.
 

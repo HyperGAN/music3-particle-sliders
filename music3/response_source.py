@@ -1,4 +1,4 @@
-"""Verify the current PG0.11.0 response cohort; historical locks stay separate."""
+"""Verify the current PG0.11.1 response cohort; historical locks stay separate."""
 import hashlib
 from importlib import metadata
 from importlib import util
@@ -6,11 +6,11 @@ import json
 from pathlib import Path
 import sys
 
-CORE_COMMIT = "c13890f8e2a1ecf1dc8eb9f2a37f9187cb9fea78"
-CORE_VERSION = "0.15.1"
-PG_VERSION = "0.11.0"
+CORE_COMMIT = "ec1161f5d74481be3540cb0dfa63d0e8f8b54e90"
+CORE_VERSION = "0.15.2"
+PG_VERSION = "0.11.1"
 LOCK = Path(__file__).with_name("response-core.lock.json")
-LOCK_SHA256 = "b460fa0ada9e0f644ec936c24a23494916cfc704934c3831bdc16146b49b86e1"
+LOCK_SHA256 = "e7986e7c08cf680d3ed502924ce6293821168a6b670a5630bdd3c28e42969838"
 
 
 def verify_response_core():
@@ -21,14 +21,14 @@ def verify_response_core():
     """
     contents = LOCK.read_bytes()
     if hashlib.sha256(contents).hexdigest() != LOCK_SHA256:
-        raise RuntimeError("Music3 PG0.11.0 requires its exact canonical source lock bytes")
+        raise RuntimeError("Music3 PG0.11.1 requires its exact canonical source lock bytes")
     lock = json.loads(contents)
     if (lock["core"]["commit"] != CORE_COMMIT or lock["core"]["version"] != CORE_VERSION
             or lock["particlegan"]["version"] != PG_VERSION):
-        raise RuntimeError("Music3 response proposal requires its canonical core0.15.1/PG0.11.0 lock")
+        raise RuntimeError("Music3 response proposal requires its canonical core0.15.2/PG0.11.1 lock")
     dist = metadata.distribution("particle-sliders-core")
     if dist.version != CORE_VERSION or metadata.version("particlegan") != PG_VERSION:
-        raise RuntimeError("use the exact reviewed core0.15.1/PG0.11.0 response environment; old CLI has its own lock")
+        raise RuntimeError("use the exact reviewed core0.15.2/PG0.11.1 response environment; old CLI has its own lock")
     registered = {str(path) for path in dist.files or ()}
     expected = lock["source_sha256"]
     root = Path(dist.locate_file("")).resolve()

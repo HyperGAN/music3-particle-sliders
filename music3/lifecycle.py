@@ -13,7 +13,7 @@ from pathlib import Path, PurePosixPath
 import re
 
 
-MILESTONE = "c13890f8e2a1ecf1dc8eb9f2a37f9187cb9fea78"
+MILESTONE = "ec1161f5d74481be3540cb0dfa63d0e8f8b54e90"
 MODEL_REVISION = "bd348f9c49ea3c1b39f33ace3436f8fad435f24e"
 _OPTIONS = {
     "dummy", "host", "rows", "steps", "batch", "seed", "width", "device",
@@ -121,19 +121,19 @@ def _validate_model(options):
     device = options.get("device", "cpu")
     if not isinstance(device, str) or (device != "cpu" and not re.fullmatch(r"cuda:[0-9]+", device)):
         raise ValueError("device must be cpu or an explicit cuda index")
-    pair=(options.get("pg_source_profile", "release-0.11.0"),options.get("penalty_input_domain", "auto"))
+    pair=(options.get("pg_source_profile", "release-0.11.1"),options.get("penalty_input_domain", "auto"))
     if dummy:
-        if pair!=("release-0.11.0","auto"):
-            raise UnsupportedOperation("Music3 fixture uses official PG0.11.0 release-0.11.0/auto; other source profiles are unqualified")
+        if pair!=("release-0.11.1","auto"):
+            raise UnsupportedOperation("Music3 fixture uses official PG0.11.1 release-0.11.1/auto; other source profiles are unqualified")
         if width>=170:
-            raise UnsupportedOperation("native Music3 width4096 is gated: official PG0.11.0 release/auto refuses flat vectors of width >=170; no projection or profile fallback")
+            raise UnsupportedOperation("native Music3 width4096 is gated: official PG0.11.1 release/auto refuses flat vectors of width >=170; no projection or profile fallback")
         if device!="cpu" or options.get("base_precision","float32")!="float32":
             raise UnsupportedOperation("Music3 random Qwen3 fixture requires CPU float32")
         if any(key in options for key in ("model_dir","manifest","manifest_sha256","native_numerical_profile")):
             raise ValueError("random fixture cannot use native model identity or numerical policy")
         return
-    if pair!=("release-0.11.0","continuous"):
-        raise UnsupportedOperation("native Music3 width4096 is gated unless the explicit release-0.11.0/continuous pair is selected; official release/auto remains refused")
+    if pair!=("release-0.11.1","continuous"):
+        raise UnsupportedOperation("native Music3 width4096 is gated unless the explicit release-0.11.1/continuous pair is selected; official release/auto remains refused")
     if width!=4096:
         raise UnsupportedOperation("native Music3 requires the genuine 4096-wide Qwen3 state; no projection")
     if not device.startswith("cuda:") or options.get("base_precision")!="bfloat16":
@@ -265,7 +265,7 @@ def _build_native(options, *, checkpointing=False):
 
     dummy = options.get("dummy", False)
     width = options.get("width", 32 if dummy else 4096)
-    domain = dict(pg_source_profile=options.get("pg_source_profile", "release-0.11.0"),
+    domain = dict(pg_source_profile=options.get("pg_source_profile", "release-0.11.1"),
                   penalty_input_domain=options.get("penalty_input_domain", "auto"))
     require_audio_width(width, **domain)  # Exact PG source gate before model allocation.
     device = torch.device(options.get("device", "cpu"))
@@ -428,7 +428,7 @@ def _configuration(options):
     return dict(dummy=dummy, width=options.get("width", 32 if dummy else 4096),
         seed=options.get("seed", 7), max_sequence_length=options.get("max_sequence_length", 256),
         base_precision=options.get("base_precision", "float32" if dummy else "bfloat16"),
-        pg_source_profile=options.get("pg_source_profile", "release-0.11.0"),
+        pg_source_profile=options.get("pg_source_profile", "release-0.11.1"),
         penalty_input_domain=options.get("penalty_input_domain", "auto"),
         **({"native_numerical_profile":options["native_numerical_profile"]} if not dummy else {}))
 
@@ -493,7 +493,7 @@ def _prepare(options):
                 particles=adapter.particles, response_domain="continuous_vector",
                 preset=options.get("preset", "bispf_optimized"), batch_size=options.get("batch", 2),
                 total_steps=options.get("steps", 4), seed=options.get("seed", 7),
-                pg_source_profile=options.get("pg_source_profile", "release-0.11.0"),
+                pg_source_profile=options.get("pg_source_profile", "release-0.11.1"),
                 penalty_input_domain=options.get("penalty_input_domain", "auto"), recipe_overrides=rates)
             specification = INFERENCE.specification(adapter, model_identity=adapter.model_identity,
                 protocol="music3-native-final-ar-hidden-v2-engine", configuration=_configuration(options))
@@ -508,9 +508,9 @@ def capabilities(options):
     width = options.get("width", 32 if dummy else 4096)
     operations = ("train", "resume", "evaluate", "export", "response")
     supported = (dummy is True and type(width) is int and 1 <= width < 170
-                 and options.get("pg_source_profile", "release-0.11.0") == "release-0.11.0"
+                 and options.get("pg_source_profile", "release-0.11.1") == "release-0.11.1"
                  and options.get("penalty_input_domain", "auto") == "auto") or (dummy is False and width==4096
-                 and options.get("pg_source_profile")=="release-0.11.0"
+                 and options.get("pg_source_profile")=="release-0.11.1"
                  and options.get("penalty_input_domain")=="continuous"
                  and options.get("native_numerical_profile")=="music3-bf16-eager-strict-engine-v1")
     unavailable = (("render", "Music3 acoustic/token sampling is unqualified; numerical hidden responses only"),)
@@ -518,8 +518,8 @@ def capabilities(options):
         reason = "Music3 native/wide AR responses are gated pending explicit continuous-domain source qualification"
         unavailable += tuple((operation, reason) for operation in operations)
     return ResponseCapabilities("routed_particle_gan", "audio_ar_hidden", "native_final_ar_hidden",
-        "continuous_vector", (1, width), "0.11.0",
-        options.get("pg_source_profile", "release-0.11.0"), options.get("penalty_input_domain", "auto"),
+        "continuous_vector", (1, width), "0.11.1",
+        options.get("pg_source_profile", "release-0.11.1"), options.get("penalty_input_domain", "auto"),
         base_precisions=("float32",) if dummy else ("bfloat16",),
         operations=operations if supported else (), unavailable_reasons=unavailable,
         qualification="Music3 narrow official fixture / separate explicit native continuous source candidate; acoustic quality gated")

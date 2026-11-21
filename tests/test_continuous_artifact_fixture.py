@@ -2,7 +2,7 @@
 
 This is NOT the genuine36-layer/200000-vocabulary pretrained Music3 model.
 Only pretrained loading/tokenization/native-device admission are replaced.
-The real routed adapter, provider, critic, PG0.11.0 game, resume and inference run.
+The real routed adapter, provider, critic, PG0.11.1 game, resume and inference run.
 """
 from copy import deepcopy
 from dataclasses import replace
@@ -21,8 +21,8 @@ from test_native_profile import strict_math
 
 @pytest.fixture
 def candidate_fixture(monkeypatch,strict_math):
-    try:_released_sources('release-0.11.0')
-    except RuntimeError:pytest.skip('exact published PG0.11.0 environment required')
+    try:_released_sources('release-0.11.1')
+    except RuntimeError:pytest.skip('exact published PG0.11.1 environment required')
     build=product._build_native
     monkeypatch.setattr(product,'_validate_model',lambda options:None)
     actual_capabilities=product.capabilities
@@ -31,7 +31,7 @@ def candidate_fixture(monkeypatch,strict_math):
             qualification='random one-layer4096-vector CPU geometry, no pretrained/native audio')
     monkeypatch.setattr(product,'BACKEND',replace(product.BACKEND,configure_capabilities=fixture_capabilities))
     monkeypatch.setattr(product,'INFERENCE',replace(product.INFERENCE,configure_capabilities=fixture_capabilities))
-    # The actual source gate inside build, adapter and game still verifies PG0.11.0.
+    # The actual source gate inside build, adapter and game still verifies PG0.11.1.
     # Random one-layer Qwen3 is4096-wide but has only256 synthetic token IDs.
     def boundary(options,**kwargs):
         return build(dict(options,dummy=True,device='cpu',base_precision='float32'),**kwargs)
@@ -45,7 +45,7 @@ def candidate_fixture(monkeypatch,strict_math):
     monkeypatch.setattr(music3_native,'assert_audio_start',lambda *args,**kwargs:None)
     return SessionConfig('music3','music3-4096-random-CPU-geometry-only',device='cpu',
         base_precision='float32',width=4096,steps=2,batch=2,seed=7,ema_decay=None,
-        pg_source_profile='release-0.11.0',penalty_input_domain='continuous',
+        pg_source_profile='release-0.11.1',penalty_input_domain='continuous',
         native_numerical_profile=strict_math['native_numerical_profile'],
         rows=[dict(neutral='soft piano',positive='crisp piano',lyrics=''),
               dict(neutral='quiet piano',positive='crisp quiet piano',lyrics='')])

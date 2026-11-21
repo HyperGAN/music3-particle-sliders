@@ -36,7 +36,7 @@ No projection or reshape bypasses source/domain requirements.
 
 The bounded [ordinary LoRA helper](docs/ordinary-lora-distillation.md) remains
 available for explicit CPU approximation. The separately packaged
-[HyperGAN/HNDL candidate](cohorts/hndl/README.md) retains its independent pin.
+[archived HyperGAN/HNDL candidate](https://github.com/HyperGAN/music3-particle-sliders/blob/f23889b4fafd6a63efaff2ceeb7fc4c312f9f5d6/cohorts/hndl/README.md) documents its original pin.
 Published historical controls and loading paths are unchanged; no weights are
 retrained or migrated by the current dependency upgrade.
 

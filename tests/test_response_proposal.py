@@ -288,7 +288,7 @@ def test_invalid_response_restore_is_transactional():
         equal(run.checkpoint(), before)
 
 
-@pytest.mark.parametrize('field,value', [('pg_version', '0.9.1'), ('pg_source_profile', 'release')])
+@pytest.mark.parametrize('field,value', [('pg_version', '0.11.0'), ('pg_source_profile', 'release')])
 def test_historical_pg_identity_cannot_resume_in_current_cohort(field, value):
     from particle_sliders.engine import _hash
     with open_response(config()) as run:

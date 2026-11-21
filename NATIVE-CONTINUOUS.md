@@ -32,7 +32,8 @@ The entire native prepare, including provider, critic, prior, streams and optimi
 
 CPU checks cover strict-policy refusals, three-visible-device RNG mocks, actual small Qwen3/provider/critic/prior state equality across fresh processes and caller seeds, and exact two-update versus one-plus-one continuation. These checks and full-class META/asset hashing are source/readiness evidence only: the full pretrained model has not yet completed a GPU update, exact native resume, memory measurement, audio generation, preservation evaluation, or listening review. The BF16 language-model weight floor alone is 15.9898 GiB; a future GPU proof needs separately admitted headroom.
 
-The previous default core `ddb41423bcefc1fe76cd94d0f9b367353b3ea137` response package is preserved byte-for-byte and independently buildable in `cohorts/pg094-response-ddb-20261104`, with SHA manifest beside it. Older CLI, response and HNDL cohorts retain their bytes and environments; their packets are not relabeled or migrated.
+The [prior candidate source and manifests](https://github.com/HyperGAN/music3-particle-sliders/tree/f23889b4fafd6a63efaff2ceeb7fc4c312f9f5d6/cohorts) document the original
+CLI, response, and HNDL environments.
 
 
 Version0.2.1 corrects strict import admission for the exact virtual legacy aliases

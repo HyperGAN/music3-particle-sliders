@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
+import json
 
 from music3.cards import control_paths, load_sample_cards, release_card
 from music3.defaults import BASE_MODEL_ID, HUB_WEIGHTS_ID
@@ -33,13 +33,16 @@ def test_particle_card_has_two_unipolar_rows():
     assert all(row.lyrics for row in rows)
 
 
-def test_configs_point_at_this_repo_and_the_base_id():
-    for name in ("config-music3.yaml", "config-music3-encoder.yaml"):
-        raw = yaml.safe_load((ROOT / "configs/music3" / name).read_text(encoding="utf-8"))
-        assert raw["pretrained_model"]["name_or_path"] == BASE_MODEL_ID
-        assert raw["prompts_file"] == "configs/music3/prompts-music3.yaml"
-        assert raw["network"]["rank"] == 8
-        assert (ROOT / raw["prompts_file"]).exists()
+def test_response_example_uses_the_current_backend_and_source():
+    from music3.lifecycle import BACKEND
+    from particle_sliders.engine import PG_SOURCE_PROFILE
+    from particle_sliders.lifecycle import SessionConfig
+
+    raw = json.loads((ROOT / "examples/music3-response.json").read_text())
+    config = SessionConfig.from_dict(raw)
+    assert config.backend == BACKEND.name
+    assert config.options["pg_source_profile"] == PG_SOURCE_PROFILE
+    assert config.options["ema_decay"] is None
 
 
 def test_sample_cards_match_the_september_release():

@@ -179,15 +179,9 @@ def test_changed_observation_policy_refuses_before_body(strict_math):
     assert not reached and not torch.cuda.is_initialized()
 
 
-def test_old_default_package_archive_bytes_and_core_pin_remain_exact():
-    root=Path(__file__).resolve().parents[1]
-    manifest=json.loads((root/'cohorts/pg094-response-ddb-20261104-files.json').read_text())
-    old=root/'cohorts/pg094-response-ddb-20261104'
-    assert manifest['product_source']=='38733953d911018918671df0ba3ede89ca1c4734'
-    assert len(manifest['files'])==20
-    for name,digest in manifest['files'].items():assert hashlib.sha256((old/name).read_bytes()).hexdigest()==digest
-    assert 'ddb41423bcefc1fe76cd94d0f9b367353b3ea137' in (old/'pyproject.toml').read_text()
-    assert assets.native_sources()['lifecycle.py']==hashlib.sha256((root/'music3/lifecycle.py').read_bytes()).hexdigest()
+def test_current_source_inventory_binds_the_installed_lifecycle():
+    source = Path(product.__file__).resolve()
+    assert assets.native_sources()['lifecycle.py'] == hashlib.sha256(source.read_bytes()).hexdigest()
 
 
 @pytest.mark.parametrize('domain',['auto','continuous'])

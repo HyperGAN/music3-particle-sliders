@@ -1,8 +1,8 @@
 # ComfyUI: historical MiniMax Music 3 LoRAs
 
 This guide applies to the historical conventional LoRA exports for
-`MiniMaxAI/MiniMax-Music3`. The PG 0.9 product route writes a shared
-`adapter-export.pt` containing a routed particle adapter. That export is
+`MiniMaxAI/MiniMax-Music3`. The current product route writes a shared
+RAW inference packet containing a routed particle adapter. That export is
 not a stock ComfyUI LoRA and must not be passed to the converter below.
 No acoustic renderer or ComfyUI export for the new route is qualified.
 
@@ -48,8 +48,7 @@ diffusion_model.diffusion_transformer.transformer.layers.N.self_attn.to_out.lora
 Put a historical transformer file in `ComfyUI/models/loras/` and load it
 on the MiniMax Music 3 MODEL. Follow that file's sidecar for its trained
 signs and unit scale. A `unit_scale: 1.0` field alone does not establish
-that both signs were trained. The new PG 0.9 LM route is unipolar, with
-scale 0 off and +1 trained; it currently supports CPU hidden probes only.
+that both signs were trained. The numerical response lifecycle has its own backend and artifact format.
 
 ## Converter
 
@@ -66,5 +65,4 @@ python /path/to/conceptmod/scripts/convert_lora_comfyui.py path/to/adapter.safet
 
 The historical published recordings were rendered with native adapters.
 ComfyUI precision and sampler settings can change the audio. These
-recordings do not qualify the new PG 0.9 adapter or its pending native
-sampling/decoder path.
+recordings do not qualify the current numerical-response adapter or its native audio path.

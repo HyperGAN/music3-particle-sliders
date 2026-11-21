@@ -1,6 +1,6 @@
 {
   "backend": "music3",
-  "cohort": "music3-pg095-raw-new-cpu-run",
+  "cohort": "music3-raw-new-cpu-run",
   "options": {
     "dummy": true,
     "width": 32,
@@ -9,7 +9,7 @@
     "seed": 7,
     "ema_decay": null,
     "checkpointing": true,
-    "pg_source_profile": "release-0.9.5",
+    "pg_source_profile": "release-0.11.1",
     "penalty_input_domain": "auto"
   }
 }

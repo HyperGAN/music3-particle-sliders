@@ -1,4 +1,4 @@
-# Native continuous Music3 — published PG0.11.0
+# Native continuous Music3 — published PG0.11.1
 
 ## Completed native response measurement
 
@@ -10,21 +10,21 @@ The older128-update response-SSE nominee and final0.8928904545147202 remain
 historical numerical diagnostics; they are not the current audio-effect selector.
 No new search, render, rating or confirmation is required.
 
-The [sanitized receipt](evidence/pg095-native-lr/summary.json) supersedes the earlier pending-native status below for this exact source/profile. Earlier CPU and failed-admission observations remain historical evidence.
+The [archived receipt](https://github.com/HyperGAN/music3-particle-sliders/blob/f23889b4fafd6a63efaff2ceeb7fc4c312f9f5d6/evidence/pg095-native-lr/summary.json) records the exact earlier source and profile. Earlier CPU and failed-admission observations remain historical evidence.
 
 ## Native setup and earlier readiness evidence
 
-The default narrow CPU fixture uses `release-0.11.0/auto`. Native4096-wide
-responses require `pg_source_profile="release-0.11.0"`,
+The default narrow CPU fixture uses `release-0.11.1/auto`. Native4096-wide
+responses require `pg_source_profile="release-0.11.1"`,
 `penalty_input_domain="continuous"`,
-`native_numerical_profile="music3-bf16-eager-strict-pg095-v1"`,
+`native_numerical_profile="music3-bf16-eager-strict-engine-v1"`,
 `device="cuda:0"` and `base_precision="bfloat16"`.
-Core0.15.1 is pinned to `c13890f8e2a1ecf1dc8eb9f2a37f9187cb9fea78`;
-the published PG0.11.0 wheel and full577-file shared source map are verified.
+Core0.15.2 is pinned to `ec1161f5d74481be3540cb0dfa63d0e8f8b54e90`;
+the published PG0.11.1 wheel and complete shared source map are verified.
 The old source801 profile refuses. Install in a fresh environment with the
 root package's exact dependencies; no separate PG801 overlay is needed.
 
-Native dependencies are actual Torch`2.9.1+cu128` / CUDA12.8, Transformers 5.15.0, Diffusers `d5baa4fb548294f47dbca49890abd4b291204c60`, huggingface-hub 1.27.0, safetensors 0.8.0, numpy 2.2.6, and tokenizers 0.22.2. The `native-source` extra installs these runtime dependencies; select the CUDA12.8 Torch build explicitly in a fresh PG0.11.0 environment. Installing that extra alone does not change the default ParticleGAN source profile. The pinned Diffusers caption/lyrics packing and genuine Qwen3 eager attention are used. The asset lock binds all LM/tokenizer files for MiniMax-Music3 revision`bd348f9c49ea3c1b39f33ace3436f8fad435f24e` plus exact owned Transformer/Diffusers source files. Supply local `model_dir`, `manifest`, and `manifest_sha256`; no download occurs. Complete 399 BF16 checkpoint tensors, 8,584,475,648 elements, are compared before adapter attachment.
+Native dependencies are actual Torch`2.9.1+cu128` / CUDA12.8, Transformers 5.15.0, Diffusers `d5baa4fb548294f47dbca49890abd4b291204c60`, huggingface-hub 1.27.0, safetensors 0.8.0, numpy 2.2.6, and tokenizers 0.22.2. The `native-source` extra installs these runtime dependencies; select the CUDA12.8 Torch build explicitly in a fresh PG0.11.1 environment. Installing that extra alone does not change the default ParticleGAN source profile. The pinned Diffusers caption/lyrics packing and genuine Qwen3 eager attention are used. The asset lock binds all LM/tokenizer files for MiniMax-Music3 revision`bd348f9c49ea3c1b39f33ace3436f8fad435f24e` plus exact owned Transformer/Diffusers source files. Supply local `model_dir`, `manifest`, and `manifest_sha256`; no download occurs. Complete 399 BF16 checkpoint tensors, 8,584,475,648 elements, are compared before adapter attachment.
 
 The caller owns the numerical settings. Before preparation, configure deterministic algorithms with warn-only disabled; `CUBLAS_WORKSPACE_CONFIG=:4096:8`; highest FP32 precision; cuDNN deterministic, benchmark disabled; both TF32 flags and FP16/BF16 reduced-precision reductions disabled; flash, memory-efficient and cuDNN SDPA disabled, math SDPA enabled with low-precision math reduction disabled. Forced TF32 environment overrides are refused. The product records actual settings and explicit eager attention, refuses changes before responses and observation, and never repairs flags implicitly.
 
@@ -63,9 +63,9 @@ and first scores; do not add fresh confirmation or replay completed work.
 Source/asset identity, exact continuation and native response protocols remain
 unchanged. A response binding alone is not a waveform renderer.
 
-The PG0.11.0 protocol is `music3-native-final-ar-hidden-v2-engine`.
+The PG0.11.1 protocol is `music3-native-final-ar-hidden-v2-engine`.
 Model geometry, dtype, numerical flags and inherited rate defaults are unchanged.
 This is a new source cohort: no old full-state or portable packet is rebound.
 Earlier source801 import/weight/probe observations remain historical, as
 recorded in [the preserved native guide](docs/native-pg801.md). They do not
-qualify PG0.11.0 native training or learning rates; the fresh PG0.11.0 evidence is linked above.
+qualify current pretrained training or learning rates.

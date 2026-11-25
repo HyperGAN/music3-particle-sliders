@@ -116,3 +116,32 @@ RAW64 semantic receipts record frame hiddens for acoustic synthesis, with
 no live feedback directions or adaptive budget calibration. Adaptive
 Music3 gain remains unmeasured.
 [Shared equations and calibration protocol](https://github.com/HyperGAN/particle-sliders/blob/b1f780decc516808cfd3019d5e5b674457161f86/docs/strength-schedules.md#activation-dependent-steering)
+
+### Read back cached-frame dose
+
+Use `SemanticDoseMatcher` to propose a zero-prefill constant and measure both
+returned strength traces. Supply a separate core wheel built from
+`34ed1856f224f9a32ab092e58d9803f0cfc45c38` for the shared interval-dose
+functions. Music3 verifies that module's source bytes before loading it.
+
+```python
+from music3.semantic_dose import SemanticDoseMatcher
+
+matcher = SemanticDoseMatcher(dose_wheel)
+gate_strengths = receipt["applied_strengths"]
+candidate = matcher.propose(gate_strengths, expected_eligible=receipt["eligible"])
+# After the registered constant arm returns, use its actual strengths from generate().
+comparison = matcher.readback(gate_strengths, constant_applied_strengths)
+```
+
+Run a feasible proposal with effective strengths `[0.0] + [candidate] * max_frames`
+and the same request, seed and native sampler. The proposal uses a hypothesized
+cached length and returns `None` if that clock cannot fit the dose within `[0,1]`.
+Readback excludes the zero prefill and counts the cached EOS prediction when
+present. On the rank-8, alpha-8 Music3 BF16 CUDA path, Torch 2.9.1+cu128
+applies binary32 scalar coefficients before BF16 tensor rounding.
+`exact` requires equal doses on the two returned clocks. `nearest` records the
+closest representable constant for the returned control clock and its signed
+`dose_error`. Treat that arm as a timing comparison only when the prospective
+protocol explicitly accepts nearest controls. An `unmatched` result leaves the
+timing comparison open and preserves the independent gate-versus-OFF result.
